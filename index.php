@@ -1,6 +1,6 @@
 <?php 
 $currentpage = "home";
-include('src/php/header.php'); 
+include('src/php/header.php');
 ?>
 
 <h1> Willkommen: <?php echo($_SESSION['username']);?></h1><br>

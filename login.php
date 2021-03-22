@@ -19,13 +19,13 @@ if(isset($_POST['username'])){
     echo '
     <html>
     <head>
-    <!-- Bootstrap Css -->
-    <link rel="stylesheet" href="../../src/css/bootstrap.min.css">
+        <!-- Bootstrap Css -->
+        <link rel="stylesheet" href="../../src/css/bootstrap.min.css">
 
-    <!-- Bootstrap Theme -->
-    <link rel="stylesheet" href="../../src/css/bootstrap.css">
+        <!-- Bootstrap Theme -->
+        <link rel="stylesheet" href="../../src/css/bootstrap.css">
 
-    <link rel="stylesheet" href="../../src/css/style.css">
+        <link rel="stylesheet" href="../../src/css/style.css">
     </head>
     <body>
 
