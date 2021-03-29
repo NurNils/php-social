@@ -1,5 +1,6 @@
 <?php
-session_start();
+$isLogin = true;
+include('src/php/header.php');
 if(isset($_POST['username'])){
     include('db.php');
 
@@ -17,18 +18,6 @@ if(isset($_POST['username'])){
     header("Location: index.php");
 } else {
     echo '
-    <html>
-    <head>
-        <!-- Bootstrap Css -->
-        <link rel="stylesheet" href="../../src/css/bootstrap.min.css">
-
-        <!-- Bootstrap Theme -->
-        <link rel="stylesheet" href="../../src/css/bootstrap.css">
-
-        <link rel="stylesheet" href="../../src/css/style.css">
-    </head>
-    <body>
-
     <div class="center-center">
         <form action="login.php" method="post">
             <label>Benutzername: </label><br>
