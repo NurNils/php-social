@@ -2,7 +2,6 @@
 $isLogin = true;
 include('src/php/header.php');
 if(isset($_POST['username'])){
-    include('db.php');
 
     $sql = "SELECT * FROM login WHERE username='".htmlspecialchars($_POST['username'])."' and passwd='".md5( $_POST['passwd'])."'";
     $res = $db->query($sql);
