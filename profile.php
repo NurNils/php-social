@@ -11,32 +11,15 @@ if(isset($_GET['user'])){
         $username = $row->username;
     }
     echo('
-    <div class="container">
+    <div class="container main-content">
         <b>' . $username . '</b>
         <p>Stream Money Boy "Feed the Skreetz" OUT NOW</p>
         <p>Join Date: October 2018</p>
         <p></p>
-    
-    
-    
     </div>
-    
-    
-    
     ');
-
-}
-else{
+} else{
     echo('Undefined User');
 }
-
-
-
-
-
-
-
-
-
 include('src/php/footer.php');
 ?>
