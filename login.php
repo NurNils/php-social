@@ -3,17 +3,17 @@ $isLogin = true;
 include('src/php/header.php');
 if(isset($_POST['username'])){
 
-    $sql = "SELECT * FROM login WHERE username='".htmlspecialchars($_POST['username'])."' and passwd='".md5( $_POST['passwd'])."'";
+    $sql = "SELECT * FROM `user` WHERE `username`=\"".htmlspecialchars($_POST['username'])."\" AND `password`=\"".md5( $_POST['password'])."\"";
     $res = $db->query($sql);
-
+    echo $sql;
     while($row = mysqli_fetch_object($res)) {
         $_SESSION['username'] = $row->username;
-        $_SESSION['passwd'] = $row->passwd;
+        $_SESSION['password'] = $row->password;
         header("Location: index.php");
     }
     echo "Falsches Passwort oder Benutzername";
 
-} elseif(isset($_SESSION['username'])){
+} elseif(isset($_SESSION['username'])) {
     header("Location: index.php");
 } else {
     echo '
@@ -23,7 +23,7 @@ if(isset($_POST['username'])){
             <input type="text" name="username">
             <br>
             <label>Passwort: </label><br>
-            <input type="password" name="passwd">
+            <input type="password" name="password">
             <br><br>
             <input class="btn btn-primary btn-lg" type="submit" value="Login">
         </form>

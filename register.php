@@ -3,15 +3,17 @@
 $isLogin = true;
 include('src/php/header.php');
 
-if(isset($_POST['username']) && isset($_POST['passwd'])){
+if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])){
     include('db.php');
     $username = mysqli_real_escape_string($db, $_POST['username']);
+    $email = mysqli_real_escape_string($db, $_POST['email']);
 
-    $sql = "INSERT INTO `login` (`id`, `username`, `passwd`) VALUES (NULL, '$username', '".md5($_POST['passwd'])."')";
+    $sql = "INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES (NULL, '$username', '$email', '".md5($_POST['password'])."')";
     $db->query($sql);
 
     $_SESSION['username'] = $username;
-    $_SESSION['passwd'] = md5($_POST['passwd']);
+    $_SESSION['email'] = $email;
+    $_SESSION['password'] = md5($_POST['password']);
 
     header("Location: index.php");
 
@@ -23,10 +25,13 @@ if(isset($_POST['username']) && isset($_POST['passwd'])){
         <h3>Registrierung</h3>
         <form action="register.php" method="post">
             <label>Benutzername: </label><br>
-            <input type="text" name="username">
+            <input type="text" name="username" pattern="[a-z0-9_-]{3,16}$">
+            <br>
+            <label>E-Mail-Adresse: </label><br>
+            <input type="text" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
             <br>
             <label>Passwort: </label><br>
-            <input type="password" name="passwd">
+            <input type="password" name="password">
             <br><br>
             <input class="btn btn-primary btn-lg" type="submit" value="Registrieren">
         </form>
