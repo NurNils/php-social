@@ -1,4 +1,6 @@
-<?php 
+<?php
+include('db.php');
+
 session_start();
 if (!isset($isLogin) && !isset($_SESSION['username'])) {
     header('Location: login.php');
@@ -8,12 +10,12 @@ if (!isset($isLogin) && !isset($_SESSION['username'])) {
 
 <head>
 <!-- Bootstrap Css -->
-<link rel="stylesheet" href="../../src/css/bootstrap.min.css">
+<link rel="stylesheet" href="src/css/bootstrap.min.css">
 
 <!-- Bootstrap Theme -->
-<link rel="stylesheet" href="../../src/css/bootstrap.css">
+<link rel="stylesheet" href="src/css/bootstrap.css">
 
-<link rel="stylesheet" href="../../src/css/style.css">
+<link rel="stylesheet" href="src/css/style.css">
 </head>
 <body>
 <?php
