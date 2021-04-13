@@ -16,13 +16,14 @@ if (!isset($isLogin) && !isset($_SESSION['username'])) {
 <link rel="stylesheet" href="src/css/bootstrap.css">
 
 <link rel="stylesheet" href="src/css/style.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <?php
 if(!isset($isLogin)) {
   echo('
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">DHBW Social</a>
+    <a class="navbar-brand" href="index.php">DHBW Social</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

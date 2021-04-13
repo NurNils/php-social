@@ -10,10 +10,13 @@ if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password
 
     $sql = "INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES (NULL, '$username', '$email', '".md5($_POST['password'])."')";
     $db->query($sql);
-
-    $_SESSION['username'] = $username;
-    $_SESSION['email'] = $email;
-    $_SESSION['password'] = md5($_POST['password']);
+    $sql = "SELECT * FROM user WHERE `username` = '$username'";
+    $res = $db->query($sql);
+    while($row = mysqli_fetch_object($res)) {
+        $_SESSION['username'] = $row->username;
+        $_SESSION['userID'] = $row->id;
+        header("Location: index.php");
+    }
 
     header("Location: index.php");
 

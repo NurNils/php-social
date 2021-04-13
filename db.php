@@ -13,7 +13,7 @@ $db->set_charset("utf8");
 // Create tables
 $db->query("CREATE TABLE IF NOT EXISTS `user` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
-    `username` varchar(100) NOT NULL,
+    `username` varchar(100) NOT NULL UNIQUE,
     `password` varchar(100) NOT NULL,
     `email` varchar(100) NOT NULL UNIQUE,
     `avatar` varchar(100) DEFAULT NULL,

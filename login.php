@@ -5,10 +5,10 @@ if(isset($_POST['username'])){
 
     $sql = "SELECT * FROM `user` WHERE `username`=\"".htmlspecialchars($_POST['username'])."\" AND `password`=\"".md5( $_POST['password'])."\"";
     $res = $db->query($sql);
-    echo $sql;
     while($row = mysqli_fetch_object($res)) {
         $_SESSION['username'] = $row->username;
         $_SESSION['password'] = $row->password;
+        $_SESSION['userID'] = $row->id;
         header("Location: index.php");
     }
     echo "Falsches Passwort oder Benutzername";

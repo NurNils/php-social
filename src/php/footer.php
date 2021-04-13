@@ -6,5 +6,6 @@
 </footer>
     <script src="src/js/jquery.js"></script>
     <script src="src/js/bootstrap.min.js" ></script>
+    <script src="src/js/script.js"></script>
 </body>
 </html>
