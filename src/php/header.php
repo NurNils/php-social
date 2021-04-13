@@ -39,6 +39,9 @@ if(!isset($isLogin)) {
         <li class="nav-item">
           <a class="nav-link '. ($currentpage == "post" ? 'active' : '') .'" href="post.php">Post erstellen</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link '. ($currentpage == "info" ? 'active' : '') .'" href="info.php">Info</a>
+        </li>
       </ul>
       <a href="profile.php?user='.$_SESSION['username'].'">
         <img src="assets/images/cat.jpg" class="form-inline my-2 mr-3 my-lg-0" id="profile-pic"/>
