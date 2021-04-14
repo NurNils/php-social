@@ -71,7 +71,7 @@ function showPostTime($time){
             </div>
         </div>
         <div class="col main-content">
-            <div class="">
+            <div class="center-div">
                 <div class="starter-template">
                     <h1>Feed</h1>
                     <p class="lead">Hier stehen alle neuen Posts</p>
@@ -79,15 +79,28 @@ function showPostTime($time){
                         $sql = "SELECT post.*, user.username FROM post, user WHERE user.id=post.userID";
                         $res = $db->query($sql);
                         while($row = mysqli_fetch_object($res)) {
+                            $sql = "SELECT ((SELECT COUNT(*) FROM feedback WHERE `like` = 1 AND postID = ".$row->id.") - (SELECT COUNT(*) FROM feedback WHERE `like` = 0 AND postID = ".$row->id.")) AS ergebnis";
+                            if($row2 = mysqli_fetch_object($db->query($sql))) {
+                                $likecount = $row2->ergebnis;
+                            }
+                            $sql = "SELECT * FROM feedback WHERE postID = ".$row->id." AND userID = ".$_SESSION['userID'];
+                            $liked = NULL;
+                            if($row2 = mysqli_fetch_object($db->query($sql))) {
+                                $liked = $row2->like;
+                            }
                             echo('
                             <div class="card post" style="width: 18rem;">
                                 <div class="card-body">
-                                    <h5 class="card-title">'.$row->username.'</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">'.showPostTime($row->postDate).'</h6>
+                                    <h5 class="card-title post-username">'.$row->username.' <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .showPostTime($row->postDate).'</span></h5>
                                     <p class="card-text">'.$row->content.'</p>
-                                    <span onclick="feedback(1, '.$_SESSION['userID'].', '.$row->id.')" id="like-btn'.$row->id.'" class="text-primary material-icons feedback">thumb_up</span>
-                                    <span onclick="feedback(0, '.$_SESSION['userID'].', '.$row->id.')" id="dislike-btn'.$row->id.'" class="text-primary material-icons feedback">thumb_down</span>
-                                    <a href="#" class="card-link" style="float: right"><span class="material-icons">reply</span></a>
+                                    <img src="assets/images/cat.jpg" class="post-media"/><br><br>
+                                    <span onclick="feedback(1, '.$_SESSION['userID'].', '.$row->id.')" id="like-btn'.$row->id.'" class="material-icons feedback text-primary '.($liked == "1" ? 'text-success' : '').'">thumb_up</span>
+                                    <span class="like-count text-primary" id="like-count'.$row->id.'">'.$likecount.'</span>
+                                    <span onclick="feedback(0, '.$_SESSION['userID'].', '.$row->id.')" id="dislike-btn'.$row->id.'" class="text-primary material-icons feedback '.($liked == "0" ? 'text-danger' : '').'">thumb_down</span>
+                                    <div class="reply">
+                                        <span class="material-icons text-success">reply</span>
+                                        <span class="reply-count text-success">1337</span>
+                                    </div>
                                 </div>
                             </div>
                             ');
