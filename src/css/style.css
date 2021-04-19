@@ -243,6 +243,114 @@ body {
     color: rgb(27, 149, 224);
 }
 
+.profile {
+    margin: 0 10px;
+}
+.avatar {
+    height: 150px;
+    width: 150px;
+    border-radius: 100px;
+    border-style: solid;
+    border-color: grey;
+    display: block;
+    position: absolute;
+    margin-top: -75px;
+}
+
+.banner {
+    width: 100%;
+}
+
+.profile-actions {
+    padding: 10px 0;
+    text-align: right;
+}
+
+.profile-actions button {
+    padding: 10px 15px;
+    font-weight: bold;
+    background-color: transparent;
+    color: rgb(27, 149, 224);
+    border-style: solid;
+    border-color: rgb(27, 149, 224);
+    border-radius: 40px;
+    font-size: 26px;
+}
+
+.profile-actions .following {
+    color: white;
+    background-color: rgb(27, 149, 224);
+}
+
+.profile-displayname {
+    font-size: 32px;
+    margin: 0;
+    line-height: 33px;
+}
+
+.profile-displayname .verified-follow {
+    margin-left: 2px;
+}
+
+.profile-username {
+    margin: 0;
+    color: grey;
+}
+
+.profile-description {
+    margin: 5px 0;
+}
+
+.profile-registered {
+    color: grey;
+}
+
+.profile-followerinfo {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.profile-following {
+    margin-right: 20px;
+}
+
+.profile-following, .profile-userfollowers {
+    font-size: 18px;
+}
+
+.tab {
+    overflow: hidden;
+    width: 100%;
+}
+
+.tab button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+    color: grey;
+    width: 24%;
+}
+
+.tab button:hover {
+    color: rgb(27, 149, 224);
+}
+
+.tab button.active {
+    border-bottom-style: solid;
+    border-bottom-color: rgb(27, 149, 224);
+    color: rgb(27, 149, 224);
+    font-weight: bold;
+}
+  
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+}
+
 @font-face {
     font-family: 'Roboto thin';
     src: url('Roboto-Thin.ttf');
