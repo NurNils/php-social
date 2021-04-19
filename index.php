@@ -44,7 +44,7 @@ function showPostTime($time){
         <div class="col-2 side">
             <div class="sidebar">
                 <div class="personal">
-                    <p>Banner</p>
+                    <img src="assets/images/cat.jpg" class="banner"/>
                     <img src="assets/images/cat.jpg" class="profile-pic-side"/>
                     <b><?php echo ($_SESSION['username']); ?></b>
                     <b class="material-icons verified-follow"><?php echo ($_SESSION['verified'] ? 'verified' : ''); ?></b><br><br>

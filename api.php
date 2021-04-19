@@ -1,14 +1,12 @@
 <?php
-
-if(isset($_GET['token'])) {
+session_start();
+if(isset($_SESSION['username'])) {
     if(isset($_GET['like']) && isset($_GET['userID']) && isset($_GET['postID'])) {
         include('db.php');
         $like = mysqli_real_escape_string($db, $_GET['like']);
-        $token = mysqli_real_escape_string($db, $_GET['token']);
         $userID = mysqli_real_escape_string($db, $_GET['userID']);
         $postID = mysqli_real_escape_string($db, $_GET['postID']);
         if($like != "1" && $like != "0") die("Wrong parameters");
-        // TODO: Validate UserID/PostID/Token
         $sql = "SELECT * FROM feedback WHERE `userID`=\"".$userID."\" AND `postID`=\"".$postID."\"";
         if($row = mysqli_fetch_object($db->query($sql))) {
             // User liked/disliked already

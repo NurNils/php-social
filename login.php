@@ -10,13 +10,22 @@ if(isset($_POST['username'])){
         $_SESSION['password'] = $row->password;
         $_SESSION['userID'] = $row->id;
         $_SESSION['verified'] = $row->verified;
+        $_SESSION['token'] = "123xxx123";
+        $secret = "55";
+        $GLOBALS['test'] = 1;
+        // TODO generate Token and secret to validate token
         header("Location: index.php");
     }
-    echo "Falsches Passwort oder Benutzername";
+    makeLoginForm(true);
 
 } elseif(isset($_SESSION['username'])) {
     header("Location: index.php");
 } else {
+    makeLoginForm();
+    include('src/php/footer.php');
+}
+
+function makeLoginForm($isWrong = false) {
     echo '
     <div class="center-center">
         <form action="login.php" method="post">
@@ -24,13 +33,13 @@ if(isset($_POST['username'])){
             <input type="text" name="username">
             <br>
             <label>Passwort: </label><br>
-            <input type="password" name="password">
+            <input type="password" name="password"><br>
+            '.($isWrong ? '<span class="text-danger">Falscher Benutzername <br> oder Passwort</span>' : '').'
             <br><br>
             <input class="btn btn-primary btn-lg" type="submit" value="Login">
         </form>
         <p>Kein Profil? Jetzt <a href="register.php">registrieren</a></p>
     </div>
     ';
-    include('src/php/footer.php');
 }
 ?>

@@ -7,7 +7,7 @@ if(localStorage.getItem('light')) {
 function feedback(like, userID, postID){
     const request = new XMLHttpRequest();
     // TODO Add token
-    request.open('GET', `http://localhost/api.php?token=1&userID=${userID}&postID=${postID}&like=${like}`);
+    request.open('GET', `http://localhost/api.php?userID=${userID}&postID=${postID}&like=${like}`);
     // request.setRequestHeader('Authorization', `Basic ${getToken()}`);
     request.setRequestHeader('Accept', 'text/plain');
     request.responseType = 'json';
