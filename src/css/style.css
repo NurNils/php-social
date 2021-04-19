@@ -32,14 +32,43 @@
 .post {
     margin: 1em 0;
     width: 80% !important;
-    font-family: 'Roboto thin';
+    font-family: 'Roboto medium';
     font-size: 15px;
 }
-.post-username {
+.post-headline {
     font-family: 'Roboto medium';  
+
 }
+
+.post-username {
+    color: white;
+}
+.post-username:hover {
+    cursor: pointer;
+    text-decoration: underline white;
+    color: white;
+}
+.post-content {
+    margin-left: 2.5vw;
+    margin-top: -2.5vw;
+}
+.posted-profile-pic {
+    border-radius: 100%;
+    object-fit: cover;
+    height: 2.5vw;
+    position: relative;
+    top: 1.5em;
+    margin-left: 0.5em;
+    width: 2.5vw;
+}
+
+.posted-profile-pic:hover {
+    cursor: pointer;
+    opacity: 80%;
+}
+
 .personal {
-    background-color: #727272;
+    /* background-color: #727272; */
     border-radius: 5px;
 }
 .center-center {
@@ -57,42 +86,21 @@
     width: 40px;
     height: 40px;
     border-radius: 100%;
-}
-
-@font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: url(https://example.com/MaterialIcons-Regular.eot);
-    src: local('Material Icons'),
-      local('MaterialIcons-Regular'),
-      url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
-      url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
-      url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
-  }
-
-.material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: 'liga';
+    object-fit: cover;
 }
 
 .feedback:hover{
     cursor: pointer;
-    color: yellow;
     opacity: 80%;
+}
+
+.reply-icon:hover{
+    cursor: pointer;
+    opacity: 80%;
+    text-decoration: none;
+}
+.reply-icon {
+    text-decoration: none;
 }
 
 .feedback {
@@ -126,6 +134,110 @@
     float: right;
 }
 
+.custom-switch {
+    margin-right: 10px;
+}
+.custom-control-label {
+    filter: contrast(1.337) grayscale();
+}
+.profile-pic-side {
+    object-fit: cover;
+    height: 2.5vw;
+    width: 2.5vw;
+    border-radius: 100%;
+}
+body {
+    font-family: 'Roboto medium';
+}
+.profile-pic-follow {
+    object-fit: cover;
+    height: 2.5vw;
+    width: 2.5vw;
+    border-radius: 100%;
+}
+.verified-follow {
+    font-size: 1em !important;
+    position: relative;
+    top: 0.4vh;
+}
+
+
+.searchbar, .searchbar-main{
+    height: 40px;
+    background-color: #353b48;
+    border-radius: 30px;
+    margin-right: 10px;
+}
+
+.searchbar-main {
+    width: 75%;
+    margin-left: 5%;
+}
+
+.arrow-back {
+    width: 5%;
+    float: left;
+    margin: 0.15em 0;
+    font-size: 32px !important;
+}
+.arrow-back:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.search_input{
+    color: white;
+    border: 0;
+    outline: 0;
+    background: none;
+    width: 0;
+    caret-color:transparent;
+    line-height: 30px;
+    transition: width 0.4s linear;
+}
+
+.search_input-main{
+    color: white;
+    border: 0;
+    outline: 0;
+    background: none;
+    caret-color:red;
+    line-height: 30px;
+    padding: 3px 13px;
+}
+
+.searchbar:hover > .search_input{
+    width: 200px;
+    caret-color:red;
+    transition: width 0.4s linear;
+    padding: 3px 13px;
+}
+
+.search-form {
+    margin: 0;
+}
+
+.search_icon, .fa-search{
+    height: 40px;
+    width: 40px;
+    float: right;
+    border-radius: 50%;
+    color:white;
+    text-decoration:none;
+    padding: 7px;
+}
+
+.hashtag, .username, .content-link{
+    color: rgb(27, 149, 224);
+}
+
+.hashtag:hover, .username:hover, .content-link:hover {
+    cursor: pointer;
+    opacity: 80%;
+    text-decoration: underline;
+    color: rgb(27, 149, 224);
+}
+
 @font-face {
     font-family: 'Roboto thin';
     src: url('Roboto-Thin.ttf');
@@ -133,4 +245,34 @@
 @font-face {
     font-family: 'Roboto medium';
     src: url('Roboto-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://example.com/MaterialIcons-Regular.eot);
+    src: local('Material Icons'),
+      local('MaterialIcons-Regular'),
+      url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
+      url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
+      url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
+  }
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
 }

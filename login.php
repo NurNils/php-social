@@ -9,6 +9,7 @@ if(isset($_POST['username'])){
         $_SESSION['username'] = $row->username;
         $_SESSION['password'] = $row->password;
         $_SESSION['userID'] = $row->id;
+        $_SESSION['verified'] = $row->verified;
         header("Location: index.php");
     }
     echo "Falsches Passwort oder Benutzername";

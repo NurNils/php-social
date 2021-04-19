@@ -4,7 +4,7 @@ include('src/php/header.php');
 
 if(isset($_GET['user'])){
 
-    $sql = "SELECT * FROM login WHERE username='" . htmlspecialchars($_GET['user']) . "'";
+    $sql = "SELECT * FROM user WHERE username='" . htmlspecialchars($_GET['user']) . "'";
     $res = $db->query($sql);
 
     while($row = mysqli_fetch_object($res)) {

@@ -15,6 +15,7 @@ if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password
     while($row = mysqli_fetch_object($res)) {
         $_SESSION['username'] = $row->username;
         $_SESSION['userID'] = $row->id;
+        $_SESSION['verified'] = $row->verified;
         header("Location: index.php");
     }
 

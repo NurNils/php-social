@@ -12,9 +12,6 @@ if (!isset($isLogin) && !isset($_SESSION['username'])) {
 <!-- Bootstrap Css -->
 <link rel="stylesheet" href="src/css/bootstrap.min.css">
 
-<!-- Bootstrap Theme -->
-<link rel="stylesheet" href="src/css/bootstrap.css">
-
 <link rel="stylesheet" href="src/css/style.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -43,6 +40,16 @@ if(!isset($isLogin)) {
           <a class="nav-link '. ($currentpage == "info" ? 'active' : '') .'" href="info.php">Info</a>
         </li>
       </ul>
+      <form method="get" action="index.php" class="search-form">
+        <div class="searchbar">
+          <input class="search_input" type="text" pattern="#[a-zA-Z0-9]+" name="query" placeholder="Search...">
+          <span class="material-icons fas fa-search">search</span>
+        </div>
+      </form>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="light-dark-switch" data-onstyle="warning" onclick="modeChange()">
+        <label class="custom-control-label" id="light-dark-label" for="light-dark-switch"><span class="material-icons" id="light-dark-icon">wb_sunny</span></label>
+      </div>
       <a href="profile.php?user='.$_SESSION['username'].'">
         <img src="assets/images/cat.jpg" class="form-inline my-2 mr-3 my-lg-0" id="profile-pic"/>
       </a>
