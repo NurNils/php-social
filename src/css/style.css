@@ -40,6 +40,9 @@
     font-family: 'Roboto medium';
     font-size: 15px;
 }
+.post-in-profile {
+    margin: 1em auto;
+}
 .post-headline {
     font-family: 'Roboto medium';  
 
