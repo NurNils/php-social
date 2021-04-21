@@ -21,38 +21,31 @@ $userfollowing = $row->ergebnis;
         <div class="col-2 side">
             <div class="sidebar">
                 <div class="personal">
-                    <img src="assets/images/cat.jpg" class="banner"/>
-                    <img src="assets/images/cat.jpg" class="profile-pic-side"/>
-                    <b><?php echo ($_SESSION['username']); ?></b>
-                    <b class="material-icons verified-follow"><?php echo ($_SESSION['verified'] ? 'verified' : ''); ?></b><br><br>
-                    <div class="row center">
-                        <div class="col">
-                            Posts
+                    <div class="profile-side-info">
+                        <img src="assets/images/cat.jpg" class="profile-pic-side"/>
+                        <b><?php echo ($_SESSION['username']); ?></b>
+                        <b class="material-icons verified-follow"><?php echo ($_SESSION['verified'] ? 'verified' : ''); ?></b>
+                        <div class="row">
+                            <div class="col profile-info-row-content">
+                                <?php echo($userposts); ?>
+                            </div>
+                            <div class="col profile-info-row-content">
+                                <?php echo($userfollowers); ?>
+                            </div>
+                            <div class="col profile-info-row-content">
+                                <?php echo($userfollowing); ?>
+                            </div>
+                        </div>           
+                        <div class="row">
+                            <div class="col profile-info-row">Posts </div>
+                            <div class="col profile-info-row">Follower</div>
+                            <div class="col profile-info-row">Folge ich</div>
                         </div>
-                        <div class="col">
-                            Folger
-                        </div>
-                        <div class="col">
-                            Folge ich
-                        </div>
-                    </div>
-                    <div class="row center">
-                        <div class="col">
-                            <?php echo($userposts); ?>
-                        </div>
-                        <div class="col">
-                            <?php echo($userfollowers); ?>
-                        </div>
-                        <div class="col">
-                            <?php echo($userfollowing); ?>
-                        </div>
-                    </div>
+                    </div>        
+                    <a href="post.php" class="profile-info-button">Neuen Post erstellen</a>
                 </div>
-                <br><br>
-                <a href="post.php" class="btn btn-primary">Neuer post</a><br>
-                <br><br>
                 <div class="following">
-                    <h3>Ich folge</h3><br>
+                    <h3>Folge ich:</h3><br>
                     <?php
                     $sql = "SELECT * FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=".$_SESSION['userID'];
                     $res = $db->query($sql);

@@ -24,13 +24,21 @@ if(isset($_GET['user'])){
         echo('
         <div class="container main-content">
             <div>
-                <img class="banner" src="assets/images/cat2.png' . $row->banner . '">
+                '. ($_GET['user'] == $_SESSION['username'] ? '
+                <form style="display: none;" id="edit-banner" method="POST" action="upload.php" enctype="multipart/form-data">
+                    <input type="file" id="file-upload" name="uploadedFile"><br>
+                    <input type="submit" name="uploadBtn" value="hochladen" />
+                </form>' : '').'<img class="banner" src="assets/images/cat2.png' . $row->banner . '">
             </div>
             <div class="profile">
                 <img class="avatar" src="assets/images/cat2.png' . $row->avatar . '">
-
+                '. ($_GET['user'] == $_SESSION['username'] ? '
+                <form style="display: none;" id="edit-avatar" method="POST" action="upload.php" enctype="multipart/form-data">
+                    <input type="file" id="file-upload" name="uploadedFile"><br>
+                    <input type="submit" name="uploadBtn" value="hochladen" />
+                </form>' : '').'
                 <div class="profile-actions">
-                    '. ($_GET['user'] == $_SESSION['username'] ? '<button>Profil bearbeiten</button>' : ($isFollowing ? '<button class="following">Folge ich</button>' : '<button>Folgen</button>')) . ' 
+                    '. ($_GET['user'] == $_SESSION['username'] ? '<button onclick="activateChangeMode()" id="change-profile">Profil bearbeiten</button>' : ($isFollowing ? '<button class="following" onclick="defollow('.$row->id.')">Folge ich</button>' : '<button onclick="follow('.$row->id.')">Folgen</button>')) . ' 
                 </div>
                 <br><br>
                 <p class="profile-displayname"><b>' . $row->username . '</b>' . ($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '') . '</p>

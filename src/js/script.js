@@ -129,3 +129,23 @@ function openProfileTabs(evt, tabId) {
     document.getElementById(tabId).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
+function activateChangeMode() {
+    if(document.getElementById("edit-banner").style.display == "none") {
+        document.getElementById("edit-banner").style.display = "block";
+        document.getElementById("edit-avatar").style.display = "block";
+        document.getElementById("change-profile").className = "following";
+    } else {
+        document.getElementById("edit-banner").style.display = "none";
+        document.getElementById("edit-avatar").style.display = "none";
+        document.getElementById("change-profile").className = "";
+    }
+}
+
+function follow(userId) {
+    console.log('TODO: FOLLOW', userId);
+}
+
+function defollow(userId) {
+    console.log('TODO: DEFOLLOW', userId);
+}
