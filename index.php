@@ -61,7 +61,7 @@ $userfollowing = $row->ergebnis;
                 </div>
             </div>
         </div>
-        <div class="col main-content">
+        <div class="col">
             <div class="center-div">
                 <div class="starter-template">
                     <?php

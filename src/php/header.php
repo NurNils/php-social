@@ -60,6 +60,7 @@ if(!isset($isLogin)) {
       </form>
     </div>
   </nav>
+  <div class="main-content">
   ');
 }
 ?>

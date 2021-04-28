@@ -43,12 +43,17 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
         if($row2 = mysqli_fetch_object($db->query($sql))) {
             $liked = $row2->like;
         }
-        $changedContent = preg_replace('/(?<= |^)(#[a-zA-Z0-9]+)(?= |$)/', '<span class="hashtag" onclick="search(\'$1\')">$1</span>', $row->content);
-        $changedContent = preg_replace('/(?<= |^)(@[a-z0-9_-]{3,16}+)(?= |$)/', '<span class="username" onclick="openUser(\'$1\')">$1</span>', $changedContent);
-        $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
+        $changedContent = "";
+        if(isset($row->content) && $row->content != "") {
+            $changedContent = preg_replace('/(?<= |^)(#[a-zA-Z0-9]+)(?= |$)/', '<span class="hashtag" onclick="search(\'$1\')">$1</span>', $row->content);
+            $changedContent = preg_replace('/(?<= |^)(@[a-z0-9_-]{3,16}+)(?= |$)/', '<span class="username" onclick="openUser(\'$1\')">$1</span>', $changedContent);
+            $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
+        }
         $posts .= '
       <div class="card '.($inProfile ? 'post-in-profile' : '').' post">
-          <a href="profile.php?user='.$row->username.'"><img src="assets/images/cat2.png" class="posted-profile-pic"/></a>
+          <a href="profile.php?user='.$row->username.'">
+            <img src="assets/images/cat2.png" class="posted-profile-pic"/>
+          </a>
           <div class="card-body post-content">
               <h5 class="card-title post-headline">
                   <a class="post-username"  href="profile.php?user='.$row->username.'">'.$row->username.'</a> 
@@ -56,7 +61,7 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
                   <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .showPostTime($row->postDate).'</span>
               </h5>
               <p class="card-text">'.$changedContent.'</p>
-              <img src="assets/images/cat.jpg" class="post-media"/><br><br>
+              '. (isset($row->media) && $row->media != "" ? "<img src=\"files/post/$row->media\" class=\"post-media\"/><br><br>": "") .'
               <span onclick="feedback(1, '.$_SESSION['userID'].', '.$row->id.')" id="like-btn'.$row->id.'" class="material-icons feedback text-primary '.($liked == "1" ? 'text-success' : '').'">thumb_up</span>
               <span class="like-count text-primary" id="like-count'.$row->id.'">'.$likecount.'</span>
               <span onclick="feedback(0, '.$_SESSION['userID'].', '.$row->id.')" id="dislike-btn'.$row->id.'" class="text-primary material-icons feedback '.($liked == "0" ? 'text-danger' : '').'">thumb_down</span>
@@ -73,9 +78,9 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
 
 function getAllowedFileExtensions($destinationFolder){
     switch($destinationFolder){
-        case "chat": return array('jpg', 'gif', 'png', 'zip', 'txt', 'xls', 'doc');
+        case "chat": return array('jpg', 'gif', 'png');
         case "profile":
-        case "post": return array('jpg', 'gif', 'png');
+        case "post": return array('jpg', 'gif', 'png', 'jpeg', 'mp4', 'mp3', 'avi', 'svg');
         default: echo $destinationFolder . " ist kein erlaubter destinationFolder.";
     }
 }
@@ -102,7 +107,7 @@ function uploadFile($uploadedFile, $destinationFolder){
             $dest_path = $uploadFileDir . $newFileName;
             if(move_uploaded_file($fileTmpPath, $dest_path)) {
                 $message ='File is successfully uploaded.';
-                return $dest_path;
+                return $newFileName;
             } else {
                 $message = 'There was some error moving the file to upload directory. Please make sure the upload directory is writable by web server.';
             }

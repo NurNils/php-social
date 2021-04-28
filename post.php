@@ -1,40 +1,35 @@
 <?php
-
 $currentpage = "post";
 include('src/php/header.php');
 
-echo '<br><br><br><br><br><br><br>';
+$error = "";
+if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
 
-if(isset($_POST['textContent']) ||  isset($_POST['uploadedFile'])){
-
-    $textContent = "NULL";
-    if(isset($_POST['textContent'])){
-        $textContent = mysqli_real_escape_string($db, $_POST['textContent']);
+    $postContent = "NULL";
+    if(isset($_POST['postContent'])){
+        $postContent = "'" . mysqli_real_escape_string($db, $_POST['postContent']) . "'";
     }
+
+    $referencedPost = "NULL";
+    if(isset($_POST['refPost'])){
+        $referencedPost = "'" . mysqli_real_escape_string($db, $_POST['refPost']) . "'";
+    }
+
     $media = "NULL";
-
-    //echo($_POST['uploadedFile']);
-    //var_dump($_FILES);
-    //echo($_FILES["uploadedFile"]);
-    //echo($_POST['uploadedFile']);
-
     if(isset($_FILES['uploadedFile'])){
         try{
-            echo("test");
             $media = "'" . uploadFile($_FILES["uploadedFile"], 'post') . "'";
         }catch(Exception $e){
-            echo("test2");
-            echo 'Fehler beim Fileupload: ' .  $e->getMessage() . "\n";
+            $error = $e->getMessage();
         }
     }
-    echo($media);
 
-    $sql = "INSERT INTO `post` (`id`, `userID`, `referencedPostID`, `content`, `media`, `postDate`) 
-            VALUES (NULL, '" . $_SESSION['userID'] . "', NULL , '$textContent', $media, NULL)";
-
-    $db->query($sql);
-
-    header("Location: index.php");
+    if($error == "") {
+        $sql = "INSERT INTO `post` (`userID`, `referencedPostID`, `content`, `media`) 
+        VALUES ('" . $_SESSION['userID'] . "', $referencedPost , $postContent, $media)";
+        $db->query($sql);
+        header("Location: index.php");
+    }
 }
 
 echo '
@@ -42,11 +37,11 @@ echo '
         <h3>Post erstellen:</h3>
         <form enctype="multipart/form-data" action="post.php" method="post">
             <br>
-            <label for="textContent">Content: </label>
-            <textarea id="textContent" name="textContent"></textarea>
+            <label for="postContent">Content: </label>
+            <textarea maxlength="280" id="postContent" name="postContent"></textarea>
             <br><br>
             <input type="file" id="file-upload" name="uploadedFile"><br>
-            <br>
+            <p class="text-danger">'.$error.'</p>
             <input class="btn btn-primary btn-lg" type="submit" value="Pfostieren!">
         </form>
     </div>

@@ -4,7 +4,7 @@ include('src/php/header.php');
 
 ?>
 
-<div class="container main-content">
+<div class="container">
     <h1>DHBW Social</h1>
     <p>
         Willkommen zu unserem PHP-Projekt "PHP-Social" - Eine Abwandlung der bekannten Social-Media Plattform Twitter.

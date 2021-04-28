@@ -34,7 +34,7 @@ if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
         $isFollowing = $row2->ergebnis > 0 ? true : false;
 
         echo('
-        <div class="container main-content">
+        <div class="container">
             <div>
                 '. ($_GET['user'] == $_SESSION['username'] ? '
                 <form style="display: none;" id="edit-banner" method="POST" action="upload.php" enctype="multipart/form-data">
@@ -101,7 +101,7 @@ if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
         $counter++;
     }
     if($counter == 0) {
-        echo("<div class='main-content'>ff</div>");
+        echo("ff");
     }
 } else{
     echo('Undefined User');

@@ -30,7 +30,7 @@
     height: 15vh;
     object-fit: cover;
 }
-.main-content, .sidebar {
+.main-content {
     margin-top: 8vh;
     margin-bottom: 40px;
 }
@@ -397,6 +397,13 @@ body {
 .tabcontent {
     display: none;
     padding: 6px 12px;
+}
+
+#postContent {
+    resize: none;
+    width: 50vw;
+    min-height: 15vh;
+    font-family: 'Roboto medium';
 }
 
 @font-face {

@@ -1,4 +1,4 @@
-
+</div>
 <footer class="footer">
     <div class="container center">
         <span>© LMF.software</span>
