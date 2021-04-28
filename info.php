@@ -1,6 +1,7 @@
 <?php 
 $currentpage = "info";
-include('src/php/header.php'); 
+include('src/php/header.php');
+
 ?>
 
 <div class="container main-content">

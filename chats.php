@@ -3,13 +3,15 @@
 $currentpage = "chats";
 include('src/php/header.php');
 
-echo('
-<form method="POST" action="chats.php" enctype="multipart/form-data">
-    <input type="file" id="file-upload" name="uploadedFile"><br>
-    <input type="submit" name="uploadBtn" value="Upload" />
-</form>
-');
+$message = '';
 
+    echo('
+    <form method="POST" action="upload.php" enctype="multipart/form-data">
+        <input type="file" id="file-upload" name="uploadedFile"><br>
+        <input type="submit" name="uploadBtn" value="Upload" />
+        <input type="hidden" value="chat" name="destinationFolder">
+    </form>
+  ');
 
 ?>
 

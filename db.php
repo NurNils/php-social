@@ -30,7 +30,7 @@ $db->query("CREATE TABLE IF NOT EXISTS `post` (
     `referencedPostID` int(11) DEFAULT NULL,
     `content` varchar(280) DEFAULT NULL,
     `media` varchar(100) DEFAULT NULL,
-    `postDate` DATETIME DEFAULT NOW(),
+    `postDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`userID`) REFERENCES user(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`referencedPostID`) REFERENCES post(`id`) ON DELETE NO ACTION 

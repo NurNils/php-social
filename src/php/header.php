@@ -1,80 +1,10 @@
 <?php
 include('db.php');
+include ('functions.php');
 
 session_start();
 if (!isset($isLogin) && !isset($_SESSION['username'])) {
     header('Location: login.php');
-}
-function showPostTime($time){
-  $time = strtotime($time);
-  $now = strtotime(date("Y-m-d H:i:s"));
-  $diff = $now - $time;
-  if($diff - 60 < 0) {
-      // Show seconds
-      return $diff." sek";
-  } elseif ($diff - 60*60 < 0) {
-      // Show minutes
-      return round($diff/60)." min";
-  } elseif ($diff - 60*60*24 < 0) {
-      // Show hours
-      return round($diff/60/60)." std";
-  } elseif (strftime("%Y", $time) == strftime("%Y", $now)) {
-      // Show date
-      return strftime("%d %h", $time);
-  } else {
-      // Show date and year
-      return strftime("%d %h %y", $time);
-  }
-}
-
-function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin = "") {
-  if($userid == -1) {
-      $sql = "SELECT post.*, user.username, user.verified FROM post, user WHERE user.id=post.userID $query ORDER BY post.postDate DESC";
-  } else {
-      $sql = "SELECT post.*, user.username, user.verified FROM post INNER JOIN user ON user.id = post.userID $secondJoin WHERE post.userID=".$userid." $query ORDER BY post.postDate DESC";
-  }
-  $res = $db->query($sql);
-  $posts = "";
-  while($row = mysqli_fetch_object($res)) {
-      $sql = "SELECT ((SELECT COUNT(*) FROM feedback WHERE `like` = 1 AND postID = ".$row->id.") - (SELECT COUNT(*) FROM feedback WHERE `like` = 0 AND postID = ".$row->id.")) AS ergebnis";
-      if($row2 = mysqli_fetch_object($db->query($sql))) {
-          $likecount = $row2->ergebnis;
-      }
-      $sql = "SELECT COUNT(*) AS ergebnis FROM post WHERE referencedPostID = ".$row->id;
-      if($row2 = mysqli_fetch_object($db->query($sql))) {
-          $replycount = $row2->ergebnis;
-      }
-      $sql = "SELECT * FROM feedback WHERE postID = ".$row->id." AND userID = ".$_SESSION['userID'];
-      $liked = NULL;
-      if($row2 = mysqli_fetch_object($db->query($sql))) {
-          $liked = $row2->like;
-      }
-      $changedContent = preg_replace('/(?<= |^)(#[a-zA-Z0-9]+)(?= |$)/', '<span class="hashtag" onclick="search(\'$1\')">$1</span>', $row->content);
-      $changedContent = preg_replace('/(?<= |^)(@[a-z0-9_-]{3,16}+)(?= |$)/', '<span class="username" onclick="openUser(\'$1\')">$1</span>', $changedContent);
-      $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
-      $posts .= '
-      <div class="card '.($inProfile ? 'post-in-profile' : '').' post">
-          <a href="profile.php?user='.$row->username.'"><img src="assets/images/cat2.png" class="posted-profile-pic"/></a>
-          <div class="card-body post-content">
-              <h5 class="card-title post-headline">
-                  <a class="post-username"  href="profile.php?user='.$row->username.'">'.$row->username.'</a> 
-                  '.($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '').'
-                  <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .showPostTime($row->postDate).'</span>
-              </h5>
-              <p class="card-text">'.$changedContent.'</p>
-              <img src="assets/images/cat.jpg" class="post-media"/><br><br>
-              <span onclick="feedback(1, '.$_SESSION['userID'].', '.$row->id.')" id="like-btn'.$row->id.'" class="material-icons feedback text-primary '.($liked == "1" ? 'text-success' : '').'">thumb_up</span>
-              <span class="like-count text-primary" id="like-count'.$row->id.'">'.$likecount.'</span>
-              <span onclick="feedback(0, '.$_SESSION['userID'].', '.$row->id.')" id="dislike-btn'.$row->id.'" class="text-primary material-icons feedback '.($liked == "0" ? 'text-danger' : '').'">thumb_down</span>
-              <div class="reply">
-                  <a href="post.php?refPost='.$row->id.'" class="material-icons text-success reply-icon">reply</a>
-                  <span class="reply-count text-success">'.$replycount.'</span>
-              </div>
-          </div>
-      </div>
-      ';
-  }
-  return $posts != "" ? $posts : "<br><h3 class='center'>Keine Posts gefunden :(</h3>";
 }
 
 ?>
