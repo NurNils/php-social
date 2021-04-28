@@ -2,7 +2,19 @@
 $currentpage = "profile";
 include('src/php/header.php');
 
-if(isset($_GET['user'])){
+if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
+    $username = mysqli_real_escape_string($db, $_GET['user']);
+    $userID = mysqli_real_escape_string($db, $_GET['userID']);
+    $follow = mysqli_real_escape_string($db, $_GET['follow']);
+
+    if($follow == "true") {
+        $sql = "DELETE FROM follows WHERE `userID` = ".$_SESSION['userID']." AND `following` = $userID";
+    } else {
+        $sql = "INSERT INTO follows (`userID`, `following`, `followDate`) VALUES (".$_SESSION['userID'].", $userID, NULL)";
+    }
+    $db->query($sql);
+    header("Location: profile.php?user=".$username);
+} else if(isset($_GET['user'])){
 
     $sql = "SELECT * FROM user WHERE username='" . htmlspecialchars($_GET['user']) . "'";
     $res = $db->query($sql);
@@ -38,7 +50,18 @@ if(isset($_GET['user'])){
                     <input type="submit" name="uploadBtn" value="hochladen" />
                 </form>' : '').'
                 <div class="profile-actions">
-                    '. ($_GET['user'] == $_SESSION['username'] ? '<button onclick="activateChangeMode()" id="change-profile">Profil bearbeiten</button>' : ($isFollowing ? '<button class="following" onclick="defollow('.$row->id.')">Folge ich</button>' : '<button onclick="follow('.$row->id.')">Folgen</button>')) . ' 
+                    '. ($_GET['user'] == $_SESSION['username'] 
+                        ? '<button onclick="activateChangeMode()" id="change-profile">Profil bearbeiten</button>' 
+                        : '<form> 
+                            <input type="hidden" name="user" value="'.$row->username.'">
+                            <input type="hidden" name="userID" value="'.$row->id.'">' . 
+                            ($isFollowing 
+                                ? '<button type="submit" class="following">Folge ich</button>
+                                    <input type="hidden" name="follow" value="true">' 
+                                : '<button type="submit">Folgen</button>
+                                    <input type="hidden" name="follow" value="false">'
+                            ) . '</form>'
+                        ) . '
                 </div>
                 <br><br>
                 <p class="profile-displayname"><b>' . $row->username . '</b>' . ($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '') . '</p>
