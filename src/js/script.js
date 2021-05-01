@@ -7,10 +7,9 @@ if(localStorage.getItem('light')) {
 function feedback(like, userID, postID){
     const request = new XMLHttpRequest();
     // TODO Add token
-    request.open('GET', `http://localhost/api.php?userID=${userID}&postID=${postID}&like=${like}`);
+    request.open('GET', `http://localhost/api.php?postID=${postID}&like=${like}`);
     // request.setRequestHeader('Authorization', `Basic ${getToken()}`);
     request.setRequestHeader('Accept', 'text/plain');
-    request.responseType = 'json';
     
     request.onreadystatechange = function() {
       if(request.readyState == 4) {
@@ -142,10 +141,26 @@ function activateChangeMode() {
     }
 }
 
-function follow(userId) {
-    console.log('TODO: FOLLOW', userId);
-}
+function deletePost(id) {
+    if(confirm('Wollen Sie diesen Post wirklich löschen?')) {
 
-function defollow(userId) {
-    console.log('TODO: DEFOLLOW', userId);
+        const request = new XMLHttpRequest();
+        // TODO Add token
+        request.open('GET', `http://localhost/api.php?postID=${id}&delete=true`);
+        // request.setRequestHeader('Authorization', `Basic ${getToken()}`);
+        request.setRequestHeader('Accept', 'text/plain');
+        
+        request.onreadystatechange = function() {
+          if(request.readyState == 4) {
+            if(request.status == 200) {
+                document.getElementById('post' + id).remove();
+            } else if(request.status == 401){
+                alert("unauthorized")
+            } else {
+                alert("error")
+            }
+          }
+        };
+        request.send();
+    }
 }

@@ -371,6 +371,11 @@ body {
     width: 100%;
 }
 
+.delete-post {
+    cursor: pointer;
+    float: right;
+}
+
 .tab button {
     background-color: transparent;
     border: none;

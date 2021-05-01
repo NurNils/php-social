@@ -50,7 +50,7 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
             $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
         }
         $posts .= '
-      <div class="card '.($inProfile ? 'post-in-profile' : '').' post">
+      <div class="card '.($inProfile ? 'post-in-profile' : '').' post" id="post'.$row->id.'">
           <a href="profile.php?user='.$row->username.'">
             <img src="assets/images/cat2.png" class="posted-profile-pic"/>
           </a>
@@ -59,6 +59,7 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
                   <a class="post-username"  href="profile.php?user='.$row->username.'">'.$row->username.'</a> 
                   '.($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '').'
                   <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .showPostTime($row->postDate).'</span>
+                  '.(($_SESSION['verified'] || $_SESSION['userID'] == $row->userID) ? '<span class="material-icons delete-post text-danger" onclick="deletePost('.$row->id.')">delete</span>' : '').'
               </h5>
               <p class="card-text">'.$changedContent.'</p>
               '. (isset($row->media) && $row->media != "" ? "<img src=\"files/post/$row->media\" class=\"post-media\"/><br><br>": "") .'

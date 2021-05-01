@@ -1,6 +1,6 @@
 <?php
 include('db.php');
-include ('functions.php');
+include('functions.php');
 
 session_start();
 if (!isset($isLogin) && !isset($_SESSION['username'])) {
