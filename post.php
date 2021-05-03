@@ -30,10 +30,15 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
         $db->query($sql);
         header("Location: index.php");
     }
+} else {
+    if(isset($_GET['refPost'])){
+        $refPost = mysqli_real_escape_string($db, $_GET['refPost']);
+        echo(getPostById($refPost, $db));
+    }
 }
 
 echo '
-    <div class="center-center">
+    <div class="">
         <h3>Post erstellen:</h3>
         <form enctype="multipart/form-data" action="post.php" method="post">
             <br>
@@ -41,6 +46,7 @@ echo '
             <textarea maxlength="280" id="postContent" name="postContent"></textarea>
             <br><br>
             <input type="file" id="file-upload" name="uploadedFile"><br>
+            '.( isset($_GET['refPost']) ? '<input type="hidden" name="refPost" value="'.$_GET['refPost'].'"/>' : '').'
             <p class="text-danger">'.$error.'</p>
             <input class="btn btn-primary btn-lg" type="submit" value="Pfostieren!">
         </form>

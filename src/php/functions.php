@@ -77,6 +77,37 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
     return $posts != "" ? $posts : "<br><h3 class='center'>Keine Posts gefunden :(</h3>";
 }
 
+function getPostById($postID, $db) {
+    $sql = "SELECT post.*, user.username, user.verified FROM post, user WHERE user.id=post.userID AND post.id = $postID";
+    $post = "";
+    while($row = mysqli_fetch_object($db->query($sql))) {
+        $changedContent = "";
+        if(isset($row->content) && $row->content != "") {
+            $changedContent = preg_replace('/(?<= |^)(#[a-zA-Z0-9]+)(?= |$)/', '<span class="hashtag" onclick="search(\'$1\')">$1</span>', $row->content);
+            $changedContent = preg_replace('/(?<= |^)(@[a-z0-9_-]{3,16}+)(?= |$)/', '<span class="username" onclick="openUser(\'$1\')">$1</span>', $changedContent);
+            $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
+        }
+        $post = '
+        <div class="card post" id="post'.$row->id.'">
+            <a href="profile.php?user='.$row->username.'">
+            <img src="assets/images/cat2.png" class="posted-profile-pic"/>
+            </a>
+            <div class="card-body post-content">
+                <h5 class="card-title post-headline">
+                    <a class="post-username"  href="profile.php?user='.$row->username.'">'.$row->username.'</a> 
+                    '.($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '').'
+                    <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .showPostTime($row->postDate).'</span>
+                </h5>
+                <p class="card-text">'.$changedContent.'</p>
+                '. (isset($row->media) && $row->media != "" ? "<img src=\"files/post/$row->media\" class=\"post-media\"/><br><br>": "") .'
+            </div>
+        </div>
+        ';
+        break;
+    }
+    return $post;
+}
+
 function getAllowedFileExtensions($destinationFolder){
     switch($destinationFolder){
         case "chat":
