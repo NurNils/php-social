@@ -79,8 +79,9 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
 
 function getAllowedFileExtensions($destinationFolder){
     switch($destinationFolder){
-        case "chat": return array('jpg', 'gif', 'png');
-        case "profile":
+        case "chat":
+        case "avatar":
+        case "banner": return array('jpg', 'gif', 'png', 'jpeg', 'svg');
         case "post": return array('jpg', 'gif', 'png', 'jpeg', 'mp4', 'mp3', 'avi', 'svg');
         default: echo $destinationFolder . " ist kein erlaubter destinationFolder.";
     }

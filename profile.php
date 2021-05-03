@@ -2,7 +2,28 @@
 $currentpage = "profile";
 include('src/php/header.php');
 
-if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
+if(isset($_POST['user']) && isset($_POST['edit'])){
+    $error = "";
+
+    $description = "NULL";
+    if(isset($_POST['description'])){
+        $description = "'" . mysqli_real_escape_string($db, $_POST['description']) . "'";
+    }
+
+    $avatar = "NULL";
+    if(isset($_FILES['avatar'])){
+        try {
+            $avatar = "'" . uploadFile($_FILES["avatar"], 'avatar') . "'";
+        } catch(Exception $e) {
+            $error = $e->getMessage();
+        }
+    }
+
+    if($error == "") {
+       echo("success");
+    }
+
+} else if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
     $username = mysqli_real_escape_string($db, $_GET['user']);
     $userID = mysqli_real_escape_string($db, $_GET['userID']);
     $follow = mysqli_real_escape_string($db, $_GET['follow']);
@@ -14,8 +35,19 @@ if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
     }
     $db->query($sql);
     header("Location: profile.php?user=".$username);
-} else if(isset($_GET['user'])){
-
+} else if(isset($_GET['user']) && isset($_GET['edit'])){
+    echo('
+    <div>
+    <form enctype="multipart/form-data" action="profile.php" method="post">
+        <h3>Beschreibung bearbeiten</h3>
+        <input type="text" placeholder="Beschreibung" name="description"/><br>
+        <input type="file" id="file-upload" name="avatar"/><br>
+        <input type="hidden" name="user" value="'.$_GET['user'].'"/>
+        <input type="hidden" name="edit" value="1"/>
+        <input type="submit" />
+    </form>
+    </div>');
+} else if(isset($_GET['user'])) {
     $sql = "SELECT * FROM user WHERE username='" . htmlspecialchars($_GET['user']) . "'";
     $res = $db->query($sql);
     $counter = 0;
@@ -35,33 +67,21 @@ if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
 
         echo('
         <div class="container">
-            <div>
-                '. ($_GET['user'] == $_SESSION['username'] ? '
-                <form style="display: none;" id="edit-banner" method="POST" action="upload.php" enctype="multipart/form-data">
-                    <input type="file" id="file-upload" name="uploadedFile"><br>
-                    <input type="submit" name="uploadBtn" value="hochladen" />
-                </form>' : '').'<img class="banner" src="assets/images/cat2.png' . $row->banner . '">
-            </div>
             <div class="profile">
                 <img class="avatar" src="assets/images/cat2.png' . $row->avatar . '">
-                '. ($_GET['user'] == $_SESSION['username'] ? '
-                <form style="display: none;" id="edit-avatar" method="POST" action="upload.php" enctype="multipart/form-data">
-                    <input type="file" id="file-upload" name="uploadedFile"><br>
-                    <input type="submit" name="uploadBtn" value="hochladen" />
-                </form>' : '').'
                 <div class="profile-actions">
-                    '. ($_GET['user'] == $_SESSION['username'] 
-                        ? '<button onclick="activateChangeMode()" id="change-profile">Profil bearbeiten</button>' 
-                        : '<form> 
-                            <input type="hidden" name="user" value="'.$row->username.'">
-                            <input type="hidden" name="userID" value="'.$row->id.'">' . 
-                            ($isFollowing 
-                                ? '<button type="submit" class="following">Folge ich</button>
-                                    <input type="hidden" name="follow" value="true">' 
-                                : '<button type="submit">Folgen</button>
-                                    <input type="hidden" name="follow" value="false">'
-                            ) . '</form>'
-                        ) . '
+                '. ($_GET['user'] == $_SESSION['username'] 
+                    ? '<a href="profile.php?user='.$_GET['user'].'&edit=1"><button id="change-profile">Profil bearbeiten</button></a>' 
+                    : '<form> 
+                        <input type="hidden" name="user" value="'.$row->username.'">
+                        <input type="hidden" name="userID" value="'.$row->id.'">' . 
+                        ($isFollowing 
+                            ? '<button type="submit" class="following">Folge ich</button>
+                                <input type="hidden" name="follow" value="true">' 
+                            : '<button type="submit">Folgen</button>
+                                <input type="hidden" name="follow" value="false">'
+                        ) . '</form>'
+                    ) . '
                 </div>
                 <br><br>
                 <p class="profile-displayname"><b>' . $row->username . '</b>' . ($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '') . '</p>

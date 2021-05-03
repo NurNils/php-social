@@ -17,9 +17,9 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
 
     $media = "NULL";
     if(isset($_FILES['uploadedFile'])){
-        try{
+        try {
             $media = "'" . uploadFile($_FILES["uploadedFile"], 'post') . "'";
-        }catch(Exception $e){
+        } catch(Exception $e) {
             $error = $e->getMessage();
         }
     }

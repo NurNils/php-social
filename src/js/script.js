@@ -129,18 +129,6 @@ function openProfileTabs(evt, tabId) {
     evt.currentTarget.className += " active";
 }
 
-function activateChangeMode() {
-    if(document.getElementById("edit-banner").style.display == "none") {
-        document.getElementById("edit-banner").style.display = "block";
-        document.getElementById("edit-avatar").style.display = "block";
-        document.getElementById("change-profile").className = "following";
-    } else {
-        document.getElementById("edit-banner").style.display = "none";
-        document.getElementById("edit-avatar").style.display = "none";
-        document.getElementById("change-profile").className = "";
-    }
-}
-
 function deletePost(id) {
     if(confirm('Wollen Sie diesen Post wirklich löschen?')) {
 
@@ -149,7 +137,7 @@ function deletePost(id) {
         request.open('GET', `http://localhost/api.php?postID=${id}&delete=true`);
         // request.setRequestHeader('Authorization', `Basic ${getToken()}`);
         request.setRequestHeader('Accept', 'text/plain');
-        
+
         request.onreadystatechange = function() {
           if(request.readyState == 4) {
             if(request.status == 200) {
