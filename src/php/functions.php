@@ -93,7 +93,7 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
     return $posts != "" ? $posts : "<br><h3 class='center'>Keine Posts gefunden :(</h3>";
 }
 
-function getPostById($postID, $db, $inProfile) {
+function getPostById($postID, $db, $inProfile = NULL) {
     $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post, user WHERE user.id=post.userID AND post.id = $postID";
     $post = "";
     while($row = mysqli_fetch_object($db->query($sql))) {
@@ -104,7 +104,7 @@ function getPostById($postID, $db, $inProfile) {
             $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
         }
         $post = '
-        <div class="card '.($inProfile ? 'post-in-profile-answer' : 'post-answer').' post-answer" id="post'.$row->id.'">
+        <div class="card '. (is_null($inProfile) ? '' : ($inProfile ? 'post-in-profile-answer' : 'post-answer')).'" id="post'.$row->id.'">
             <a href="profile.php?user='.$row->username.'">
             <img src="' . getProfileAvatar($row->avatar) . '" class="posted-profile-pic"/>
             </a>

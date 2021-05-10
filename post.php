@@ -37,7 +37,7 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
     if(isset($_GET['refPost'])){
         $refPost = mysqli_real_escape_string($db, $_GET['refPost']);
         echo '<h3>Antwort auf:</h3>';
-        echo(getPostById($refPost, $db, false));
+        echo(getPostById($refPost, $db));
     } else {
         echo '<h3>Post erstellen:</h3>';
     }

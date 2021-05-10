@@ -138,11 +138,11 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
                 </div>
               
                 <div id="posts" class="tabcontent" style="display: block">
-                    '.getUserPosts($row->id, $db, "AND post.referencedPostID IS NULL", true).'
+                    '.getUserPosts($row->id, $db, "AND post.referencedPostID IS NULL", true, "", false).'
                 </div>
                 
                 <div id="posts-answers" class="tabcontent">
-                    '.getUserPosts($row->id, $db, "", true, "", false).'
+                    '.getUserPosts($row->id, $db, "", true).'
                 </div>
                 
                 <div id="media" class="tabcontent">

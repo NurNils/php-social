@@ -51,7 +51,7 @@ if(!isset($isLogin)) {
       </ul>
       <form method="get" action="index.php" class="search-form">
         <div class="searchbar">
-          <input class="search_input" type="text" pattern="#[a-zA-Z0-9]+" name="query" placeholder="Search...">
+          <input class="search_input" type="text" pattern="#[a-zA-Z0-9]+" name="query" placeholder="Suchen...">
           <span class="material-icons fas fa-search">search</span>
         </div>
       </form>
