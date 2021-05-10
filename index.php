@@ -19,13 +19,17 @@ $userfollowing = $row->ergebnis;
 <br>
 <div class="container-fluid content">
     <div class="row">
-        <div class="col-2 side">
+        <div class="col-3 side">
             <div class="sidebar">
                 <div class="personal">
                     <div class="profile-side-info">
-                        <img src="<?php echo(getProfileAvatar($_SESSION['avatar'])) ?>" class="profile-pic-side"/>
-                        <b><?php echo ($_SESSION['username']); ?></b>
-                        <b class="material-icons verified-follow"><?php echo ($_SESSION['verified'] ? 'verified' : ''); ?></b>
+                        <div class="center">
+                            <a href="profile.php?user=<?php echo($_SESSION['username']) ?>">
+                                <img src="<?php echo(getProfileAvatar($_SESSION['avatar'])) ?>" class="profile-pic-side"/>
+                            </a>
+                            <b><a class="post-username" href="profile.php?user=<?php echo ($_SESSION['username'] . "\">". $_SESSION['username'] . "</a>"); ?></b>
+                            <b class="material-icons verified-follow"><?php echo ($_SESSION['verified'] ? 'verified' : ''); ?></b>
+                        </div><br>
                         <div class="row">
                             <div class="col profile-info-row-content">
                                 <?php echo($userposts); ?>
@@ -42,7 +46,7 @@ $userfollowing = $row->ergebnis;
                             <div class="col profile-info-row">Follower</div>
                             <div class="col profile-info-row">Folge ich</div>
                         </div>
-                    </div>        
+                    </div>
                     <a href="post.php" class="profile-info-button">Neuen Post erstellen</a>
                 </div>
                 <div class="following">
@@ -52,11 +56,14 @@ $userfollowing = $row->ergebnis;
                     $res = $db->query($sql);
                     while($row = mysqli_fetch_object($res)) {
                         echo('
-                            <img src="assets/images/cat.jpg" class="profile-pic-follow"/>
-                            <b>'.$row->username.'</b>
+                        <div class="follower">
+                            <a href="profile.php?user='.$row->username.'">
+                                <img src="' . getProfileAvatar($row->avatar) . '" class="profile-pic-follow"/>
+                            </a>
+                            <b><a class="post-username" href="profile.php?user='.$row->username.'">'.$row->username.'</a></b>
                             <b class="material-icons verified-follow">'.($row->verified ? 'verified' : '').'</b>
-                            <hr>
-                        ');
+                        </div>
+                        <br>');
                     }
                     ?>
                 </div>
@@ -64,26 +71,25 @@ $userfollowing = $row->ergebnis;
         </div>
         <div class="col">
             <div class="center-div">
-                <div class="starter-template">
-                    <?php
-                        $query = "";
-                        if(isset($_GET['query'])) {
-                            echo('
-                            <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>
-                            <form method="get" action="index.php" class="search-form">
-                                <div class="searchbar-main">
-                                    <input class="search_input-main" type="text" pattern="#[a-zA-Z0-9]+" name="query" value="'.$_GET['query'].'" placeholder="Search...">
-                                    <span class="material-icons fas fa-search">search</span>
-                                </div>
-                            </form>
-                            ');
-                            $query = htmlspecialchars("AND post.content LIKE '% ".$_GET['query']." %'");
-                        }
-                        echo getUserPosts(-1, $db, $query);
-                    ?>
-                </div>
+                <?php
+                    $query = "";
+                    if(isset($_GET['query'])) {
+                        echo('
+                        <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>
+                        <form method="get" action="index.php" class="search-form">
+                            <div class="searchbar-main">
+                                <input class="search_input-main" type="text" pattern="#[a-zA-Z0-9]+" name="query" value="'.$_GET['query'].'" placeholder="Search...">
+                                <span class="material-icons fas fa-search">search</span>
+                            </div>
+                        </form>
+                        ');
+                        $query = htmlspecialchars("AND post.content LIKE '% ".$_GET['query']." %'");
+                    }
+                    echo getUserPosts(-1, $db, $query);
+                ?>
             </div>
         </div>
+        <div class="col-2"></div>
     </div>
 </div>
 

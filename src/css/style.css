@@ -39,12 +39,13 @@
     text-align: center;
 }
 .center-div {
-    width: 50%;
+    width: 70%;
     margin: auto;
 }
 .sidebar {
     position: fixed;
     width: 25vw;
+    margin-top: 1em;
 }
 .side {
     padding: 0;
@@ -64,18 +65,25 @@
 }
 .post {
     margin: 1em 0;
-    width: 80% !important;
     font-family: 'Roboto medium';
     font-size: 15px;
 }
 .post-in-profile {
     margin: 1em auto;
+    width: 80% !important;
+}
+.post-in-profile-answer{
+    margin: 0.2em auto;
+    margin-left: 20% !important;
+    width: 70% !important;
+}
+.post-answer {
+    margin-top: 0.2em;
+    margin-left: 20%;
 }
 .post-headline {
-    font-family: 'Roboto medium';  
-
+    font-family: 'Roboto medium';
 }
-
 .post-username {
     color: white;
 }
@@ -105,7 +113,7 @@
 
 .personal {
     /* background-color: #727272; */
-    padding: 8px 7px;
+    padding: 15px 7px;
     border-radius: 5px;
     margin-bottom: 10px;
     box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
@@ -204,16 +212,24 @@
     padding: 10px 15px;
     font-weight: bold;
     background-color: transparent;
-    color: rgb(27, 149, 224);
+    color: white;
     border-style: solid;
     border-color: rgb(27, 149, 224);
+    background-color: rgb(27, 149, 224);
     font-size: 18px;
     display: block;
     margin-top: 15px;
-    text-transform: uppercase;
+    text-align: center;
+    border-radius: 40px;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 2em;
 }
 .profile-info-button:hover {
-    color: rgb(27, 149, 224);
+    text-decoration: none;
+    color: white;
+    background-color: rgb(2, 134, 216);
+    border-color: rgb(2, 134, 216);
 }
 #profile-edit-form {
     margin: 0 auto;
@@ -222,16 +238,27 @@
     padding: 10px 30px;
     border-radius: 11px;
     border-width: 2px;
+    margin-top: 10vh;
     box-shadow: 8px 8px #375a7f !important;
 }
 #profile-edit-form h1 {
     font-size: 32px;
 }
-#profile-edit-form h2 {
+#profile-edit-form h2, .create-post-form h2 {
     font-size: 18px;
     margin-right: 10px;
     margin-top: 15px;
-    text-decoration: underline;
+}
+.create-post-form {
+    margin: 0 auto;
+    max-width: 60vw;
+    border-style: solid;
+    max-width: 750px;
+    padding: 10px 30px;
+    border-radius: 11px;
+    border-width: 2px;
+    margin-top: 10vh;
+    box-shadow: 8px 8px #375a7f !important;
 }
 body {
     font-family: 'Roboto medium';
@@ -338,6 +365,7 @@ body {
     display: block;
     position: absolute;
     margin-top: -75px;
+    object-fit: cover;
 }
 #edit-avatar {
     position: absolute;
@@ -365,7 +393,12 @@ body {
     border-radius: 40px;
     font-size: 16px;
 }
-
+.not-found-hr {
+    height: 3px !important;
+    border-width: 0;
+    color: lightgray;
+    background-color: lightgray
+}
 .profile-actions .following {
     color: white;
     background-color: rgb(27, 149, 224);
@@ -375,7 +408,12 @@ body {
     font-weight: bold;
     font-size: 18px;
 }
-
+.sidebar .following {
+    margin-top: 2em;
+    margin-left: 0.5em;
+}
+.follower {
+}
 .profile-displayname {
     font-size: 32px;
     margin: 0;
@@ -450,13 +488,14 @@ body {
     padding: 6px 12px;
 }
 
-#postContent {
+#postContent, #change-description {
     resize: none;
-    width: 50vw;
-    min-height: 15vh;
     font-family: 'Roboto medium';
+    border-radius: 5px;
+    width: 100%;
+    background-color: transparent;
+    color: white;
 }
-
 @font-face {
     font-family: 'Roboto thin';
     src: url('Roboto-Thin.ttf');

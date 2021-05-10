@@ -77,6 +77,8 @@ function modeChange() {
         for(i = 0; i < searchbarMain.length; i++) {
             searchbarMain[i].style.backgroundColor = '#353b48';
         }
+        document.getElementById('postContent').style.color = "white";
+        document.getElementById('change-description').style.color = "white";
     } else {
         // Change to light
         document.getElementById('light-dark-icon').innerHTML = "wb_sunny";
@@ -104,6 +106,8 @@ function modeChange() {
         for(i = 0; i < searchbarMain.length; i++) {
             searchbarMain[i].style.backgroundColor = '#375a7f';
         }
+        document.getElementById('postContent').style.color = "black";
+        document.getElementById('change-description').style.color = "black";
     }
 }
 

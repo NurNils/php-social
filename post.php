@@ -33,20 +33,20 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
         header("Location: index.php");
     }
 } else {
+    echo '<div class="create-post-form">';
     if(isset($_GET['refPost'])){
         $refPost = mysqli_real_escape_string($db, $_GET['refPost']);
-        echo(getPostById($refPost, $db));
+        echo '<h3>Antwort auf:</h3>';
+        echo(getPostById($refPost, $db, false));
+    } else {
+        echo '<h3>Post erstellen:</h3>';
     }
-}
-
-echo '
-    <div class="">
-        <h3>Post erstellen:</h3>
+    
+    echo '
         <form enctype="multipart/form-data" action="post.php" method="post">
-            <br>
-            <label for="postContent">Content: </label>
-            <textarea maxlength="280" id="postContent" name="postContent"></textarea>
-            <br><br>
+            <h2>Inhalt</h2>
+            <textarea maxlength="280" id="postContent" rows="6" name="postContent"></textarea>
+            <h2>Bild oder Video</h2>
             <input type="file" id="file-upload" name="uploadedFile"><br>
             '.( isset($_GET['refPost']) ? '<input type="hidden" name="refPost" value="'.$_GET['refPost'].'"/>' : '').'
             <p class="text-danger">'.$error.'</p>
@@ -54,6 +54,7 @@ echo '
         </form>
     </div>
     ';
+}
 include('src/php/footer.php');
 //UserID muss gesetzt sein und (Content || Media)
 //Wenn nichts davon gesetzt ist echo form mit Eingaben für einen neuen POST

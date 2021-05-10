@@ -59,23 +59,31 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
     $db->query($sql);
     header("Location: profile.php?user=".$username);
 } else if(isset($_GET['user']) && isset($_GET['edit'])){
-    echo('
-    <div id="profile-edit-form">
-    <h1>Profil bearbeiten</h1>
-    <form enctype="multipart/form-data" action="profile.php" method="post">
-        <h2>Beschreibung</h2>
-        <textarea name="description" rows="4" cols="50"></textarea>
-        <br>
-        <h2>Avatar</h2>
-        <input type="file" id="file-upload" name="avatar"/><br>
-        <h2>Banner</h2>
-        <input type="file" id="file-upload" name="banner"/><br>
-        <input type="hidden" name="user" value="'.$_GET['user'].'"/>
-        <input type="hidden" name="edit" value="1"/>
-        <br>
-        <input class="btn btn-primary btn-lg" type="submit" value="Änderungen speichern">
-    </form>
-    </div>');
+    $user = mysqli_real_escape_string($db, $_GET['user']);
+    if($user == $_SESSION['username']) {
+        $sql = "SELECT * FROM user WHERE id=".$_SESSION['userID'];
+        $row = mysqli_fetch_object($db->query($sql));
+        $description = $row->description;
+        echo('
+        <div id="profile-edit-form">
+        <h1>Profil bearbeiten</h1>
+        <form enctype="multipart/form-data" action="profile.php" method="post">
+            <h2>Beschreibung</h2>
+            <textarea maxlength="160" id="change-description" name="description" rows="6" cols="50">' . $description . '</textarea>
+            <br>
+            <h2>Avatar</h2>
+            <input type="file" id="file-upload" name="avatar"/><br>
+            <h2>Banner</h2>
+            <input type="file" id="file-upload" name="banner"/><br>
+            <input type="hidden" name="user" value="'.$_GET['user'].'"/>
+            <input type="hidden" name="edit" value="1"/>
+            <br>
+            <input class="btn btn-primary btn-lg" type="submit" value="Änderungen speichern">
+        </form>
+        </div>');
+    } else {
+        header("Location: index.php");
+    }
 } else if(isset($_GET['user'])) {    
     $sql = "SELECT * FROM user WHERE username='" . htmlspecialchars($_GET['user']) . "'";
     $res = $db->query($sql);
@@ -130,11 +138,11 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
                 </div>
               
                 <div id="posts" class="tabcontent" style="display: block">
-                    '.getUserPosts($row->id, $db, "", true).'
+                    '.getUserPosts($row->id, $db, "AND post.referencedPostID IS NULL", true).'
                 </div>
                 
                 <div id="posts-answers" class="tabcontent">
-                    '.getUserPosts($row->id, $db, "AND post.referencedPostID IS NOT NULL", true).'
+                    '.getUserPosts($row->id, $db, "", true, "", false).'
                 </div>
                 
                 <div id="media" class="tabcontent">
@@ -150,10 +158,25 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         $counter++;
     }
     if($counter == 0) {
-        echo("ff");
+        echo('
+        <div class="container">
+            <div class="profile">
+                <img class="banner" src="' . getProfileBanner(NULL) . '">
+                <img class="avatar" src="' . getProfileAvatar(NULL) . '">
+                <br><br><br><br><br><br>
+                <p class="profile-displayname"><b>' . $_GET['user'] . '</b></p>
+                <p class="profile-username">@' . $_GET['user'] . '</b></p>
+                <hr class="not-found-hr">
+                <div class="center">
+                    <h4>Dieser Account existiert nicht</h4>
+                    <p class="text-secondary">Versuche, nach einem anderen Account zu suchen.</p>
+                </div>
+            </div>
+        </div>
+        ');
     }
 } else{
-    echo('Undefined User');
+    header("Location: index.php");
 }
 
 include('src/php/footer.php');

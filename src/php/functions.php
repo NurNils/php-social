@@ -22,18 +22,18 @@ function showPostTime($time){
 }
 
 function getProfileAvatar($avatar) {
-    return 'files/avatar/' . ($avatar ? $avatar : 'notFound.png');
+    return 'files/avatar/' . ($avatar ? $avatar : 'defaultProfile.png');
 }
 
 function getProfileBanner($banner) {
     return 'files/banner/' . ($banner ? $banner : 'notFound.png');
 }
 
-function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin = "") {
+function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin = "", $showAnswers = true) {
     if($userid == -1) {
-        $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post, user WHERE user.id=post.userID $query ORDER BY post.postDate DESC";
+        $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post, user WHERE user.id=post.userID $query AND post.referencedPostID IS NULL ORDER BY post.postDate DESC";
     } else {
-        $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post INNER JOIN user ON user.id = post.userID $secondJoin WHERE post.userID=".$userid." $query ORDER BY post.postDate DESC";
+        $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post INNER JOIN user ON user.id = post.userID $secondJoin WHERE post.userID=".$userid." $query AND post.referencedPostID IS NULL ORDER BY post.postDate DESC";
     }
     $res = $db->query($sql);
     $posts = "";
@@ -57,6 +57,7 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
             $changedContent = preg_replace('/(?<= |^)(@[a-z0-9_-]{3,16}+)(?= |$)/', '<span class="username" onclick="openUser(\'$1\')">$1</span>', $changedContent);
             $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
         }
+
         $posts .= '
       <div class="card '.($inProfile ? 'post-in-profile' : '').' post" id="post'.$row->id.'">
           <a href="profile.php?user='.$row->username.'">
@@ -81,11 +82,18 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
           </div>
       </div>
       ';
+      if($showAnswers){
+        $sql = "SELECT * FROM post WHERE referencedPostID = ".$row->id;
+        $res2 = $db->query($sql);
+        while($row2 = mysqli_fetch_object($res2)) {
+          $posts .= '<div class="answer">' . getPostById($row2->id, $db, $inProfile) . '</div>';
+        }
+      }
     }
     return $posts != "" ? $posts : "<br><h3 class='center'>Keine Posts gefunden :(</h3>";
 }
 
-function getPostById($postID, $db) {
+function getPostById($postID, $db, $inProfile) {
     $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post, user WHERE user.id=post.userID AND post.id = $postID";
     $post = "";
     while($row = mysqli_fetch_object($db->query($sql))) {
@@ -96,7 +104,7 @@ function getPostById($postID, $db) {
             $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
         }
         $post = '
-        <div class="card post" id="post'.$row->id.'">
+        <div class="card '.($inProfile ? 'post-in-profile-answer' : 'post-answer').' post-answer" id="post'.$row->id.'">
             <a href="profile.php?user='.$row->username.'">
             <img src="' . getProfileAvatar($row->avatar) . '" class="posted-profile-pic"/>
             </a>
