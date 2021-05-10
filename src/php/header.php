@@ -13,12 +13,19 @@ if (!isset($isLogin) && !isset($_SESSION['username'])) {
 <head>
 <!-- Bootstrap Css -->
 <link rel="stylesheet" href="src/css/bootstrap.min.css">
-
 <link rel="stylesheet" href="src/css/style.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="src/js/topscript.js"></script>
 </head>
 <body>
+  <div id="snackbar"></div>
 <?php
+
+if(isset($_SESSION['snackbar'])) {
+  echo('<script>openSnackbar(\'' . $_SESSION['snackbar']['message'] . '\', ' . $_SESSION['snackbar']['error'] . ')</script>'); 
+  unset($_SESSION['snackbar']);
+}
+
 if(!isset($isLogin)) {
   echo('
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
@@ -53,7 +60,7 @@ if(!isset($isLogin)) {
         <label class="custom-control-label" id="light-dark-label" for="light-dark-switch"><span class="material-icons" id="light-dark-icon">wb_sunny</span></label>
       </div>
       <a href="profile.php?user='.$_SESSION['username'].'">
-        <img src="assets/images/cat.jpg" class="form-inline my-2 mr-3 my-lg-0" id="profile-pic"/>
+        <img src="'.getProfileAvatar($_SESSION['avatar']).'" class="form-inline my-2 mr-3 my-lg-0" id="profile-pic"/>
       </a>
       <form action="src/php/logout.php" class="form-inline my-2 my-lg-0">
           <button class="btn btn-secondary my-2 my-sm-0" type="submit">Ausloggen</button>

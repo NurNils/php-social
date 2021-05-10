@@ -13,6 +13,7 @@ $userfollowers = $row->ergebnis;
 $sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE userID=".$_SESSION['userID'];
 $row = mysqli_fetch_object($db->query($sql));
 $userfollowing = $row->ergebnis;
+
 ?>
 
 <br>
@@ -22,7 +23,7 @@ $userfollowing = $row->ergebnis;
             <div class="sidebar">
                 <div class="personal">
                     <div class="profile-side-info">
-                        <img src="assets/images/cat.jpg" class="profile-pic-side"/>
+                        <img src="<?php echo(getProfileAvatar($_SESSION['avatar'])) ?>" class="profile-pic-side"/>
                         <b><?php echo ($_SESSION['username']); ?></b>
                         <b class="material-icons verified-follow"><?php echo ($_SESSION['verified'] ? 'verified' : ''); ?></b>
                         <div class="row">

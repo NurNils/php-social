@@ -16,7 +16,7 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
     }
 
     $media = "NULL";
-    if(isset($_FILES['uploadedFile'])){
+    if($_FILES['uploadedFile']['size'] != 0){
         try {
             $media = "'" . uploadFile($_FILES["uploadedFile"], 'post') . "'";
         } catch(Exception $e) {
@@ -28,6 +28,8 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
         $sql = "INSERT INTO `post` (`userID`, `referencedPostID`, `content`, `media`) 
         VALUES ('" . $_SESSION['userID'] . "', $referencedPost , $postContent, $media)";
         $db->query($sql);
+        $_SESSION['snackbar']['error'] = false;
+        $_SESSION['snackbar']['message'] = "Post erfolgreich erstellt";
         header("Location: index.php");
     }
 } else {

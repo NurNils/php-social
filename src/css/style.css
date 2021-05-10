@@ -1,3 +1,31 @@
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #4caf50;
+    color: white;
+    text-align: left;
+    border-radius: 7px;
+    padding: 16px;
+    font-size: 18px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 50px;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 0.5s, fadeOut 0.5s 3s;
+    animation: fadeIn 0.5s, fadeOut 0.5s 3s;
+}
+
+#snackbar.error {
+    background-color: #f44336;
+}
+
 .footer {
     position: fixed;
     bottom: 0;
@@ -187,7 +215,24 @@
 .profile-info-button:hover {
     color: rgb(27, 149, 224);
 }
-
+#profile-edit-form {
+    margin: 0 auto;
+    max-width: 500px;
+    border-style: solid;
+    padding: 10px 30px;
+    border-radius: 11px;
+    border-width: 2px;
+    box-shadow: 8px 8px #375a7f !important;
+}
+#profile-edit-form h1 {
+    font-size: 32px;
+}
+#profile-edit-form h2 {
+    font-size: 18px;
+    margin-right: 10px;
+    margin-top: 15px;
+    text-decoration: underline;
+}
 body {
     font-family: 'Roboto medium';
 }
@@ -284,6 +329,7 @@ body {
     margin: 0 10px;
 }
 .avatar {
+    background-color: grey;
     height: 150px;
     width: 150px;
     border-radius: 100px;

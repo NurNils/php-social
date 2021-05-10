@@ -10,6 +10,7 @@ if(isset($_POST['username'])){
         $_SESSION['password'] = $row->password;
         $_SESSION['userID'] = $row->id;
         $_SESSION['verified'] = $row->verified;
+        $_SESSION['avatar'] = $row->avatar;
         $_SESSION['token'] = "123xxx123";
         $secret = "55";
         $GLOBALS['test'] = 1;

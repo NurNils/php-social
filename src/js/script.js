@@ -129,6 +129,17 @@ function openProfileTabs(evt, tabId) {
     evt.currentTarget.className += " active";
 }
 
+/** Opens a snackbar with error or success styling */
+function openSnackbar(message, error) {
+    const snackBar = document.getElementById("snackbar");
+    snackBar.className = "show";
+    error ? snackBar.className += " error" : snackBar.className += " success";
+    snackBar.innerHTML = message;
+    setTimeout(() => {
+        snackBar.className = snackBar.className.replace("show", "");
+    }, 3000);
+}
+
 function deletePost(id) {
     if(confirm('Wollen Sie diesen Post wirklich löschen?')) {
 
@@ -141,11 +152,12 @@ function deletePost(id) {
         request.onreadystatechange = function() {
           if(request.readyState == 4) {
             if(request.status == 200) {
+                openSnackbar('Post erfolgreich gelöscht', false);
                 document.getElementById('post' + id).remove();
             } else if(request.status == 401){
-                alert("unauthorized")
+                openSnackbar('Du hast hierfür keine Berechtigungen', true);
             } else {
-                alert("error")
+                openSnackbar('Ein Fehler ist aufgetreten', true);
             }
           }
         };

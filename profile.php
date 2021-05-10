@@ -5,24 +5,47 @@ include('src/php/header.php');
 if(isset($_POST['user']) && isset($_POST['edit'])){
     $error = "";
 
-    $description = "NULL";
-    if(isset($_POST['description'])){
+    $description = NULL;
+    if(isset($_POST['description'])) {
         $description = "'" . mysqli_real_escape_string($db, $_POST['description']) . "'";
     }
 
-    $avatar = "NULL";
-    if(isset($_FILES['avatar'])){
+    $avatar = NULL;
+    if($_FILES['avatar']['size'] != 0) {
         try {
-            $avatar = "'" . uploadFile($_FILES["avatar"], 'avatar') . "'";
+            $avatar = uploadFile($_FILES["avatar"], 'avatar');
         } catch(Exception $e) {
             $error = $e->getMessage();
         }
     }
 
-    if($error == "") {
-       echo("success");
-    }
+    $banner = NULL;
+    if($_FILES['banner']['size'] != 0){
+        try {
+            $banner = "'" . uploadFile($_FILES["banner"], 'banner') . "'";
+        } catch(Exception $e) {
+            $error = $e->getMessage();
+        }
+    }    
 
+    if($error == "") {
+        $set = array();
+        if($description) array_push($set, "description=".$description);
+        if($avatar) {
+            array_push($set, "avatar='".$avatar."'");
+            $_SESSION['avatar'] = $avatar;
+        }
+        if($banner) array_push($set, "banner=".$banner);
+        $sql = "UPDATE `user` SET " . implode(",", $set) . "WHERE id=" . $_SESSION['userID'];
+        $db->query($sql);
+        $_SESSION['snackbar']['error'] = false;
+        $_SESSION['snackbar']['message'] = "Profil erfolgreich bearbeitet";
+        
+    } else {
+        $_SESSION['snackbar']['error'] = true;
+        $_SESSION['snackbar']['message'] = $error;
+    }
+    header("Location: profile.php?user=" . $_SESSION['username']);
 } else if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
     $username = mysqli_real_escape_string($db, $_GET['user']);
     $userID = mysqli_real_escape_string($db, $_GET['userID']);
@@ -37,22 +60,27 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
     header("Location: profile.php?user=".$username);
 } else if(isset($_GET['user']) && isset($_GET['edit'])){
     echo('
-    <div>
+    <div id="profile-edit-form">
+    <h1>Profil bearbeiten</h1>
     <form enctype="multipart/form-data" action="profile.php" method="post">
-        <h3>Beschreibung bearbeiten</h3>
-        <input type="text" placeholder="Beschreibung" name="description"/><br>
+        <h2>Beschreibung</h2>
+        <textarea name="description" rows="4" cols="50"></textarea>
+        <br>
+        <h2>Avatar</h2>
         <input type="file" id="file-upload" name="avatar"/><br>
+        <h2>Banner</h2>
+        <input type="file" id="file-upload" name="banner"/><br>
         <input type="hidden" name="user" value="'.$_GET['user'].'"/>
         <input type="hidden" name="edit" value="1"/>
-        <input type="submit" />
+        <br>
+        <input class="btn btn-primary btn-lg" type="submit" value="Änderungen speichern">
     </form>
     </div>');
-} else if(isset($_GET['user'])) {
+} else if(isset($_GET['user'])) {    
     $sql = "SELECT * FROM user WHERE username='" . htmlspecialchars($_GET['user']) . "'";
     $res = $db->query($sql);
     $counter = 0;
     while($row = mysqli_fetch_object($res)) {
-
         $sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE `following`=".$row->id;
         $row2 = mysqli_fetch_object($db->query($sql));
         $userfollowers = $row2->ergebnis;
@@ -68,7 +96,8 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         echo('
         <div class="container">
             <div class="profile">
-                <img class="avatar" src="assets/images/cat2.png' . $row->avatar . '">
+                <img class="banner" src="' . getProfileBanner($row->banner) . '">
+                <img class="avatar" src="' . getProfileAvatar($row->avatar) . '">
                 <div class="profile-actions">
                 '. ($_GET['user'] == $_SESSION['username'] 
                     ? '<a href="profile.php?user='.$_GET['user'].'&edit=1"><button id="change-profile">Profil bearbeiten</button></a>' 

@@ -21,11 +21,19 @@ function showPostTime($time){
     }
 }
 
+function getProfileAvatar($avatar) {
+    return 'files/avatar/' . ($avatar ? $avatar : 'notFound.png');
+}
+
+function getProfileBanner($banner) {
+    return 'files/banner/' . ($banner ? $banner : 'notFound.png');
+}
+
 function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin = "") {
     if($userid == -1) {
-        $sql = "SELECT post.*, user.username, user.verified FROM post, user WHERE user.id=post.userID $query ORDER BY post.postDate DESC";
+        $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post, user WHERE user.id=post.userID $query ORDER BY post.postDate DESC";
     } else {
-        $sql = "SELECT post.*, user.username, user.verified FROM post INNER JOIN user ON user.id = post.userID $secondJoin WHERE post.userID=".$userid." $query ORDER BY post.postDate DESC";
+        $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post INNER JOIN user ON user.id = post.userID $secondJoin WHERE post.userID=".$userid." $query ORDER BY post.postDate DESC";
     }
     $res = $db->query($sql);
     $posts = "";
@@ -52,7 +60,7 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
         $posts .= '
       <div class="card '.($inProfile ? 'post-in-profile' : '').' post" id="post'.$row->id.'">
           <a href="profile.php?user='.$row->username.'">
-            <img src="assets/images/cat2.png" class="posted-profile-pic"/>
+            <img src="' . getProfileAvatar($row->avatar) . '" class="posted-profile-pic"/>
           </a>
           <div class="card-body post-content">
               <h5 class="card-title post-headline">
@@ -78,7 +86,7 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
 }
 
 function getPostById($postID, $db) {
-    $sql = "SELECT post.*, user.username, user.verified FROM post, user WHERE user.id=post.userID AND post.id = $postID";
+    $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post, user WHERE user.id=post.userID AND post.id = $postID";
     $post = "";
     while($row = mysqli_fetch_object($db->query($sql))) {
         $changedContent = "";
@@ -90,7 +98,7 @@ function getPostById($postID, $db) {
         $post = '
         <div class="card post" id="post'.$row->id.'">
             <a href="profile.php?user='.$row->username.'">
-            <img src="assets/images/cat2.png" class="posted-profile-pic"/>
+            <img src="' . getProfileAvatar($row->avatar) . '" class="posted-profile-pic"/>
             </a>
             <div class="card-body post-content">
                 <h5 class="card-title post-headline">

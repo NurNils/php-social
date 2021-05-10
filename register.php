@@ -16,6 +16,7 @@ if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password
         $_SESSION['username'] = $row->username;
         $_SESSION['userID'] = $row->id;
         $_SESSION['verified'] = $row->verified;
+        $_SESSION['avatar'] = $row->avatar;
         header("Location: index.php");
     }
 
