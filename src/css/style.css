@@ -79,7 +79,7 @@
 }
 .post-answer {
     margin-top: 0.2em;
-    margin-left: 20%;
+    /* margin-left: 20%; */
 }
 .post-headline {
     font-family: 'Roboto medium';

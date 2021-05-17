@@ -37,91 +37,113 @@ function getUserPosts($userid, $db, $query = "", $inProfile = false, $secondJoin
     }
     $res = $db->query($sql);
     $posts = "";
-    while($row = mysqli_fetch_object($res)) {
-        $sql = "SELECT ((SELECT COUNT(*) FROM feedback WHERE `like` = 1 AND postID = ".$row->id.") - (SELECT COUNT(*) FROM feedback WHERE `like` = 0 AND postID = ".$row->id.")) AS ergebnis";
-        if($row2 = mysqli_fetch_object($db->query($sql))) {
-            $likecount = $row2->ergebnis;
-        }
-        $sql = "SELECT COUNT(*) AS ergebnis FROM post WHERE referencedPostID = ".$row->id;
-        if($row2 = mysqli_fetch_object($db->query($sql))) {
-            $replycount = $row2->ergebnis;
-        }
-        $sql = "SELECT * FROM feedback WHERE postID = ".$row->id." AND userID = ".$_SESSION['userID'];
-        $liked = NULL;
-        if($row2 = mysqli_fetch_object($db->query($sql))) {
-            $liked = $row2->like;
-        }
-        $changedContent = "";
-        if(isset($row->content) && $row->content != "") {
-            $changedContent = preg_replace('/(?<= |^)(#[a-zA-Z0-9]+)(?= |$)/', '<span class="hashtag" onclick="search(\'$1\')">$1</span>', $row->content);
-            $changedContent = preg_replace('/(?<= |^)(@[a-z0-9_-]{3,16}+)(?= |$)/', '<span class="username" onclick="openUser(\'$1\')">$1</span>', $changedContent);
-            $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
-        }
 
-        $posts .= '
-      <div class="card '.($inProfile ? 'post-in-profile' : '').' post" id="post'.$row->id.'">
-          <a href="profile.php?user='.$row->username.'">
-            <img src="' . getProfileAvatar($row->avatar) . '" class="posted-profile-pic"/>
-          </a>
-          <div class="card-body post-content">
-              <h5 class="card-title post-headline">
-                  <a class="post-username"  href="profile.php?user='.$row->username.'">'.$row->username.'</a> 
-                  '.($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '').'
-                  <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .showPostTime($row->postDate).'</span>
-                  '.(($_SESSION['verified'] || $_SESSION['userID'] == $row->userID) ? '<span class="material-icons delete-post text-danger" onclick="deletePost('.$row->id.')">delete</span>' : '').'
-              </h5>
-              <p class="card-text">'.$changedContent.'</p>
-              '. (isset($row->media) && $row->media != "" ? "<img src=\"files/post/$row->media\" class=\"post-media\"/><br><br>": "") .'
-              <span onclick="feedback(1, '.$_SESSION['userID'].', '.$row->id.')" id="like-btn'.$row->id.'" class="material-icons feedback text-primary '.($liked == "1" ? 'text-success' : '').'">thumb_up</span>
-              <span class="like-count text-primary" id="like-count'.$row->id.'">'.$likecount.'</span>
-              <span onclick="feedback(0, '.$_SESSION['userID'].', '.$row->id.')" id="dislike-btn'.$row->id.'" class="text-primary material-icons feedback '.($liked == "0" ? 'text-danger' : '').'">thumb_down</span>
-              <div class="reply">
-                  <a href="post.php?refPost='.$row->id.'" class="material-icons text-success reply-icon">reply</a>
-                  <span class="reply-count text-success">'.$replycount.'</span>
-              </div>
-          </div>
-      </div>
-      ';
+    while($row = mysqli_fetch_object($res)) {
+        $posts .= createPostDiv($row, $inProfile, getLiked($row, $db), getLikeCount($row, $db), getReplyCount($row, $db));
+
       if($showAnswers){
-        $sql = "SELECT * FROM post WHERE referencedPostID = ".$row->id;
-        $res2 = $db->query($sql);
-        while($row2 = mysqli_fetch_object($res2)) {
-          $posts .= '<div class="answer">' . getPostById($row2->id, $db, $inProfile) . '</div>';
-        }
+          $posts .= loadReplies($row->id, 1, $db);
       }
     }
+
     return $posts != "" ? $posts : "<br><h3 class='center'>Keine Posts gefunden :(</h3>";
+}
+
+function getLikeCount($row, $db){
+    $sql = "SELECT ((SELECT COUNT(*) FROM feedback WHERE `like` = 1 AND postID = ".$row->id.") - (SELECT COUNT(*) FROM feedback WHERE `like` = 0 AND postID = ".$row->id.")) AS ergebnis";
+    if($row2 = mysqli_fetch_object($db->query($sql))) {
+        return $row2->ergebnis;
+    }
+    return null;
+}
+
+function getReplyCount($row, $db){
+    $sql = "SELECT COUNT(*) AS ergebnis FROM post WHERE referencedPostID = ".$row->id;
+    if($row2 = mysqli_fetch_object($db->query($sql))) {
+        return $row2->ergebnis;
+    }
+    return null;
+}
+
+function getLiked($row, $db){
+    $sql = "SELECT * FROM feedback WHERE postID = ".$row->id." AND userID = ".$_SESSION['userID'];
+    $liked = NULL;
+    if($row2 = mysqli_fetch_object($db->query($sql))) {
+        $liked = $row2->like;
+    }
+
+    return $liked;
+}
+
+function createPostDiv($row, $inProfile, $liked, $likecount, $replycount){
+
+    $changedContent = "";
+    if(isset($row->content) && $row->content != "") {
+        $changedContent = preg_replace('/(?<= |^)(#[a-zA-Z0-9]+)(?= |$)/', '<span class="hashtag" onclick="search(\'$1\')">$1</span>', $row->content);
+        $changedContent = preg_replace('/(?<= |^)(@[a-z0-9_-]{3,16}+)(?= |$)/', '<span class="username" onclick="openUser(\'$1\')">$1</span>', $changedContent);
+        $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
+    }
+
+    return '
+          <div class="card '.($inProfile ? 'post-in-profile' : '').' post" id="post'.$row->id.'">
+              <a href="profile.php?user='.$row->username.'">
+                <img src="' . getProfileAvatar($row->avatar) . '" class="posted-profile-pic"/>
+              </a>
+              <div class="card-body post-content">
+                  <h5 class="card-title post-headline">
+                      <a class="post-username"  href="profile.php?user='.$row->username.'">'.$row->username.'</a> 
+                      '.($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '').'
+                      <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .showPostTime($row->postDate).'</span>
+                      '.(($_SESSION['verified'] || $_SESSION['userID'] == $row->userID) ? '<span class="material-icons delete-post text-danger" onclick="deletePost('.$row->id.')">delete</span>' : '').'
+                  </h5>
+                  <p class="card-text">'.$changedContent.'</p>
+                  '. (isset($row->media) && $row->media != "" ? "<img src=\"files/post/$row->media\" class=\"post-media\"/><br><br>": "") .'
+                  <span onclick="feedback(1, '.$_SESSION['userID'].', '.$row->id.')" id="like-btn'.$row->id.'" class="material-icons feedback text-primary '.($liked == "1" ? 'text-success' : '').'">thumb_up</span>
+                  <span class="like-count text-primary" id="like-count'.$row->id.'">'.$likecount.'</span>
+                  <span onclick="feedback(0, '.$_SESSION['userID'].', '.$row->id.')" id="dislike-btn'.$row->id.'" class="text-primary material-icons feedback '.($liked == "0" ? 'text-danger' : '').'">thumb_down</span>
+                  <div class="reply">
+                      <a href="post.php?refPost='.$row->id.'" class="material-icons text-success reply-icon">reply</a>
+                      <span class="reply-count text-success">'.$replycount.'</span>
+                  </div>
+              </div>
+          </div>
+          ';
+}
+
+function loadReplies($postID, $replyLevel, $db){
+
+    $replyString = "";
+
+    $sql = "SELECT * FROM post WHERE referencedPostID = " . $postID;
+    $replies = $db->query($sql);
+
+    $marginleft = "45%";
+    if($replyLevel <= 3){
+        $marginleft = $replyLevel * 15 . "%";
+    }
+
+    echo("Test");
+
+    while($reply = mysqli_fetch_object($replies)){
+        //echo("Aktueller Replystring:" . $replyString . "<br>");
+        echo("test2");
+        //var_dump($reply);
+        $replyString .= '<div  style="margin-top:0.2em;margin-left: ' . $marginleft . '">' . getPostById($reply->id, $db, false) . '</div>';
+        $replyString .= loadReplies($reply->id, $replyLevel+1, $db);
+    }
+
+    if($replies->num_rows == 0){
+        return "";
+    }
+
+    return $replyString;
 }
 
 function getPostById($postID, $db, $inProfile = NULL) {
     $sql = "SELECT post.*, user.username, user.avatar, user.verified FROM post, user WHERE user.id=post.userID AND post.id = $postID";
-    $post = "";
-    while($row = mysqli_fetch_object($db->query($sql))) {
-        $changedContent = "";
-        if(isset($row->content) && $row->content != "") {
-            $changedContent = preg_replace('/(?<= |^)(#[a-zA-Z0-9]+)(?= |$)/', '<span class="hashtag" onclick="search(\'$1\')">$1</span>', $row->content);
-            $changedContent = preg_replace('/(?<= |^)(@[a-z0-9_-]{3,16}+)(?= |$)/', '<span class="username" onclick="openUser(\'$1\')">$1</span>', $changedContent);
-            $changedContent = preg_replace('/((http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/im', '<a class="content-link" href="$1">$1</a>', $changedContent);
-        }
-        $post = '
-        <div class="card '. (is_null($inProfile) ? '' : ($inProfile ? 'post-in-profile-answer' : 'post-answer')).'" id="post'.$row->id.'">
-            <a href="profile.php?user='.$row->username.'">
-            <img src="' . getProfileAvatar($row->avatar) . '" class="posted-profile-pic"/>
-            </a>
-            <div class="card-body post-content">
-                <h5 class="card-title post-headline">
-                    <a class="post-username"  href="profile.php?user='.$row->username.'">'.$row->username.'</a> 
-                    '.($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '').'
-                    <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .showPostTime($row->postDate).'</span>
-                </h5>
-                <p class="card-text">'.$changedContent.'</p>
-                '. (isset($row->media) && $row->media != "" ? "<img src=\"files/post/$row->media\" class=\"post-media\"/><br><br>": "") .'
-            </div>
-        </div>
-        ';
-        break;
-    }
-    return $post;
+    $row = mysqli_fetch_object($db->query($sql));
+
+    return createPostDiv($row, $inProfile, getLiked($row, $db), getLikeCount($row, $db), getReplyCount($row, $db));
 }
 
 function getAllowedFileExtensions($destinationFolder){
