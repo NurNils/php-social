@@ -161,6 +161,7 @@ function deletePost(id) {
             } else if(request.status == 401){
                 openSnackbar('Du hast hierfür keine Berechtigungen', true);
             } else {
+                console.log(request.responseText);
                 openSnackbar('Ein Fehler ist aufgetreten', true);
             }
           }

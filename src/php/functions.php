@@ -33,6 +33,7 @@ function getPosts($cond, $db, $showReplies = false) {
             $posts .= loadReplies($post->id, 1, $db);
         }
     }
+
     return $posts != "" ? $posts : "<br><h3 class='center'>Keine Posts gefunden :(</h3>";
 }
 
