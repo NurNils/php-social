@@ -1,10 +1,10 @@
 <?php
 include('src/php/db.php');
 session_start();
-if(isset($_SESSION['username']) && isset($_SESSION['userID'])) {
+if(isset($_SESSION['user'])) {
     if(isset($_GET['like']) && isset($_GET['postID'])) {
         include('db.php');
-        $userID = $_SESSION['userID'];
+        $userID = $_SESSION['user']->id;
         $like = mysqli_real_escape_string($db, $_GET['like']);
         $postID = mysqli_real_escape_string($db, $_GET['postID']);
         if($like != "1" && $like != "0") die("Wrong parameters");
@@ -28,7 +28,7 @@ if(isset($_SESSION['username']) && isset($_SESSION['userID'])) {
 
         $sql = "SELECT user.verified, user.id FROM user INNER JOIN post ON user.id = post.userID WHERE post.id = $postID";
         if($row = mysqli_fetch_object($db->query($sql))) {
-            if($_SESSION['verified'] || $row->id == $_SESSION['userID']) {
+            if($_SESSION['user']->verified || $row->id == $_SESSION['user']->id) {
                 $sql = "DELETE FROM post WHERE `id` = $postID";
                 $db->query($sql);
             }

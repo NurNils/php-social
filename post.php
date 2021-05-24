@@ -26,7 +26,7 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
 
     if($error == "") {
         $sql = "INSERT INTO `post` (`userID`, `referencedPostID`, `content`, `media`) 
-        VALUES ('" . $_SESSION['userID'] . "', $referencedPost , $postContent, $media)";
+        VALUES ('" . $_SESSION['user']->id . "', $referencedPost , $postContent, $media)";
         $db->query($sql);
         $_SESSION['snackbar']['error'] = false;
         $_SESSION['snackbar']['message'] = "Post erfolgreich erstellt";

@@ -6,20 +6,15 @@ if(isset($_POST['username'])){
     $sql = "SELECT * FROM `user` WHERE `username`=\"".htmlspecialchars($_POST['username'])."\" AND `password`=\"".md5( $_POST['password'])."\"";
     $res = $db->query($sql);
     while($row = mysqli_fetch_object($res)) {
-        $_SESSION['username'] = $row->username;
-        $_SESSION['password'] = $row->password;
-        $_SESSION['userID'] = $row->id;
-        $_SESSION['verified'] = $row->verified;
-        $_SESSION['avatar'] = $row->avatar;
+        $_SESSION['user'] = new User($row);
         $_SESSION['token'] = "123xxx123";
         $secret = "55";
-        $GLOBALS['test'] = 1;
         // TODO generate Token and secret to validate token
         header("Location: index.php");
     }
     makeLoginForm(true);
 
-} elseif(isset($_SESSION['username'])) {
+} elseif(isset($_SESSION['user']->id)) {
     header("Location: index.php");
 } else {
     makeLoginForm();

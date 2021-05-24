@@ -3,7 +3,7 @@ include('db.php');
 include('functions.php');
 
 session_start();
-if (!isset($isLogin) && !isset($_SESSION['username'])) {
+if (!isset($isLogin) && !isset($_SESSION['user']->id)) {
     header('Location: login.php');
 }
 
@@ -51,7 +51,7 @@ if(!isset($isLogin)) {
       </ul>
       <form method="get" action="index.php" class="search-form">
         <div class="searchbar">
-          <input class="search_input" type="text" pattern="#[a-zA-Z0-9]+" name="query" placeholder="Suchen...">
+          <input class="search_input" type="text" pattern="#[a-zA-Z0-9]+" name="query" placeholder="Hashtags suchen...">
           <span class="material-icons fas fa-search">search</span>
         </div>
       </form>
@@ -59,8 +59,8 @@ if(!isset($isLogin)) {
         <input type="checkbox" class="custom-control-input" id="light-dark-switch" data-onstyle="warning" onclick="modeChange()">
         <label class="custom-control-label" id="light-dark-label" for="light-dark-switch"><span class="material-icons" id="light-dark-icon">wb_sunny</span></label>
       </div>
-      <a href="profile.php?user='.$_SESSION['username'].'">
-        <img src="'.getProfileAvatar($_SESSION['avatar']).'" class="form-inline my-2 mr-3 my-lg-0" id="profile-pic"/>
+      <a href="profile.php?user='.$_SESSION['user']->name.'">
+        <img src="'.$_SESSION['user']->getAvatar().'" class="form-inline my-2 mr-3 my-lg-0" id="profile-pic"/>
       </a>
       <form action="src/php/logout.php" class="form-inline my-2 my-lg-0">
           <button class="btn btn-secondary my-2 my-sm-0" type="submit">Ausloggen</button>

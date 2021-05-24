@@ -2,15 +2,15 @@
 $currentpage = "home";
 include('src/php/header.php');
 
-$sql = "SELECT COUNT(*) AS ergebnis FROM post WHERE userID=".$_SESSION['userID'];
+$sql = "SELECT COUNT(*) AS ergebnis FROM post WHERE userID=".$_SESSION['user']->id;
 $row = mysqli_fetch_object($db->query($sql));
 $userposts = $row->ergebnis;
 
-$sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE `following`=".$_SESSION['userID'];
+$sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE `following`=".$_SESSION['user']->id;
 $row = mysqli_fetch_object($db->query($sql));
 $userfollowers = $row->ergebnis;
 
-$sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE userID=".$_SESSION['userID'];
+$sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE userID=".$_SESSION['user']->id;
 $row = mysqli_fetch_object($db->query($sql));
 $userfollowing = $row->ergebnis;
 
@@ -24,11 +24,11 @@ $userfollowing = $row->ergebnis;
                 <div class="personal">
                     <div class="profile-side-info">
                         <div class="center">
-                            <a href="profile.php?user=<?php echo($_SESSION['username']) ?>">
-                                <img src="<?php echo(getProfileAvatar($_SESSION['avatar'])) ?>" class="profile-pic-side"/>
+                            <a href="profile.php?user=<?php echo($_SESSION['user']->name) ?>">
+                                <img src="<?php echo(($_SESSION['user']->getAvatar())) ?>" class="profile-pic-side"/>
                             </a>
-                            <b><a class="post-username" href="profile.php?user=<?php echo ($_SESSION['username'] . "\">". $_SESSION['username'] . "</a>"); ?></b>
-                            <b class="material-icons verified-follow"><?php echo ($_SESSION['verified'] ? 'verified' : ''); ?></b>
+                            <b><a class="post-username" href="profile.php?user=<?php echo ($_SESSION['user']->name . "\">". $_SESSION['user']->name . "</a>"); ?></b>
+                            <b class="material-icons verified-follow"><?php echo ($_SESSION['user']->verified ? 'verified' : ''); ?></b>
                         </div><br>
                         <div class="row">
                             <div class="col profile-info-row-content">
@@ -52,16 +52,17 @@ $userfollowing = $row->ergebnis;
                 <div class="following">
                     <h3>Folge ich:</h3><br>
                     <?php
-                    $sql = "SELECT * FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=".$_SESSION['userID'];
+                    $sql = "SELECT * FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=".$_SESSION['user']->id;
                     $res = $db->query($sql);
                     while($row = mysqli_fetch_object($res)) {
+                        $user = new User($row);
                         echo('
                         <div class="follower">
-                            <a href="profile.php?user='.$row->username.'">
-                                <img src="' . getProfileAvatar($row->avatar) . '" class="profile-pic-follow"/>
+                            <a href="profile.php?user='.$user->name.'">
+                                <img src="' . $user->getAvatar() . '" class="profile-pic-follow"/>
                             </a>
-                            <b><a class="post-username" href="profile.php?user='.$row->username.'">'.$row->username.'</a></b>
-                            <b class="material-icons verified-follow">'.($row->verified ? 'verified' : '').'</b>
+                            <b><a class="post-username" href="profile.php?user='.$user->name.'">'.$user->name.'</a></b>
+                            <b class="material-icons verified-follow">'.($user->verified ? 'verified' : '').'</b>
                         </div>
                         <br>');
                     }
@@ -72,21 +73,24 @@ $userfollowing = $row->ergebnis;
         <div class="col">
             <div class="center-div">
                 <?php
-                    $query = "";
+                    $hashtag = "";
                     if(isset($_GET['query'])) {
                         echo('
                         <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>
                         <form method="get" action="index.php" class="search-form">
                             <div class="searchbar-main">
-                                <input class="search_input-main" type="text" pattern="#[a-zA-Z0-9]+" name="query" value="'.$_GET['query'].'" placeholder="Search...">
+                                <input class="search_input-main" type="text" pattern="#[a-zA-Z0-9]+" name="query" value="'.$_GET['query'].'" placeholder="Hashtags suchen...">
                                 <span class="material-icons fas fa-search">search</span>
                             </div>
                         </form>
                         ');
-                        $query = htmlspecialchars("AND post.content LIKE '% ".$_GET['query']." %'");
+                        $hashtag = htmlspecialchars("AND post.content LIKE '% ".$_GET['query']." %'");
                     }
-                    echo getUserPosts(-1, $db, $query);
+                    echo getPosts("post.referencedPostID IS NULL 
+                    " . ($hashtag != "" ? "AND post.content LIKE '%$hashtag%'" : ""), $db, true);
                 ?>
+                <h3>Diese Posts könnten Sie auch interessieren:</h3>
+                <hr>
             </div>
         </div>
         <div class="col-2"></div>

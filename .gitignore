@@ -7,3 +7,4 @@
 .history/
 files/*/*
 !files/*/notFound.png
+!files/avatar/defaultProfile.png

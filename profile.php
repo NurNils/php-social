@@ -36,7 +36,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
             $_SESSION['avatar'] = $avatar;
         }
         if($banner) array_push($set, "banner=".$banner);
-        $sql = "UPDATE `user` SET " . implode(",", $set) . "WHERE id=" . $_SESSION['userID'];
+        $sql = "UPDATE `user` SET " . implode(",", $set) . "WHERE id=" . $_SESSION['user']->id;
         $db->query($sql);
         $_SESSION['snackbar']['error'] = false;
         $_SESSION['snackbar']['message'] = "Profil erfolgreich bearbeitet";
@@ -45,23 +45,23 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         $_SESSION['snackbar']['error'] = true;
         $_SESSION['snackbar']['message'] = $error;
     }
-    header("Location: profile.php?user=" . $_SESSION['username']);
+    header("Location: profile.php?user=" . $_SESSION['user']->name);
 } else if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
     $username = mysqli_real_escape_string($db, $_GET['user']);
     $userID = mysqli_real_escape_string($db, $_GET['userID']);
     $follow = mysqli_real_escape_string($db, $_GET['follow']);
 
     if($follow == "true") {
-        $sql = "DELETE FROM follows WHERE `userID` = ".$_SESSION['userID']." AND `following` = $userID";
+        $sql = "DELETE FROM follows WHERE `userID` = ".$_SESSION['user']->id." AND `following` = $userID";
     } else {
-        $sql = "INSERT INTO follows (`userID`, `following`, `followDate`) VALUES (".$_SESSION['userID'].", $userID, NULL)";
+        $sql = "INSERT INTO follows (`userID`, `following`, `followDate`) VALUES (".$_SESSION['user']->id.", $userID, NULL)";
     }
     $db->query($sql);
     header("Location: profile.php?user=".$username);
 } else if(isset($_GET['user']) && isset($_GET['edit'])){
     $user = mysqli_real_escape_string($db, $_GET['user']);
-    if($user == $_SESSION['username']) {
-        $sql = "SELECT * FROM user WHERE id=".$_SESSION['userID'];
+    if($user == $_SESSION['user']->name) {
+        $sql = "SELECT * FROM user WHERE id=".$_SESSION['user']->id;
         $row = mysqli_fetch_object($db->query($sql));
         $description = $row->description;
         echo('
@@ -97,21 +97,22 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         $row2 = mysqli_fetch_object($db->query($sql));
         $userfollowing = $row2->ergebnis;
 
-        $sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE userID=".$_SESSION['userID']." AND `following` = ".$row->id;
+        $sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE userID=".$_SESSION['user']->id." AND `following` = ".$row->id;
         $row2 = mysqli_fetch_object($db->query($sql));
         $isFollowing = $row2->ergebnis > 0 ? true : false;
 
+        $user = new User($row);
         echo('
         <div class="container">
             <div class="profile">
-                <img class="banner" src="' . getProfileBanner($row->banner) . '">
-                <img class="avatar" src="' . getProfileAvatar($row->avatar) . '">
+                <img class="banner" src="' . $user->getBanner() . '">
+                <img class="avatar" src="' . $user->getAvatar() . '">
                 <div class="profile-actions">
-                '. ($_GET['user'] == $_SESSION['username'] 
+                '. ($_GET['user'] == $user->name 
                     ? '<a href="profile.php?user='.$_GET['user'].'&edit=1"><button id="change-profile">Profil bearbeiten</button></a>' 
                     : '<form> 
-                        <input type="hidden" name="user" value="'.$row->username.'">
-                        <input type="hidden" name="userID" value="'.$row->id.'">' . 
+                        <input type="hidden" name="user" value="'.$user->name.'">
+                        <input type="hidden" name="userID" value="'.$user->id.'">' . 
                         ($isFollowing 
                             ? '<button type="submit" class="following">Folge ich</button>
                                 <input type="hidden" name="follow" value="true">' 
@@ -121,8 +122,8 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
                     ) . '
                 </div>
                 <br><br>
-                <p class="profile-displayname"><b>' . $row->username . '</b>' . ($row->verified ? '<b class="material-icons verified-follow">verified</b>' : '') . '</p>
-                <p class="profile-username">@' . $row->username . '</b></p>
+                <p class="profile-displayname"><b>' . $user->name . '</b>' . ($user->verified ? '<b class="material-icons verified-follow">verified</b>' : '') . '</p>
+                <p class="profile-username">@' . $user->name . '</b></p>
                 <p class="profile-description">' . $row->description . '</p>
                 <p class="profile-registered">Seit ' . strftime('%B %G', strtotime($row->registerDate)) . ' bei DHBW Social</p>
                 <div class="profile-followerinfo">
@@ -138,19 +139,19 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
                 </div>
               
                 <div id="posts" class="tabcontent" style="display: block">
-                    '.getUserPosts($row->id, $db, "AND post.referencedPostID IS NULL", true, "", false).'
+                    '.getPosts("post.referencedPostID IS NULL AND post.userID = " . $user->id, $db).'
                 </div>
                 
                 <div id="posts-answers" class="tabcontent">
-                    '.getUserPosts($row->id, $db, "", true).'
+                    '.getPosts("post.referencedPostID IS NULL AND post.userID = " . $user->id, $db, true).'
                 </div>
                 
                 <div id="media" class="tabcontent">
-                    '.getUserPosts($row->id, $db, "AND post.media IS NOT NULL", true).'
+                    '.getPosts("post.media IS NOT NULL AND post.userID = " . $user->id, $db).'
                 </div>
                 
                 <div id="likes" class="tabcontent">
-                    '.getUserPosts($row->id, $db, "AND feedback.like = 1 AND feedback.userID = ".$_SESSION["userID"]."", true, "INNER JOIN feedback ON feedback.postID = post.id").'
+                    '.getPosts("feedback.like = 1 AND feedback.userID = " . $user->id , $db).'
                 </div>
             </div>
         </div>

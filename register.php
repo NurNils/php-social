@@ -13,16 +13,13 @@ if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password
     $sql = "SELECT * FROM user WHERE `username` = '$username'";
     $res = $db->query($sql);
     while($row = mysqli_fetch_object($res)) {
-        $_SESSION['username'] = $row->username;
-        $_SESSION['userID'] = $row->id;
-        $_SESSION['verified'] = $row->verified;
-        $_SESSION['avatar'] = $row->avatar;
+        $_SESSION['user'] = new User($row);
         header("Location: index.php");
     }
 
     header("Location: index.php");
 
-} elseif(isset($_SESSION['username'])) {
+} elseif(isset($_SESSION['user']->name)) {
     header('Location: index.php');
 } else {
     echo '
@@ -30,13 +27,13 @@ if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password
         <h3>Registrierung</h3>
         <form action="register.php" method="post">
             <label>Benutzername: </label><br>
-            <input type="text" name="username" pattern="[a-z0-9_-]{3,16}$">
+            <input type="text" required="1" name="username" pattern="[a-z0-9_-]{3,16}$">
             <br>
             <label>E-Mail-Adresse: </label><br>
-            <input type="text" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+            <input id="email" type="text" name="email" required="1" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
             <br>
             <label>Passwort: </label><br>
-            <input type="password" name="password">
+            <input type="password" required="1" name="password">
             <br><br>
             <input class="btn btn-primary btn-lg" type="submit" value="Registrieren">
         </form>
