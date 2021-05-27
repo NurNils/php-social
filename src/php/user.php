@@ -7,15 +7,11 @@ class User {
     public ?string $banner;
 
     function __construct($row) {
-        $this->id = $row->id;
+        $this->id = $row->userID;
         $this->name = $row->username;
         $this->verified = $row->verified;
         $this->avatar = $row->avatar;
         $this->banner = isset($row->banner) ? $row->banner : NULL;
-    }
-
-    function getUserName() {
-        return $this->name;
     }
 
     function getAvatar() {

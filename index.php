@@ -52,7 +52,7 @@ $userfollowing = $row->ergebnis;
                 <div class="following">
                     <h3>Folge ich:</h3><br>
                     <?php
-                    $sql = "SELECT * FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=".$_SESSION['user']->id;
+                    $sql = "SELECT *, id AS userID FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=".$_SESSION['user']->id;
                     $res = $db->query($sql);
                     while($row = mysqli_fetch_object($res)) {
                         $user = new User($row);
@@ -86,11 +86,10 @@ $userfollowing = $row->ergebnis;
                         ');
                         $hashtag = htmlspecialchars("AND post.content LIKE '% ".$_GET['query']." %'");
                     }
-                    echo getPosts("post.referencedPostID IS NULL 
+                    echo getPosts("post.referencedPostID IS NULL AND (post.userID = ".$_SESSION['user']->id." OR (post.userID IN 
+                    (SELECT id FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=".$_SESSION['user']->id.")))
                     " . ($hashtag != "" ? "AND post.content LIKE '%$hashtag%'" : ""), $db, true);
                 ?>
-                <h3>Diese Posts könnten Sie auch interessieren:</h3>
-                <hr>
             </div>
         </div>
         <div class="col-2"></div>

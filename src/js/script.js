@@ -38,9 +38,9 @@ function feedback(like, userID, postID){
                 document.getElementById("dislike-btn" + postID).classList.toggle("text-danger");
             }
         } else if(request.status == 401){
-            alert("unauthorized")
+            openSnackbar("Nicht authorisiert!");
         } else {
-            alert("error")
+            openSnackbar("Fehler");
         }
       }
     };
@@ -144,6 +144,29 @@ function openSnackbar(message, error) {
     }, 3000);
 }
 
+function openNotifications() {
+    console.log("test");
+    const request = new XMLHttpRequest();
+    // TODO Add token
+    request.open('GET', `http://localhost/api.php?openNotification=true`);
+    // request.setRequestHeader('Authorization', `Basic ${getToken()}`);
+    request.setRequestHeader('Accept', 'text/plain');
+    
+    request.onreadystatechange = function() {
+      if(request.readyState == 4) {
+        if(request.status == 200) {
+            console.log(request.responseText);
+
+        } else if(request.status == 401){
+            openSnackbar("Nicht authorisiert!");
+        } else {
+            openSnackbar("Fehler");
+        }
+      }
+    };
+    request.send();
+}
+
 function deletePost(id) {
     if(confirm('Wollen Sie diesen Post wirklich löschen?')) {
 
@@ -155,9 +178,11 @@ function deletePost(id) {
 
         request.onreadystatechange = function() {
           if(request.readyState == 4) {
+            console.log(request.responseText);
             if(request.status == 200) {
+                console.log(request.responseText)
                 openSnackbar('Post erfolgreich gelöscht', false);
-                document.getElementById('post' + id).remove();
+                location.reload();
             } else if(request.status == 401){
                 openSnackbar('Du hast hierfür keine Berechtigungen', true);
             } else {

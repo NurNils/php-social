@@ -33,7 +33,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         if($description) array_push($set, "description=".$description);
         if($avatar) {
             array_push($set, "avatar='".$avatar."'");
-            $_SESSION['avatar'] = $avatar;
+            $_SESSION['user']->avatar = $avatar;
         }
         if($banner) array_push($set, "banner=".$banner);
         $sql = "UPDATE `user` SET " . implode(",", $set) . "WHERE id=" . $_SESSION['user']->id;
@@ -85,7 +85,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         header("Location: index.php");
     }
 } else if(isset($_GET['user'])) {    
-    $sql = "SELECT * FROM user WHERE username='" . htmlspecialchars($_GET['user']) . "'";
+    $sql = "SELECT *, id AS userID FROM user WHERE username='" . htmlspecialchars($_GET['user']) . "'";
     $res = $db->query($sql);
     $counter = 0;
     while($row = mysqli_fetch_object($res)) {
@@ -108,7 +108,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
                 <img class="banner" src="' . $user->getBanner() . '">
                 <img class="avatar" src="' . $user->getAvatar() . '">
                 <div class="profile-actions">
-                '. ($_GET['user'] == $user->name 
+                '. ($_GET['user'] == $_SESSION['user']->name 
                     ? '<a href="profile.php?user='.$_GET['user'].'&edit=1"><button id="change-profile">Profil bearbeiten</button></a>' 
                     : '<form> 
                         <input type="hidden" name="user" value="'.$user->name.'">
@@ -143,7 +143,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
                 </div>
                 
                 <div id="posts-answers" class="tabcontent">
-                    '.getPosts("post.referencedPostID IS NULL AND post.userID = " . $user->id, $db, true).'
+                    '.getPosts("post.userID = " . $user->id, $db, false, false, true).'
                 </div>
                 
                 <div id="media" class="tabcontent">
@@ -162,8 +162,8 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         echo('
         <div class="container">
             <div class="profile">
-                <img class="banner" src="' . getProfileBanner(NULL) . '">
-                <img class="avatar" src="' . getProfileAvatar(NULL) . '">
+                <img class="banner" src="files/banner/notFound.png">
+                <img class="avatar" src="files/avatar/defaultProfile.png">
                 <br><br><br><br><br><br>
                 <p class="profile-displayname"><b>' . $_GET['user'] . '</b></p>
                 <p class="profile-username">@' . $_GET['user'] . '</b></p>

@@ -4,13 +4,12 @@ $isLogin = true;
 include('src/php/header.php');
 
 if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])){
-    include('db.php');
     $username = mysqli_real_escape_string($db, $_POST['username']);
     $email = mysqli_real_escape_string($db, $_POST['email']);
 
     $sql = "INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES (NULL, '$username', '$email', '".md5($_POST['password'])."')";
     $db->query($sql);
-    $sql = "SELECT * FROM user WHERE `username` = '$username'";
+    $sql = "SELECT *, id AS userID FROM user WHERE `username` = '$username'";
     $res = $db->query($sql);
     while($row = mysqli_fetch_object($res)) {
         $_SESSION['user'] = new User($row);

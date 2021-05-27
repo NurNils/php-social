@@ -1,40 +1,69 @@
 <?php
 include("post.php");
 include("user.php");
+include("notification.php");
 
-function getProfileAvatar($avatar) {
-    return 'files/avatar/' . ($avatar ? $avatar : 'defaultProfile.png');
+function getNotifications($db, $count = false) {
+    if($count) {
+        $sql ="SELECT COUNT(*) AS `notificationCount` FROM notificationView WHERE userID = " . $_SESSION['user']->id;
+        $res = $db->query($sql);
+        if($row = mysqli_fetch_object($res)) {
+            $text = $row->notificationCount;
+        }
+    } else {
+        $notifications = array();
+        $sql ="SELECT * FROM notificationView WHERE userID = " . $_SESSION['user']->id;
+        $res = $db->query($sql);
+        while($row = mysqli_fetch_object($res)) {
+            $notification = new Notification($row);
+            array_push($notifications, $notification->getHtml());
+        }
+        $text = implode('<div class="dropdown-divider"></div>', $notifications);
+    }
+
+    return $text != "" ? $text : '<a class="dropdown-item"><span class="notifications-message notifications-gray">Du hast keine neuen Nachrichten</span></a>';
 }
 
-function getProfileBanner($banner) {
-    return 'files/banner/' . ($banner ? $banner : 'notFound.png');
-}
-
-function getPosts($cond, $db, $showReplies = false) {
-    $sql = "SELECT post.*, user.username, user.avatar, user.verified, COUNT(feedback.like),
-        SUM(IF(feedback.like IS NULL, 0, IF(feedback.like = 1, 1, -1))) AS likedcount,
-        IF(feedback.like = 1 AND feedback.userID = " . $_SESSION['user']->id . ", 1 ,0) AS liked,
-        COUNT(comments.referencedPostID) AS replycount
-    FROM post
-    INNER JOIN user ON user.id = post.userID 
-    LEFT JOIN feedback ON feedback.postID = post.id
-    LEFT JOIN post comments ON comments.referencedPostID = post.id
-    WHERE $cond
-    GROUP BY post.id
-    ORDER BY post.postDate DESC";
+function getPosts($cond, $db, $showReplies = false, $second = false, $getParent = false) {
+    $sql ="SELECT ergebnis.*, COUNT(comments.referencedPostID) AS replycount FROM (
+        SELECT post.*, user.username, user.avatar, user.verified,
+            SUM(IF(feedback.like IS NULL, 0, IF(feedback.like = 1, 1, -1))) AS likedcount,
+            pFeedback.like AS liked
+        FROM post
+        INNER JOIN user ON user.id = post.userID 
+        LEFT JOIN feedback ON feedback.postID = post.id
+        LEFT JOIN feedback pFeedback ON pFeedback.postID = post.id AND pFeedback.userID = ". $_SESSION['user']->id ."
+        WHERE $cond
+        GROUP BY post.id) ergebnis
+    LEFT JOIN post comments ON comments.referencedPostID = ergebnis.id
+    GROUP BY ergebnis.id
+    ORDER BY ergebnis.postDate DESC";
     $posts = "";
-
     $res = $db->query($sql);
+    $postIDs = array();
     while($row = mysqli_fetch_object($res)) {
         $post = new Post($row);
-        $posts .= $post->getHtml();
+        array_push($postIDs, $post->id);
+        if($getParent && !is_null($post->referencedPostID)) {
+            $posts .= getPostById($post->referencedPostID, $db);
+            $posts .= '<div class="comment comment-level-1">' .$post->getHtml() . '</div>';
+        } else {
+            $posts .= $post->getHtml();
+        }
 
         if($showReplies) {
             $posts .= loadReplies($post->id, 1, $db);
         }
     }
-
-    return $posts != "" ? $posts : "<br><h3 class='center'>Keine Posts gefunden :(</h3>";
+    if($showReplies && !$second) {
+        $others = getPosts("post.referencedPostID IS NULL "
+        . ( count($postIDs) != 0 ? "AND post.id NOT IN (" . implode(",", $postIDs) . ")" : ""), $db, true, true);
+        $posts .= $others == "" ? "" : "<h3>Diese Posts könnten Sie auch interessieren:</h3><hr>" . $others;
+    }
+    if(!$second) {
+        $posts = $posts != "" ? $posts : "<br><h3 class='center'>Keine Posts gefunden :(</h3>";
+    }
+    return $posts;
 }
 
 function loadReplies($postID, $replyLevel, $db){
@@ -54,7 +83,7 @@ function loadReplies($postID, $replyLevel, $db){
     return $replyString;
 }
 
-function getPostById($postID, $db, $inProfile = NULL) {
+function getPostById($postID, $db) {
     $sql = "SELECT post.*, user.username, user.avatar, user.verified, COUNT(feedback.like),
         SUM(IF(feedback.like IS NULL, 0, IF(feedback.like = 1, 1, -1))) AS likedcount,
         IF(feedback.like = 1 AND feedback.userID = " . $_SESSION['user']->id . ", 1 ,0) AS liked,
@@ -117,4 +146,13 @@ function uploadFile($uploadedFile, $destinationFolder){
         $message .= 'Error:' . $uploadedFile['error'];
     }
     throw new Exception($message);
+}
+
+function deleteFile($fileName, $destinationFolder){
+    try {
+        unlink("files/" . $destinationFolder . "/" . $fileName);
+        echo("files/" . $destinationFolder . "/" . $fileName);
+    } catch (Exception $e) {
+        echo 'Fehler: ',  $e->getMessage();
+    }
 }
