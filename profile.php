@@ -54,7 +54,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
     if($follow == "true") {
         $sql = "DELETE FROM follows WHERE `userID` = ".$_SESSION['user']->id." AND `following` = $userID";
     } else {
-        $sql = "INSERT INTO follows (`userID`, `following`, `followDate`) VALUES (".$_SESSION['user']->id.", $userID, NULL)";
+        $sql = "INSERT INTO follows (`userID`, `following`) VALUES (".$_SESSION['user']->id.", $userID)";
     }
     $db->query($sql);
     header("Location: profile.php?user=".$username);

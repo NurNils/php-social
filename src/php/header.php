@@ -28,6 +28,12 @@ if (!isset($isLogin) && !isset($_SESSION['user']->id)) {
   }
 
   if (!isset($isLogin)) {
+
+    $notificationsArray = getNotifications($db);
+
+    $text = implode('<div class="dropdown-divider"></div>', $notificationsArray);
+    $notifications = $text != "" ? $text : '<a class="dropdown-item"><span class="notifications-message notifications-gray">Du hast keine neuen Nachrichten</span></a>'; 
+
     echo ('
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="index.php">DHBW Social</a>
@@ -57,18 +63,20 @@ if (!isset($isLogin) && !isset($_SESSION['user']->id)) {
         </div>
       </form>
       <div class="btn-group">
-      <button type="button" class="btn btn-info notifications" data-toggle="dropdown" onclick="openNotifications()" aria-haspopup="true" aria-expanded="false">
-        <span class="material-icons">notifications</span>
-        <div class="notifications-wrapper">
-          <div class="new-notifications">
-            <span class="new-notifications-nr">' . getNotifications($db, true) . '</span>
+        <button type="button" class="btn btn-info notifications" data-toggle="dropdown" onclick="openNotifications()" aria-haspopup="true" aria-expanded="false">
+          <span class="material-icons">notifications</span>
+          <div class="notifications-wrapper">
+            '. (count($notificationsArray) > 0 ? 
+              '<div class="new-notifications">
+                <span class="new-notifications-nr">' . count($notificationsArray) . '</span>
+              </div>'
+            : '').'
           </div>
+        </button>
+        <div class="dropdown-menu notifications-dropdown">
+          ' . $notifications . '
         </div>
-      </button>
-      <div class="dropdown-menu notifications-dropdown">
-        ' . getNotifications($db) . '
       </div>
-    </div>
       <div class="custom-control custom-switch">
         <input type="checkbox" class="custom-control-input" id="light-dark-switch" data-onstyle="warning" onclick="modeChange()">
         <label class="custom-control-label" id="light-dark-label" for="light-dark-switch"><span class="material-icons" id="light-dark-icon">wb_sunny</span></label>

@@ -3,25 +3,15 @@ include("post.php");
 include("user.php");
 include("notification.php");
 
-function getNotifications($db, $count = false) {
-    if($count) {
-        $sql ="SELECT COUNT(*) AS `notificationCount` FROM notificationView WHERE userID = " . $_SESSION['user']->id;
-        $res = $db->query($sql);
-        if($row = mysqli_fetch_object($res)) {
-            $text = $row->notificationCount;
-        }
-    } else {
-        $notifications = array();
-        $sql ="SELECT * FROM notificationView WHERE userID = " . $_SESSION['user']->id;
-        $res = $db->query($sql);
-        while($row = mysqli_fetch_object($res)) {
-            $notification = new Notification($row);
-            array_push($notifications, $notification->getHtml());
-        }
-        $text = implode('<div class="dropdown-divider"></div>', $notifications);
+function getNotifications($db) {
+    $notifications = array();
+    $sql ="SELECT * FROM notificationView WHERE userID = " . strval($_SESSION['user']->id);
+    $res = $db->query($sql);
+    while($row = mysqli_fetch_object($res)) {
+        $notification = new Notification($row);
+        array_push($notifications, $notification->getHtml());
     }
-
-    return $text != "" ? $text : '<a class="dropdown-item"><span class="notifications-message notifications-gray">Du hast keine neuen Nachrichten</span></a>';
+    return $notifications;
 }
 
 function getPosts($cond, $db, $showReplies = false, $second = false, $getParent = false) {

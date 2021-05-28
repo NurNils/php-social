@@ -56,10 +56,10 @@ $db->query("CREATE TABLE IF NOT EXISTS `feedback` (
     FOREIGN KEY (`postID`) REFERENCES post(`id`) ON DELETE CASCADE
    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
 
-// TODO add notification selection krebs
 $db->query("DROP VIEW IF EXISTS `notificationView`");
 
-/* Types of Notifications:
+/* Notification: message, username, time, userID 
+Types of Notifications:
         - User liked/disliked a post
         - User got new follower
         - User got tagged
@@ -67,7 +67,33 @@ $db->query("DROP VIEW IF EXISTS `notificationView`");
         - User the user followed posted something
 */
 $db->query("CREATE VIEW `notificationView` AS
-            SELECT 'sss' AS `message`, now() AS `time`, username, id AS userID
-            FROM user");
-
+            SELECT user.id AS `userID`, follows.followDate AS `time`, sUser.username, 'folgt dir jetzt' AS `message` FROM user
+            INNER JOIN follows ON follows.following = user.id AND follows.followDate > user.notificationUpdateTime
+            INNER JOIN user sUser ON sUser.id = follows.userID
+            GROUP BY user.id
+            UNION ALL
+            SELECT user.id AS `userID`, post.postDate AS `time`, sUser.username, 'hat etwas gepostet' AS `message` FROM user
+            INNER JOIN follows ON follows.userID = user.id
+            INNER JOIN post ON post.userID = follows.following AND post.postDate > user.notificationUpdateTime
+            INNER JOIN user sUser ON sUser.id = follows.following
+            GROUP BY user.id
+            UNION ALL
+            SELECT user.id AS `userID`, comment.postDate AS `time`, sUser.username, 'hat auf einen Post von dir geantwortet' AS `message` FROM user
+            INNER JOIN post ON post.userID = user.id
+            INNER JOIN post comment ON comment.referencedPostID = post.id AND comment.postDate > user.notificationUpdateTime
+            INNER JOIN user sUser ON sUser.id = comment.userID
+            GROUP BY user.id
+            UNION ALL
+            SELECT user.id AS `userID`, post.postDate AS `time`, sUser.username, 'hat dich in einem Post erwähnt' AS `message` FROM user
+            INNER JOIN post ON post.content REGEXP CONCAT(CONCAT('(?<= |^)(@', user.username), ')(?= |$)') AND post.postDate > user.notificationUpdateTime
+            INNER JOIN user sUser ON sUser.id = post.userID
+            GROUP BY user.id
+            UNION ALL
+            SELECT user.id AS `userID`, feedback.likedDate AS `time`, sUser.username, 
+                IF(feedback.like = 1, 'hat deinen Post geliked', 'hat deinen Post gedisliked')
+                AS `message` FROM user
+            INNER JOIN post ON post.userID = user.id
+            INNER JOIN feedback ON feedback.postID = post.id AND feedback.likedDate > user.notificationUpdateTime AND feedback.userID != user.id
+            INNER JOIN user sUser ON sUser.id = feedback.userID
+            GROUP BY user.id");
 ?>
