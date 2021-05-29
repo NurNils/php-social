@@ -84,7 +84,7 @@ $userfollowing = $row->ergebnis;
                             </div>
                         </form>
                         ');
-                        $hashtag = htmlspecialchars("AND post.content LIKE '% ".$_GET['query']." %'");
+                        $hashtag = htmlspecialchars($_GET['query']);
                     }
                     echo getPosts("post.referencedPostID IS NULL AND (post.userID = ".$_SESSION['user']->id." OR (post.userID IN 
                     (SELECT id FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=".$_SESSION['user']->id.")))

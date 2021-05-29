@@ -503,6 +503,10 @@ body {
     width: 280px;
     word-break: break-word;
 }
+
+.no-posts {
+    color: gray;
+}
 .notifications-message {
     white-space: normal;
 }
