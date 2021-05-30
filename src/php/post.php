@@ -1,4 +1,19 @@
 <?php
+/**
+ * File: post.php
+ * Post class to create a post object 
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
+/**
+ * Name: Post
+ * 
+ * Represents a post which can be post by a user
+ */
 class Post {
     public int $id;
     public ?int $referencedPostID; // PostID of parent post
@@ -25,6 +40,11 @@ class Post {
         $this->user = new User($row);
     }
 
+    /**
+     * Get the html container of the post
+     * @param boolean $actions show actions 
+     * @return string 
+     */
     function getHtml($actions = true) {
         $html = "";
         if($this->deleted) {
@@ -56,9 +76,9 @@ class Post {
                     <p class="card-text">'.$this->getContent().'</p>
                     '. $this->getMedia() .'
                     ' . ($actions ?  
-                    '<span onclick="feedback(1, '.$_SESSION['user']->id.', '.$this->id.')" id="like-btn'.$this->id.'" class="material-icons feedback text-primary '.($this->liked == "1" ? 'text-success' : '').'">thumb_up</span>
+                    '<span onclick="feedback(1, '.$this->id.')" id="like-btn'.$this->id.'" class="material-icons feedback text-primary '.($this->liked == "1" ? 'text-success' : '').'">thumb_up</span>
                     <span class="like-count text-primary" id="like-count'.$this->id.'">'.$this->likecount.'</span>
-                    <span onclick="feedback(0, '.$_SESSION['user']->id.', '.$this->id.')" id="dislike-btn'.$this->id.'" class="text-primary material-icons feedback '.($this->liked == "0" && !is_null($this->liked) ? 'text-danger' : '').'">thumb_down</span>
+                    <span onclick="feedback(0, '.$this->id.')" id="dislike-btn'.$this->id.'" class="text-primary material-icons feedback '.($this->liked == "0" && !is_null($this->liked) ? 'text-danger' : '').'">thumb_down</span>
                     <div class="reply">
                         <a href="post.php?refPost='.$this->id.'" class="material-icons text-success reply-icon">reply</a>
                         <span class="reply-count text-success">'.$this->replycount.'</span>
@@ -71,6 +91,10 @@ class Post {
         return $html;
     }
 
+    /**
+     * Get modified content of the post with hastag and links
+     * @return string 
+     */
     function getContent() {
         $changedContent = "";
         if(isset($this->content) && $this->content != "") {
@@ -82,6 +106,10 @@ class Post {
         return $changedContent;
     }
 
+    /**
+     * Get media content (image or video)
+     * @return string 
+     */
     function getMedia() {
         $image = "";
         if(!is_null($this->media) && (str_ends_with($this->media, 'mp4') || str_ends_with($this->media, 'mov'))) {

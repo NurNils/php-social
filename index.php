@@ -1,4 +1,14 @@
 <?php
+/**
+ * File: index.php
+ * Main index file 
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 $currentpage = "home";
 include('src/php/header.php');
 

@@ -1,4 +1,14 @@
 <?php
+/**
+ * File: db.php
+ * MySQL database authorization and creation with all needed tables  
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 $db_host = 'localhost';
 $db_user = 'root';
 $db_pass = '';

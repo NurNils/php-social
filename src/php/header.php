@@ -1,4 +1,14 @@
 <?php
+/**
+ * File: header.php
+ * Header to implement in each subpage with navbar and general functionalities 
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 include('db.php');
 include('functions.php');
 
@@ -16,6 +26,7 @@ if (!isset($isLogin) && !isset($_SESSION['user']->id)) {
   <link rel="stylesheet" href="src/css/style.css">
   <link rel="icon" type="image/png" href="assets/images/logo.png"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
   <script src="src/js/topscript.js"></script>
 </head>
 

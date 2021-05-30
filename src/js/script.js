@@ -1,10 +1,25 @@
+/**
+ * File: script.js
+ * Functions loaded with body
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 if(localStorage.getItem('light')) {
     modeChange();
 } else {
     document.getElementById("light-dark-switch").click();
 }
 
-function feedback(like, userID, postID){
+/**
+ * Load feedback (set like or dislike)
+ * @param boolean like is post liked or disliked
+ * @param string postID the post id
+ */
+function feedback(like, postID){
     const request = new XMLHttpRequest();
     // TODO Add token
     request.open('GET', `http://localhost/api.php?postID=${postID}&like=${like}`);
@@ -47,6 +62,9 @@ function feedback(like, userID, postID){
     request.send();
 }
 
+/**
+ * Set light or dark theme
+ */
 function modeChange() {
     let checked = document.getElementById("light-dark-switch").checked;
     if(checked) {
@@ -111,14 +129,27 @@ function modeChange() {
     }
 }
 
+/**
+ * Search posts
+ * @param string query search terms
+ */
 function search(query) {
     window.open(`index.php?query=${query.replace('#', '%23')}`, "_self");
 }
 
+/**
+ * Open a user page
+ * @param string user name of the user should be opened
+ */
 function openUser(user) {
     window.open(`profile.php?user=${user.slice(1)}`, "_self");
 }
 
+/**
+ * Open selected profile tab
+ * @param event evt triggered event
+ * @param int tabId id of the tab
+ */
 function openProfileTabs(evt, tabId) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -133,7 +164,11 @@ function openProfileTabs(evt, tabId) {
     evt.currentTarget.className += " active";
 }
 
-/** Opens a snackbar with error or success styling */
+/**
+ * Opens a snackbar with error or success styling
+ * @param string message snackbar message
+ * @param boolean error define styling (error or success) of snackbar
+ */
 function openSnackbar(message, error) {
     const snackBar = document.getElementById("snackbar");
     snackBar.className = "show";
@@ -144,6 +179,9 @@ function openSnackbar(message, error) {
     }, 3000);
 }
 
+/**
+ * Opens notifcation 
+ */
 function openNotifications() {
     console.log("test");
     const request = new XMLHttpRequest();
@@ -167,6 +205,10 @@ function openNotifications() {
     request.send();
 }
 
+/**
+ * Deletes post by id
+ * @param string id id of the post
+ */
 function deletePost(id) {
     if(confirm('Wollen Sie diesen Post wirklich löschen?')) {
 

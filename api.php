@@ -1,4 +1,14 @@
 <?php
+/**
+ * File: api.php
+ * Asynchon api calls from frontend
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 include('src/php/functions.php');
 include('src/php/db.php');
 
