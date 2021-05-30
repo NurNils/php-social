@@ -5,11 +5,11 @@ include('src/php/header.php');
 ?>
 
 <div class="container">
-    <h1>DHBW Social</h1>
+    <h1><img src="assets/images/logo.png" width="50"> DHBW Social</h1>
     <p>
-        Willkommen zu unserem PHP-Projekt "PHP-Social" - Eine Abwandlung der bekannten Social-Media Plattform Twitter.
+        Willkommen zu unserem PHP-Projekt "DHBW Social" - Eine Abwandlung der bekannten Social-Media Plattform Twitter.
         </br>
-        Benutzerhandbuch <a href="assets/pdfs/manual.pdf" download="Benutzerhandbuch">herunterladen</a>
+        (Benutzerhandbuch <a href="assets/pdfs/manual.pdf" download="Benutzerhandbuch">herunterladen</a>)
     </p>
     <h2>Contributors:</h2>
     <ul>
@@ -20,130 +20,113 @@ include('src/php/header.php');
 
     <h2>Über das Projekt</h2>
     <p>
-        Das Projekt wurde von DHBW Studenten im 3. Semester im Rahmen der Vorlesung "PHP" entwickelt.
-        Es dient als kleine Abwandlung der Plattform "Twitter" zum Erweitern unserer PHP-Skills. 
-        Welche Funktionen insgesamt umgesetzt wurden folgen im unserem vordefinierten Feature-Set:
+        Das Projekt wurde von DHBW-Studenten im 4. Semester im Rahmen des Wahlfachs "PHP" entwickelt.
+        Es dient als kleine Abwandlung der Plattform "Twitter" zum Erweitern der PHP-Skills. 
+        Welche Funktionen insgesamt umgesetzt wurden, folgen im folgenden vordefinierten Feature-Set:
     </p>
     <p>
-        <strong>Must have</strong>
+        <h4>Must have</h4>
         <ul>
             <li>
-                Login</br>
+                Login ✔️</br>
                 Wenn der Benutzer bereits registriert ist, kann er sich einloggen und bleibt eingeloggt
             </li>
             <li>
-                Register</br>
-                Benutzer werden die Möglichkeit haben sich mit einem Namen, einer Mail und einem Passwort registrieren zu können. Dabei muss er seine Mail bestätigen
+                Register ✔️</br>
+                Benutzer haben die Möglichkeit sich mit einem Benutzername, einer E-Mail und einem Passwort zu registrieren
             </li>
             <li>
-                Feed-Seite</br>
-                Es wird eine Seite geben, auf der die neusten Posts von allen Usern angezeigt
-                werden denen man folgt, ansonsten werden andere interessante Posts angezeigt
+                Feed-Seite ✔️</br>
+                Es gibt eine Seite, auf der die neusten Posts von allen Usern angezeigt sind, falls man ihnenn folgt, ansonsten werden andere interessante Posts angezeigt
             </li>
             <li>
-                Profil-Seite einstellen</br>
-                Der Benutzer soll ein Profilbild hochladen können und eine Profilbeschreibung hinzufügen können
+                Profil-Seite einstellen ✔️</br>
+                Der Benutzer kann sein Profilbild, seinen Banner und seine Profilbeschreibung bearbeiten und setzen
             </li>
             <li>
-                Posts erstellen</br>
+                Posts erstellen ✔️</br>
                 Ein User kann ein Bild oder Video (oder keins von beiden) mit Text posten, dafür gibt es eine eigene Seite für jeden Post
             </li>
             <li>
-                Likes/Dislikes</br>
-                Benutzer können mit dem Klicken auf zwei verschiedene Icons (Daumen hoch und Daumen runter) einem Post entweder ein Like oder Dislike vergeben
+                Likes/Dislikes ✔️</br>
+                Benutzer können mit dem Klicken auf zwei verschiedene Icons (Daumen hoch und Daumen runter) einem Post entweder ein Like oder Dislike hinterlassen
             </li>
             <li>
-                Hashtag-System</br>
+                Hashtag-System ✔️</br>
                 Posts erhalten selbstdefinierte Kategorien mithilfe von Hashtags. Dadurch ist es möglich, Posts mithilfe von Hashtags zu finden
             </li>
             <li>
-                Kommentare Schreiben</br>
+                Kommentare Schreiben ✔️</br>
                 Benutzer können Kommentare unter einem Post verfassen
             </li>
             <li>
-                Info-Seite</br>
-                Es sollte eine kleine Seite geben auf der das ganze System erklärt wird
+                Info-Seite ✔️</br>
+                Eine Seite, in der alle Features des ganzen Systems gelistet und erklärt sind
             </li>
         </ul>
-        <strong>Nice to have</strong>
+        <h4>Nice to have</h4>
         <ul>
             <li>
-                Passwort Reset</br>
-                Wenn der Nutzer sein Passwort vergessen hat, kann er durch “Passwort vergessen” eine E-mail an seine Adressen erhalten. In der Mail steht ein Link zu einer Seite, auf der der Nutzer sein neues Passwort vergeben kann.
+                Passwort Reset ❌</br>
+                Wenn der Nutzer sein Passwort vergessen hat, kann er durch “Passwort vergessen” eine E-Mail an seine Adressen erhalten. In der Mail steht ein Link zu einer Seite, auf der der Nutzer sein neues Passwort vergeben kann.
             </li>
             <li>
-                Privatchat</br>
-                Benutzer sollen die Möglichkeit haben miteinander zu schreiben, ein Chat kann über das Profil gestartet werden
+                Privatchat ❌</br>
+                Benutzer sollen die Möglichkeit haben, miteinander zu schreiben. Ein Chat kann über das Profil gestartet werden
             </li>
             <li>
-                Stories</br>
+                Stories ❌</br>
                 Bilder/Video Funktion analog zu Snapchat Stories
             </li>
             <li>
-                Personalisierte Userpage</br>
+                Personalisierte Userpage ❌</br>
                 Hintergrund, Hauptfarbe, Hintergrundmusik beim Öffnen kann gesetzt werden
             </li>
             <li>
-                Follower</br>
+                Follower ✔️</br>
                 Follower-Listen: Wem folge ich und wer folgt mir
             </li>
             <li>
-                Notifications</br>
-                Mitteilungen über verschiedene Ereignisse: Likes, neuer Follower, Markierungen
+                Notifications ✔️</br>
+                Mitteilungen über verschiedene Ereignisse: Likes, neuer Follower, Markierungen und Antworten
             </li>
             <li>
-                Admin-User</br>
+                Admin-User ✔️</br>
                 Kann Posts löschen
             </li>
             <li>
-                User taggen</br>
-                Andere Benutzer können auf Posts markiert werden. Getaggter Benutzer erhält
-                Notification mit Verweis auf den Post
+                User taggen ✔️</br>
+                Andere Benutzer können auf Posts markiert werden. Getaggter Benutzer erhält Notification mit Verweis auf den Post
                 </li>
             <li>
-                Live-Aktualisierung der Kommentare/Likes</br>
+                Live-Aktualisierung der Kommentare/Likes ❌</br>
                 Wenn man sich auf einem Post befindet (oder im Feed) werden Kommentare und
                 Likes ohne neuzuladen aktualisiert
             </li>
             <li>
-                Kommentare liken</br>
+                Kommentare liken ✔️</br>
                 Kommentare können von anderen Nutzern geliked werden
             </li>
             <li>
-                Light/Darkmode</br>
-                Wenn der Nutzer sein Passwort vergessen hat, kann er durch “Passwort vergessen” eine E-mail an seine Adressen erhalten. In der Mail steht ein Link zu einer Seite, auf der der Nutzer sein neues Passwort vergeben kann.
-            </li>
-            <li>
-                Passwort Reset</br>
+                Light/Darkmode ✔️</br>
                 Der Benutzer kann zwischen einer hellen und dunklen Ansicht wechseln
-            </li>
+           </li>
         </ul>
     </p>
-    <h2>Technologien</h2>
-    <h3>PHP</h3>
-    <p>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </p>
-    <h3>MySQL</h3>
-    <p>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </p>
-    <h3>HTML</h3>
-    <p>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </p>
-    <h3>CSS</h3>
-    <p>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </p>
-    <h3>JavaScript</h3>
-    <p>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </p>
-    <h3>Bootstrap</h3>
-    <p>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </p>
+    <h3>Technologien</h3>
+    <h4>PHP</h4>
+    <p>PHP ist eine Skriptsprache mit einer an C und Perl angelehnten Syntax, die hauptsächlich zur Erstellung dynamischer Webseiten oder Webanwendungen verwendet wird. PHP wird als freie Software unter der PHP-Lizenz verbreitet.</p>
+    <h43>MySQL</h4>
+    <p>MySQL ist eines der weltweit verbreitetsten relationalen Datenbankverwaltungssysteme. Es ist als Open-Source-Software sowie als kommerzielle Enterpriseversion für verschiedene Betriebssysteme verfügbar und bildet die Grundlage für viele dynamische Webauftritte.</p>
+    <h4>HTML</h4>
+    <p>Die Hypertext Markup Language ist eine textbasierte Auszeichnungssprache zur Strukturierung elektronischer Dokumente wie Texte mit Hyperlinks, Bildern und anderen Inhalten. HTML-Dokumente sind die Grundlage des World Wide Web und werden von Webbrowsern dargestellt.</p>
+    <h4>CSS</h4>
+    <p>Cascading Style Sheets ist eine Stylesheet-Sprache für elektronische Dokumente und zusammen mit HTML und JavaScript eine der Kernsprachen des World Wide Webs. Sie ist ein sogenannter „living standard“ und wird vom World Wide Web Consortium beständig weiterentwickelt.</p>
+    <h4>JavaScript</h4>
+    <p>JavaScript ist eine Skriptsprache, die ursprünglich 1995 von Netscape für dynamisches HTML in Webbrowsern entwickelt wurde, um Benutzerinteraktionen auszuwerten, Inhalte zu verändern, nachzuladen oder zu generieren und so die Möglichkeiten von HTML und CSS zu erweitern.</p>
+    <h4>Bootstrap</h4>
+    <p>Bootstrap ist ein freies Frontend-CSS-Framework. Es enthält auf HTML und CSS basierende Gestaltungsvorlagen für Typografie, Formulare, Buttons, Tabellen, Grid-Systeme, Navigations- und andere Oberflächengestaltungselemente sowie zusätzliche, optionale JavaScript-Erweiterungen.</p>
+    <br>
 </div>
 
 <?php include('src/php/footer.php'); ?>

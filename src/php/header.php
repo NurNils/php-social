@@ -15,6 +15,7 @@ if (!isset($isLogin) && !isset($_SESSION['user']->id)) {
   <link rel="stylesheet" href="src/css/bootstrap.min.css">
   <link rel="stylesheet" href="src/css/style.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
   <script src="src/js/topscript.js"></script>
 </head>
 
@@ -36,7 +37,7 @@ if (!isset($isLogin) && !isset($_SESSION['user']->id)) {
 
     echo ('
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="index.php">DHBW Social</a>
+    <a class="navbar-brand" href="index.php"><img src="assets/images/logo.png" width="35"> DHBW Social</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
