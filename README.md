@@ -1,6 +1,6 @@
 # DHBW Social
 
-![Logo]()
+![Logo](https://github.com/NurNils/dhbw-php-social/blob/master/assets/images/logo.png)
 
 Willkommen zu unserem PHP-Projekt "DHBW Social" - Eine Abwandlung der bekannten Social-Media Plattform Twitter.
 
@@ -40,7 +40,7 @@ Welche Funktionen insgesamt umgesetzt wurden, folgen im folgenden vordefinierten
 ### Nice to have
 - Passwort Reset ❌
   - Wenn der Nutzer sein Passwort vergessen hat, kann er durch “Passwort vergessen” eine E-Mail an seine Adressen erhalten. In der Mail steht ein Link zu einer Seite, auf der der Nutzer sein neues Passwort vergeben kann.
-- Privatchat ❌
+- Privatchat ✔️
   - Benutzer sollen die Möglichkeit haben, miteinander zu schreiben. Ein Chat kann über das Profil gestartet werden
 - Stories ❌
    - Bilder/Video Funktion analog zu Snapchat Stories
