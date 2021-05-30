@@ -25,7 +25,7 @@ class Post {
         $this->user = new User($row);
     }
 
-    function getHtml() {
+    function getHtml($actions = true) {
         $html = "";
         if($this->deleted) {
             $html = '
@@ -51,17 +51,19 @@ class Post {
                         <a class="post-username"  href="profile.php?user='.$this->user->name.'">'.$this->user->name.'</a> 
                         '.($this->user->verified ? '<b class="material-icons verified-follow">verified</b>' : '').'
                         <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .$this->getTime().'</span>
-                        '.(($_SESSION['user']->verified || $_SESSION['user']->id == $this->user->id) ? '<span class="material-icons delete-post text-danger" onclick="deletePost('.$this->id.')">delete</span>' : '').'
+                        '.(($_SESSION['user']->verified || $_SESSION['user']->id == $this->user->id) && $actions ? '<span class="material-icons delete-post text-danger" onclick="deletePost('.$this->id.')">delete</span>' : '').'
                     </h5>
                     <p class="card-text">'.$this->getContent().'</p>
                     '. $this->getMedia() .'
-                    <span onclick="feedback(1, '.$_SESSION['user']->id.', '.$this->id.')" id="like-btn'.$this->id.'" class="material-icons feedback text-primary '.($this->liked == "1" ? 'text-success' : '').'">thumb_up</span>
+                    ' . ($actions ?  
+                    '<span onclick="feedback(1, '.$_SESSION['user']->id.', '.$this->id.')" id="like-btn'.$this->id.'" class="material-icons feedback text-primary '.($this->liked == "1" ? 'text-success' : '').'">thumb_up</span>
                     <span class="like-count text-primary" id="like-count'.$this->id.'">'.$this->likecount.'</span>
                     <span onclick="feedback(0, '.$_SESSION['user']->id.', '.$this->id.')" id="dislike-btn'.$this->id.'" class="text-primary material-icons feedback '.($this->liked == "0" && !is_null($this->liked) ? 'text-danger' : '').'">thumb_down</span>
                     <div class="reply">
                         <a href="post.php?refPost='.$this->id.'" class="material-icons text-success reply-icon">reply</a>
                         <span class="reply-count text-success">'.$this->replycount.'</span>
-                    </div>
+                    </div>'
+                    : ""). '
                 </div>
             </div>
             ';
@@ -92,7 +94,9 @@ class Post {
         $time = strtotime($this->postDate);
         $now = strtotime(date("Y-m-d H:i:s"));
         $diff = $now - $time;
-        if($diff - 60 < 0) {
+        if($diff == 0) {
+            return "Gerade eben";
+        } else if($diff - 60 < 0) {
             // Show seconds
             return $diff." sek";
         } elseif ($diff - 60*60 < 0) {

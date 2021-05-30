@@ -45,7 +45,9 @@ function getPosts($cond, $db, $showReplies = false, $second = false, $getParent 
             $posts .= loadReplies($post->id, 1, $db);
         }
     }
-    $posts = $posts != "" ? $posts : "<h4 class='no-posts'>Keine interessanten neuen Posts...</h4>";
+    if(!$second) {
+        $posts = $posts != "" ? $posts : "<h4 class='no-posts'>Keine interessanten Posts...</h4>";
+    }
     if($showReplies && !$second) {
         $others = getPosts("post.referencedPostID IS NULL "
         . ( count($postIDs) != 0 ? "AND post.id NOT IN (" . implode(",", $postIDs) . ")" : ""), $db, true, true);
@@ -71,7 +73,7 @@ function loadReplies($postID, $replyLevel, $db){
     return $replyString;
 }
 
-function getPostById($postID, $db) {
+function getPostById($postID, $db, $actions = true) {
     $sql = "SELECT post.*, user.username, user.avatar, user.verified, COUNT(feedback.like),
         SUM(IF(feedback.like IS NULL, 0, IF(feedback.like = 1, 1, -1))) AS likedcount,
         IF(feedback.like = 1 AND feedback.userID = " . $_SESSION['user']->id . ", 1 ,0) AS liked,
@@ -87,7 +89,7 @@ function getPostById($postID, $db) {
     $row = mysqli_fetch_object($db->query($sql));
     $post = new Post($row);
 
-    return $post->getHtml();
+    return $post->getHtml($actions);
 }
 
 function getAllowedFileExtensions($destinationFolder){

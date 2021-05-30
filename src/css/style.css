@@ -527,12 +527,18 @@ body {
     bottom: 1px;
 }
 
+.logo {
+    width: 30px;
+    margin-right: 0.5em;
+}
+
 .comment {
     margin-top:0.2em;
     border-left: gray 2px solid;
     border-radius: 5%;
     padding-left: 0.2em;
 }
+
 
 .comment-level-1 {
     margin-left: 10%;
