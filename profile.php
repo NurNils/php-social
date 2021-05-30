@@ -110,7 +110,9 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
                 <div class="profile-actions">
                 '. ($_GET['user'] == $_SESSION['user']->name 
                     ? '<a href="profile.php?user='.$_GET['user'].'&edit=1"><button id="change-profile">Profil bearbeiten</button></a>' 
-                    : '<form> 
+                    : '
+                    <a href="chats.php?user='.$user->id.'"><button class="profile-message">Nachricht</button></a>
+                    <form class="follow-form"> 
                         <input type="hidden" name="user" value="'.$user->name.'">
                         <input type="hidden" name="userID" value="'.$user->id.'">' . 
                         ($isFollowing 

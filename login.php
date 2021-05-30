@@ -7,9 +7,6 @@ if(isset($_POST['username'])){
     $res = $db->query($sql);
     while($row = mysqli_fetch_object($res)) {
         $_SESSION['user'] = new User($row);
-        $_SESSION['token'] = "123xxx123";
-        $secret = "55";
-        // TODO generate Token and secret to validate token
         header("Location: index.php");
     }
     makeLoginForm(true);

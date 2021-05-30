@@ -256,7 +256,7 @@
     box-shadow: 8px 8px #375a7f !important;
 }
 body {
-    font-family: 'Roboto medium';
+    font-family: 'Roboto medium' !important;
 }
 .profile-pic-follow {
     object-fit: cover;
@@ -495,16 +495,13 @@ body {
     bottom: 29px;
     left: 7px;
 }
-.notifications-gray {
-    color: gray;
-}
 
 .notifications-dropdown {
     width: 280px;
     word-break: break-word;
 }
 
-.no-posts {
+.gray {
     color: gray;
 }
 .notifications-message {
@@ -525,6 +522,47 @@ body {
     font-size: small;
     position: relative;
     bottom: 1px;
+}
+
+.message-box {
+    width: 50%;
+}
+
+.message-box-link {
+    text-decoration: none !important;
+}
+
+.profile-message {
+    margin-right: 1em;
+    background-color: rgb(27, 149, 224) !important;
+    color: white !important;
+}
+
+.left-msg {
+
+}
+
+.right-msg {
+    text-align: right;
+}
+
+.chat-input{
+    display: flex;
+}
+
+.chat {
+    height: 70%;
+}
+
+.follow-form {
+    float: right;
+}
+
+.message-box-content {
+    display: flex;
+}
+.chat-wrapper {
+    margin-left: 1em;
 }
 
 .logo {

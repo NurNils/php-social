@@ -56,6 +56,24 @@ $db->query("CREATE TABLE IF NOT EXISTS `feedback` (
     FOREIGN KEY (`postID`) REFERENCES post(`id`) ON DELETE CASCADE
    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
 
+$db->query("CREATE TABLE IF NOT EXISTS `chat` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `user1` int(11) NOT NULL,
+    `user2` int(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user1`) REFERENCES user(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`user2`) REFERENCES user(`id`) ON DELETE CASCADE
+   ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
+
+$db->query("CREATE TABLE IF NOT EXISTS `message` (
+    `chatID` int(11) NOT NULL,
+    `userID` int(11) NOT NULL,
+    `content` VARCHAR(1000) NOT NULL,
+    `date` DATETIME DEFAULT NOW(),
+    FOREIGN KEY (`chatID`) REFERENCES chat(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`userID`) REFERENCES user(`id`) ON DELETE CASCADE
+   ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
+
 $db->query("DROP VIEW IF EXISTS `notificationView`");
 
 /* Notification: message, username, time, userID 

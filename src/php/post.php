@@ -34,7 +34,7 @@ class Post {
                 <div class="card-body post-content">
                     <h5 class="card-title post-headline">
                         <i><a class="post-username deleted">[Gelöscht]</a> </i>
-                        <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .$this->getTime().'</span>
+                        <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .prettyTime($this->postDate).'</span>
                     </h5>
                     <p class="card-text deleted">[Gelöscht]</p>
                 </div>
@@ -50,7 +50,7 @@ class Post {
                     <h5 class="card-title post-headline">
                         <a class="post-username"  href="profile.php?user='.$this->user->name.'">'.$this->user->name.'</a> 
                         '.($this->user->verified ? '<b class="material-icons verified-follow">verified</b>' : '').'
-                        <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .$this->getTime().'</span>
+                        <span class="card-subtitle mb-2 text-muted post-date">· &nbsp;' .prettyTime($this->postDate).'</span>
                         '.(($_SESSION['user']->verified || $_SESSION['user']->id == $this->user->id) && $actions ? '<span class="material-icons delete-post text-danger" onclick="deletePost('.$this->id.')">delete</span>' : '').'
                     </h5>
                     <p class="card-text">'.$this->getContent().'</p>
@@ -84,33 +84,13 @@ class Post {
 
     function getMedia() {
         $image = "";
-        if($this->media) {
+        if(!is_null($this->media) && (str_ends_with($this->media, 'mp4') || str_ends_with($this->media, 'mov'))) {
+            $image = "<video src=\"files/post/$this->media\" class=\"post-media\" controls>
+            </video>
+            <br><br>";
+        } else if(!is_null($this->media)) {
             $image = "<img src=\"files/post/$this->media\" class=\"post-media\"/><br><br>";
         }
         return $image;
-    }
-
-    function getTime(){
-        $time = strtotime($this->postDate);
-        $now = strtotime(date("Y-m-d H:i:s"));
-        $diff = $now - $time;
-        if($diff == 0) {
-            return "Gerade eben";
-        } else if($diff - 60 < 0) {
-            // Show seconds
-            return $diff." sek";
-        } elseif ($diff - 60*60 < 0) {
-            // Show minutes
-            return round($diff/60)." min";
-        } elseif ($diff - 60*60*24 < 0) {
-            // Show hours
-            return round($diff/60/60)." std";
-        } elseif (strftime("%Y", $time) == strftime("%Y", $now)) {
-            // Show date
-            return strftime("%d %h", $time);
-        } else {
-            // Show date and year
-            return strftime("%d %h %y", $time);
-        }
     }
 }

@@ -46,7 +46,7 @@ function getPosts($cond, $db, $showReplies = false, $second = false, $getParent 
         }
     }
     if(!$second) {
-        $posts = $posts != "" ? $posts : "<h4 class='no-posts'>Keine interessanten Posts...</h4>";
+        $posts = $posts != "" ? $posts : "<h4 class='gray'>Keine interessanten Posts...</h4>";
     }
     if($showReplies && !$second) {
         $others = getPosts("post.referencedPostID IS NULL "
@@ -97,7 +97,7 @@ function getAllowedFileExtensions($destinationFolder){
         case "chat":
         case "avatar":
         case "banner": return array('jpg', 'gif', 'png', 'jpeg', 'svg');
-        case "post": return array('jpg', 'gif', 'png', 'jpeg', 'mp4', 'mp3', 'avi', 'svg');
+        case "post": return array('jpg', 'gif', 'png', 'jpeg', 'mp4', 'mpeg', 'mov' ,'svg');
         default: echo $destinationFolder . " ist kein erlaubter destinationFolder.";
     }
 }
@@ -144,5 +144,68 @@ function deleteFile($fileName, $destinationFolder){
         echo("files/" . $destinationFolder . "/" . $fileName);
     } catch (Exception $e) {
         echo 'Fehler: ',  $e->getMessage();
+    }
+}
+
+function getChats($db) {
+    $userID = $_SESSION['user']->id;
+    $sql ="SELECT user.id AS userID, user.username, user.verified, user.avatar, IF(msg.content IS NULL, '', msg.content) AS lastMsg, MAX(msg.date) AS lastMsgTime  FROM chat
+    INNER JOIN user ON user.id = IF(chat.user1 = $userID, chat.user2, chat.user1)
+    LEFT JOIN `message` msg ON msg.chatID = chat.id
+    WHERE chat.user1 = $userID OR chat.user2 = $userID
+    GROUP BY chat.id";
+    $chats = "";
+    $res = $db->query($sql);
+    while($row = mysqli_fetch_object($res)) {
+        $user = new User($row);
+        $chats .= '<a class="message-box-link" href="chats.php?chat=1">
+        <div class="card text-white bg-secondary mb-3 message-box">
+            <div class="card-header message-box-content">
+                <img src="' . $user->getAvatar() . '" class="profile-pic-follow"/>
+                <div class="chat-wrapper">
+                    <span class="chat-name"><b>'.$user->name.'</b></span><br>
+                    <span class="last-message">'.$row->lastMsg.'</span> 
+                    '.(!is_null($row->lastMsgTime) ? '<i class="gray">'.prettyTime($row->lastMsgTime).'</i>' : "").'
+                </div>
+            </div>
+        </div>
+        </a>';
+    }
+
+    return $chats;
+}
+
+function getChat($db, $chatID) {
+    $sql ="SELECT * FROM `message` WHERE chatID = $chatID";
+    $messages = '<div class="left-msg">test</div><div class="right-msg">test</div>';
+    $res = $db->query($sql);
+    while($row = mysqli_fetch_object($res)) {
+        $messages .= $row->content;
+    }
+
+    return $messages;
+}
+
+function prettyTime($time) {
+    $time = strtotime($time);
+    $now = strtotime(date("Y-m-d H:i:s"));
+    $diff = $now - $time;
+    if($diff == 0) {
+        return "Gerade eben";
+    } else if($diff - 60 < 0) {
+        // Show seconds
+        return $diff." sek";
+    } elseif ($diff - 60*60 < 0) {
+        // Show minutes
+        return round($diff/60)." min";
+    } elseif ($diff - 60*60*24 < 0) {
+        // Show hours
+        return round($diff/60/60)." std";
+    } elseif (strftime("%Y", $time) == strftime("%Y", $now)) {
+        // Show date
+        return strftime("%d %h", $time);
+    } else {
+        // Show date and year
+        return strftime("%d %h %y", $time);
     }
 }
