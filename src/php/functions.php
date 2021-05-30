@@ -1,8 +1,22 @@
 <?php
+/**
+ * File: functions.php
+ * Important main functions and db operations  
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 include("post.php");
 include("user.php");
 include("notification.php");
 
+/**
+ * Get user notifications from the database
+ * @return Notification[] 
+ */
 function getNotifications($db) {
     $notifications = array();
     $sql ="SELECT * FROM notificationView WHERE userID = " . strval($_SESSION['user']->id);
@@ -14,6 +28,14 @@ function getNotifications($db) {
     return $notifications;
 }
 
+/**
+ * Get user posts from the database
+ * @param string $cond conditions for select statement
+ * @param boolean $showReplies get post with or withour replies
+ * @param boolean $second show other interested post
+ * @param boolean $getparent get parent post if exist
+ * @return Posts[] 
+ */
 function getPosts($cond, $db, $showReplies = false, $second = false, $getParent = false) {
     $sql ="SELECT ergebnis.*, COUNT(comments.referencedPostID) AS replycount FROM (
         SELECT post.*, user.username, user.avatar, user.verified,
@@ -56,6 +78,12 @@ function getPosts($cond, $db, $showReplies = false, $second = false, $getParent 
     return $posts;
 }
 
+/**
+ * Get posts replies from the database
+ * @param string $postID post id where the replies should be loaded from
+ * @param int $replyLevel define how many levels should be loaded (maximum 3)
+ * @return string 
+ */
 function loadReplies($postID, $replyLevel, $db){
     $replyString = "";
     $sql = "SELECT * FROM post WHERE referencedPostID = " . $postID;
@@ -73,6 +101,12 @@ function loadReplies($postID, $replyLevel, $db){
     return $replyString;
 }
 
+/**
+ * Get posts by id
+ * @param string $postID post id which should be loaded
+ * @param boolean $actions show actions
+ * @return string 
+ */
 function getPostById($postID, $db, $actions = true) {
     $sql = "SELECT post.*, user.username, user.avatar, user.verified, COUNT(feedback.like),
         SUM(IF(feedback.like IS NULL, 0, IF(feedback.like = 1, 1, -1))) AS likedcount,
@@ -92,6 +126,11 @@ function getPostById($postID, $db, $actions = true) {
     return $post->getHtml($actions);
 }
 
+/**
+ * Get array of all allowed file extensions 
+ * @param string $destinationFoler destination where the file should be saved
+ * @return string[]
+ */
 function getAllowedFileExtensions($destinationFolder){
     switch($destinationFolder){
         case "chat":
@@ -102,6 +141,12 @@ function getAllowedFileExtensions($destinationFolder){
     }
 }
 
+/**
+ * Upload file to defined folder 
+ * @param file $uploadedFile uploaded file from the user
+ * @param string $destinationFoler destination where the file should be saved
+ * @return string[]
+ */
 function uploadFile($uploadedFile, $destinationFolder){
     if ( $uploadedFile['error'] === UPLOAD_ERR_OK) {
         // get details of the uploaded file
@@ -138,6 +183,11 @@ function uploadFile($uploadedFile, $destinationFolder){
     throw new Exception($message);
 }
 
+/**
+ * Delete file by name 
+ * @param string $fileName name of the file
+ * @param string $destinationFoler destination where the file is saved
+ */
 function deleteFile($fileName, $destinationFolder){
     try {
         unlink("files/" . $destinationFolder . "/" . $fileName);

@@ -1,4 +1,19 @@
 <?php
+/**
+ * File: post.php
+ * Post class to create a post object 
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
+/**
+ * Name: Post
+ * 
+ * Represents a post which can be post by a user
+ */
 class Post {
     public int $id;
     public ?int $referencedPostID; // PostID of parent post
@@ -25,6 +40,11 @@ class Post {
         $this->user = new User($row);
     }
 
+    /**
+     * Get the html container of the post
+     * @param boolean $actions show actions 
+     * @return string 
+     */
     function getHtml($actions = true) {
         $html = "";
         if($this->deleted) {
@@ -71,6 +91,10 @@ class Post {
         return $html;
     }
 
+    /**
+     * Get modified content of the post with hastag and links
+     * @return string 
+     */
     function getContent() {
         $changedContent = "";
         if(isset($this->content) && $this->content != "") {
@@ -82,6 +106,10 @@ class Post {
         return $changedContent;
     }
 
+    /**
+     * Get media content (image or video)
+     * @return string 
+     */
     function getMedia() {
         $image = "";
         if($this->media) {
@@ -90,6 +118,10 @@ class Post {
         return $image;
     }
 
+    /**
+     * Get time how long the post exists
+     * @return string 
+     */
     function getTime(){
         $time = strtotime($this->postDate);
         $now = strtotime(date("Y-m-d H:i:s"));

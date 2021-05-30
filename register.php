@@ -1,4 +1,14 @@
 <?php
+/**
+ * File: register.php
+ * Login page to register a user 
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 
 $isLogin = true;
 include('src/php/header.php');

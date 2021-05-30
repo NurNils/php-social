@@ -1,4 +1,14 @@
 <?php
+/**
+ * File: client.php
+ * Sample client for socket 
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 $host    = "127.0.0.1";
 $port    = 5000;
 $message = "Hello Server";

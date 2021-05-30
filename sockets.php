@@ -1,4 +1,14 @@
 <?php
+/**
+ * File: sockets.php
+ * Sample socket creation
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0)))
 {
     $errorcode = socket_last_error();

@@ -1,4 +1,14 @@
 <?php 
+/**
+ * File: chats.php
+ * Chats page, showing all chats of logged in user
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 $currentpage = "chats";
 include('src/php/header.php');
 ?>

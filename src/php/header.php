@@ -1,4 +1,14 @@
 <?php
+/**
+ * File: header.php
+ * Header to implement in each subpage with navbar and general functionalities 
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 include('db.php');
 include('functions.php');
 

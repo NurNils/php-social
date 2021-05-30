@@ -1,4 +1,14 @@
 <?php
+/**
+ * File: profile.php
+ * Profile page to show any user-based information and to change settings like avatar, banner and name 
+ *
+ * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
+ * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
+ * @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>
+ *
+ * @copyright Copyright (c) 2021
+ */
 $currentpage = "profile";
 include('src/php/header.php');
 
