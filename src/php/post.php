@@ -76,9 +76,9 @@ class Post {
                     <p class="card-text">'.$this->getContent().'</p>
                     '. $this->getMedia() .'
                     ' . ($actions ?  
-                    '<span onclick="feedback(1, '.$_SESSION['user']->id.', '.$this->id.')" id="like-btn'.$this->id.'" class="material-icons feedback text-primary '.($this->liked == "1" ? 'text-success' : '').'">thumb_up</span>
+                    '<span onclick="feedback(1, '.$this->id.')" id="like-btn'.$this->id.'" class="material-icons feedback text-primary '.($this->liked == "1" ? 'text-success' : '').'">thumb_up</span>
                     <span class="like-count text-primary" id="like-count'.$this->id.'">'.$this->likecount.'</span>
-                    <span onclick="feedback(0, '.$_SESSION['user']->id.', '.$this->id.')" id="dislike-btn'.$this->id.'" class="text-primary material-icons feedback '.($this->liked == "0" && !is_null($this->liked) ? 'text-danger' : '').'">thumb_down</span>
+                    <span onclick="feedback(0, '.$this->id.')" id="dislike-btn'.$this->id.'" class="text-primary material-icons feedback '.($this->liked == "0" && !is_null($this->liked) ? 'text-danger' : '').'">thumb_down</span>
                     <div class="reply">
                         <a href="post.php?refPost='.$this->id.'" class="material-icons text-success reply-icon">reply</a>
                         <span class="reply-count text-success">'.$this->replycount.'</span>
