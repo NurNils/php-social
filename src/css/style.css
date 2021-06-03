@@ -60,7 +60,7 @@
     object-fit: cover;
 }
 .main-content {
-    margin-top: 8vh;
+    margin-top: 80px;
     margin-bottom: 40px;
 }
 .post {
@@ -531,6 +531,9 @@ body {
 .message-box-link {
     text-decoration: none !important;
 }
+.chat-user {
+    padding-top: 0.5em;
+}
 
 .profile-message {
     margin-right: 1em;
@@ -538,12 +541,61 @@ body {
     color: white !important;
 }
 
-.left-msg {
+#msg-input {
+    margin-right: 2em;
+}
 
+.msg {
+    display: flex;
+    margin-top: 1em;
+}
+
+.msg-content-left, .msg-content-right {
+    padding: 10px;
+    border-radius: 1em;
+    color: white;
+    width: fit-content;
+    max-width: 50%;
+}
+
+.msg-content-right {
+    background-color: rgb(27, 149, 224);
+}
+
+.msg-content-left {
+    background-color:green;
+    margin-left: 0.5em;
+}
+
+.msg-time-left, .msg-time-right {
+    color: gray;
+    font-size: small;
+}
+.msg-time-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0.8em;
+}
+
+.msg-time-left {
+    margin-left: 3.3vw;
+}
+
+.profile-pic-msg {
+    object-fit: cover;
+    height: 2.5vw;
+    width: 2.5vw;
+    border-radius: 100%;
+    margin-top: 0.2em;
+}
+
+.left-msg {
 }
 
 .right-msg {
-    text-align: right;
+    display: flex;
+
+    justify-content: flex-end;
 }
 
 .chat-input{
@@ -551,7 +603,10 @@ body {
 }
 
 .chat {
-    height: 70%;
+    margin-top: 5%;
+    height: 60%;
+    overflow-y: auto;
+    padding: 0 2% 4% 2%;
 }
 
 .follow-form {

@@ -21,9 +21,7 @@ if(localStorage.getItem('light')) {
  */
 function feedback(like, postID){
     const request = new XMLHttpRequest();
-    // TODO Add token
     request.open('GET', `http://localhost/api.php?postID=${postID}&like=${like}`);
-    // request.setRequestHeader('Authorization', `Basic ${getToken()}`);
     request.setRequestHeader('Accept', 'text/plain');
     
     request.onreadystatechange = function() {
@@ -95,8 +93,10 @@ function modeChange() {
         for(i = 0; i < searchbarMain.length; i++) {
             searchbarMain[i].style.backgroundColor = '#353b48';
         }
-        document.getElementById('postContent').style.color = "white";
-        document.getElementById('change-description').style.color = "white";
+        try {
+            document.getElementById('postContent').style.color = "white";
+            document.getElementById('change-description').style.color = "white";
+        } catch(e) {}
     } else {
         // Change to light
         document.getElementById('light-dark-icon').innerHTML = "wb_sunny";
@@ -183,18 +183,13 @@ function openSnackbar(message, error) {
  * Opens notifcation 
  */
 function openNotifications() {
-    console.log("test");
     const request = new XMLHttpRequest();
-    // TODO Add token
     request.open('GET', `http://localhost/api.php?openNotification=true`);
-    // request.setRequestHeader('Authorization', `Basic ${getToken()}`);
     request.setRequestHeader('Accept', 'text/plain');
     
     request.onreadystatechange = function() {
       if(request.readyState == 4) {
         if(request.status == 200) {
-            console.log(request.responseText);
-
         } else if(request.status == 401){
             openSnackbar("Nicht authorisiert!");
         } else {
@@ -213,26 +208,70 @@ function deletePost(id) {
     if(confirm('Wollen Sie diesen Post wirklich löschen?')) {
 
         const request = new XMLHttpRequest();
-        // TODO Add token
         request.open('GET', `http://localhost/api.php?postID=${id}&delete=true`);
-        // request.setRequestHeader('Authorization', `Basic ${getToken()}`);
         request.setRequestHeader('Accept', 'text/plain');
 
         request.onreadystatechange = function() {
           if(request.readyState == 4) {
-            console.log(request.responseText);
             if(request.status == 200) {
-                console.log(request.responseText)
                 openSnackbar('Post erfolgreich gelöscht', false);
                 location.reload();
             } else if(request.status == 401){
                 openSnackbar('Du hast hierfür keine Berechtigungen', true);
             } else {
-                console.log(request.responseText);
                 openSnackbar('Ein Fehler ist aufgetreten', true);
             }
           }
         };
         request.send();
+    }
+}
+
+
+function sendMsg(chatID) {
+    let msg = document.getElementById("msg-input").value;
+
+    var formData = new FormData();
+    formData.append("chat", chatID);
+    formData.append("message", msg);
+    
+    const request = new XMLHttpRequest();
+    request.open('POST', `http://localhost/api.php`);
+    request.setRequestHeader('Accept', 'text/plain');
+
+    request.onreadystatechange = function() {
+      if(request.readyState == 4) {
+        if(request.status == 200) {
+            let msg = document.getElementById("msg-input").value;
+            
+            document.getElementById("msg-input").value = "";
+            document.getElementById("send-msg-btn").disabled = true;
+            console.log(request.responseText);
+            if(request.responseText == "true") {
+                refreshMessages(chatID);
+            }
+        } else if(request.status == 401){
+            openSnackbar('Du hast hierfür keine Berechtigungen', true);
+        } else {
+            openSnackbar('Ein Fehler ist aufgetreten', true);
+        }
+      }
+    };
+    request.send(formData);
+}
+
+function sendMsgCheck(chatID) {
+    let msg = document.getElementById("msg-input").value;
+    if(event.key === 'Enter' && msg != "") {
+        sendMsg(chatID);      
+    }
+}
+
+function msgChanged() {
+    let msg = document.getElementById("msg-input").value;
+    if(msg != "" ) {
+        document.getElementById("send-msg-btn").disabled = false;
+    } else {
+        document.getElementById("send-msg-btn").disabled = true;
     }
 }

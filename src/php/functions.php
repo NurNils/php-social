@@ -199,7 +199,7 @@ function deleteFile($fileName, $destinationFolder){
 
 function getChats($db) {
     $userID = $_SESSION['user']->id;
-    $sql ="SELECT user.id AS userID, user.username, user.verified, user.avatar, IF(msg.content IS NULL, '', msg.content) AS lastMsg, MAX(msg.date) AS lastMsgTime  FROM chat
+    $sql ="SELECT chat.id, user.id AS userID, user.username, user.verified, user.avatar, IF(msg.content IS NULL, '', msg.content) AS lastMsg, MAX(msg.date) AS lastMsgTime  FROM chat
     INNER JOIN user ON user.id = IF(chat.user1 = $userID, chat.user2, chat.user1)
     LEFT JOIN `message` msg ON msg.chatID = chat.id
     WHERE chat.user1 = $userID OR chat.user2 = $userID
@@ -208,7 +208,7 @@ function getChats($db) {
     $res = $db->query($sql);
     while($row = mysqli_fetch_object($res)) {
         $user = new User($row);
-        $chats .= '<a class="message-box-link" href="chats.php?chat=1">
+        $chats .= '<a class="message-box-link" href="chats.php?chat='.$row->id.'">
         <div class="card text-white bg-secondary mb-3 message-box">
             <div class="card-header message-box-content">
                 <img src="' . $user->getAvatar() . '" class="profile-pic-follow"/>
@@ -226,17 +226,37 @@ function getChats($db) {
 }
 
 function getChat($db, $chatID) {
-    $sql ="SELECT * FROM `message` WHERE chatID = $chatID";
-    $messages = '<div class="left-msg">test</div><div class="right-msg">test</div>';
+    $userID = $_SESSION['user']->id;
+    $sql ="SELECT msg.*, user.id AS userID, user.username, user.verified, user.avatar FROM `message` msg
+    INNER JOIN user ON user.id = msg.userID
+    WHERE chatID = $chatID
+    ORDER BY msg.date ASC";
+    $messages = "";
     $res = $db->query($sql);
+    $lastMsg = 0;
     while($row = mysqli_fetch_object($res)) {
-        $messages .= $row->content;
+        $user = new User($row);
+        $userID = $_SESSION['user']->id;
+        if($user->id == $userID) {
+            $messages .= '<div class="right-msg msg">
+                <div class="msg-content-right">'.$row->content.'</div>
+            </div>
+            <i class="msg-time-right">'.prettyTime($row->date).'</i>';
+        } else {
+            $messages .= '<div class="left-msg msg">
+            <img src="' . $user->getAvatar() . '" class="profile-pic-msg"/>
+                <div class="msg-content-left">'.$row->content.'</div>
+            </div>
+            <i class="msg-time-left">'.prettyTime($row->date).'</i>';
+        }
+        $lastMsg = max(strtotime($row->date), $lastMsg);
     }
 
-    return $messages;
+    return array("html" => $messages, "lastMsg" => $lastMsg);
 }
 
 function prettyTime($time) {
+    setlocale(LC_TIME, "de_DE");
     $time = strtotime($time);
     $now = strtotime(date("Y-m-d H:i:s"));
     $diff = $now - $time;

@@ -8,6 +8,9 @@
  *
  * @copyright Copyright (c) 2021
  */
+
+let lastMsg = 0;
+
 /**
  * Opens a snackbar with error or success styling
  * @param string message snackbar message
@@ -21,4 +24,44 @@ function openSnackbar(message, error) {
     setTimeout(() => {
         snackBar.className = snackBar.className.replace("show", "");
     }, 3000);
+}
+
+
+function refreshMessages(chatID) {
+    var formData = new FormData();
+    formData.append("lastMsg", lastMsg/1000);
+    formData.append("chat", chatID);
+
+    const request = new XMLHttpRequest();
+    request.open('POST', `http://localhost/api.php`);
+    request.setRequestHeader('Accept', 'text/plain');
+
+    request.onreadystatechange = function() {
+        if(request.readyState == 4) {
+            if(request.status == 200) {
+                console.log(request.responseText)
+                try {
+                    res = JSON.parse(request.responseText);
+                    lastMsg = res.lastMsg*1000;
+                    document.getElementById("chat").innerHTML += res.html;
+                    var chat = document.getElementById("chat");
+                    chat.scrollTop = chat.scrollHeight;
+                } catch(e) {
+                    openSnackbar("Ein Fehler ist aufgetreten", true);
+                };
+            } else if(request.status == 401){
+                openSnackbar('Du hast hierfür keine Berechtigungen', true);
+            } else {
+                openSnackbar('Ein Fehler ist aufgetreten', true);
+            }
+        }
+    };
+    request.send(formData);
+}
+
+function startTimeout(chatID) {
+    setTimeout(() => {
+        refreshMessages(chatID);
+        startTimeout(chatID);
+    }, 1000);
 }

@@ -40,6 +40,47 @@ if(isset($_SESSION['user'])) {
     } else if(isset($_GET['openNotification'])) {
         $sql = "UPDATE user SET `notificationUpdateTime` = now() WHERE `id` = $userID";
         $db->query($sql);
+    } else if(isset($_POST['chat']) && isset($_POST['message'])) {
+        $chatID = mysqli_real_escape_string($db, $_POST['chat']);
+        $message = mysqli_real_escape_string($db, $_POST['message']);
+
+        $userID = $_SESSION['user']->id;
+
+        $sql = "SELECT * FROM chat WHERE id = $chatID AND (user1 = $userID OR user2 = $userID)";
+        if($row = mysqli_fetch_object($db->query($sql))) {
+            $sql = "INSERT INTO `message` (`chatID`, `userID`, `content`) VALUES ($chatID, $userID, '$message')";
+            $db->query($sql);
+            echo("true");
+        }
+    } else if(isset($_POST['chat']) && isset($_POST['lastMsg'])) {
+        $chatID = mysqli_real_escape_string($db, $_POST['chat']);
+        $lastMsg = mysqli_real_escape_string($db, $_POST['lastMsg']);
+        $userID = $_SESSION['user']->id;
+
+        $messages = "";
+        $sql = "SELECT msg.*, user.id AS userID, user.username, user.verified, user.avatar FROM `message` msg
+        INNER JOIN user ON user.id = msg.userID
+        WHERE chatID = $chatID AND `date` > '". date('Y-m-d H:i:s' , $lastMsg) ."'
+        ORDER BY msg.date ASC";
+        $res = $db->query($sql);
+        while($row = mysqli_fetch_object($res)) {
+            $user = new User($row);
+            $userID = $_SESSION['user']->id;
+            if($user->id == $userID) {
+                $messages .= '<div class="right-msg msg">
+                    <div class="msg-content-right">'.$row->content.'</div>
+                </div>
+                <i class="msg-time-right">'.prettyTime($row->date).'</i>';
+            } else {
+                $messages .= '<div class="left-msg msg">
+                <img src="' . $user->getAvatar() . '" class="profile-pic-msg"/>
+                    <div class="msg-content-left">'.$row->content.'</div>
+                </div>
+                <i class="msg-time-left">'.prettyTime($row->date).'</i>';
+            }
+            $lastMsg = max(strtotime($row->date), $lastMsg);
+        }
+        echo(json_encode(array("html" => $messages, "lastMsg" => $lastMsg)));
     }
 } else {
     echo('No permission');

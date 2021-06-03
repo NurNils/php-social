@@ -44,7 +44,7 @@ if (!isset($isLogin) && !isset($_SESSION['user']->id)) {
     $notificationsArray = getNotifications($db);
 
     $text = implode('<div class="dropdown-divider"></div>', $notificationsArray);
-    $notifications = $text != "" ? $text : '<a class="dropdown-item"><span class="notifications-message notifications-gray">Du hast keine neuen Nachrichten</span></a>'; 
+    $notifications = $text != "" ? $text : '<a class="dropdown-item"><span class="notifications-message gray">Du hast keine neuen Nachrichten</span></a>'; 
 
     echo ('
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">

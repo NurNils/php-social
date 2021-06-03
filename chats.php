@@ -20,25 +20,54 @@ if(isset($_GET['user'])) {
     $sql ="SELECT id FROM chat WHERE (user1 = $userID AND user2 = $ownID) OR (user1 = $ownID AND user2 = $userID)";
     $res = $db->query($sql);
     if($row = mysqli_fetch_object($res)) {
-        if(is_null($row->id)) {
-            $sql = "INSERT INTO chat (`user1`, `user2`) VALUES ($ownID, $userID)";
-            $db->query($sql);
-            echo(getChat($db, $row->id));
-        } else {
-            echo(getChat($db, $row->id));
+        header("Location: chats.php?chat=".$row->id);
+    } else {
+        $sql = "INSERT INTO chat (`user1`, `user2`) VALUES ($ownID, $userID)";
+        $db->query($sql);
+        $sql = "SELECT id FROM chat WHERE user1 = $ownID AND user2 = $userID";
+        $res2 = $db->query($sql);
+        if($row2 = mysqli_fetch_object($res2)) {
+            header("Location: chat.php?chat=".$row2->id);
         }
     }
-
 } else if(isset($_GET['chat'])) {
-    echo('<div class="container"><div class="chat">');
     $chatID = mysqli_real_escape_string($db, $_GET['chat']);
-    echo(getChat($db, $chatID));
-    echo('</div>
-        <div class="form-group chat-input">
-            <input type="text" class="form-control" placeholder="Neue Nachricht...">
-            <button type="button" class="btn btn-primary">Senden</button>
+    $userID = $_SESSION['user']->id;
+    $sql ="SELECT chat.id AS chatID, user.id AS userID, user.username, user.verified, user.avatar FROM chat
+    INNER JOIN user ON user.id = IF(chat.user1 = $userID, chat.user2, chat.user1)
+    WHERE chat.id = $chatID";
+    $res = $db->query($sql);
+    if($row = mysqli_fetch_object($res)) {
+        $user = new User($row);
+        echo('<div class="container">
+        <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>
+
+        <div class="chat-user">
+            <a class="reply-icon" href="profile.php?user='. $user->name .'">
+                <img src="' . $user->getAvatar() . '" class="profile-pic-follow"/>
+            </a>
+            <a class="chat-name post-username" href="profile.php?user='. $user->name .'"><b>'.$user->name.'</b></a><br>
         </div>
-    </div>');
+        <hr>
+        <div class="chat" id="chat">');
+        $chatID = mysqli_real_escape_string($db, $_GET['chat']);
+        $chat = getChat($db, $chatID);
+
+        echo($chat["html"]);
+        echo('</div>
+            <div class="form-group chat-input">
+                <input type="text" class="form-control" oninput="msgChanged()" onkeydown="sendMsgCheck('.$row->chatID.')" id="msg-input" placeholder="Neue Nachricht...">
+                <button type="button" id="send-msg-btn" disabled onclick="sendMsg('.$row->chatID.')" class="btn btn-primary">Senden</button>
+            </div>
+        </div>
+        
+        <script>
+        lastMsg = '.$chat['lastMsg'].'*1000;
+        var chat = document.getElementById("chat");
+        chat.scrollTop = chat.scrollHeight;
+        startTimeout('.$chatID.');</script>');
+        // TODO add "live" reload for new messages
+    }
 } else {
     echo('
     <div class="container">
