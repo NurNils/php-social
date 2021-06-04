@@ -27,7 +27,7 @@ if(isset($_GET['user'])) {
         $sql = "SELECT id FROM chat WHERE user1 = $ownID AND user2 = $userID";
         $res2 = $db->query($sql);
         if($row2 = mysqli_fetch_object($res2)) {
-            header("Location: chat.php?chat=".$row2->id);
+            header("Location: chats.php?chat=".$row2->id);
         }
     }
 } else if(isset($_GET['chat'])) {

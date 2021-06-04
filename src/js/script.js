@@ -238,7 +238,9 @@ function sendMsg(chatID) {
     const request = new XMLHttpRequest();
     request.open('POST', `http://localhost/api.php`);
     request.setRequestHeader('Accept', 'text/plain');
-
+    let ownID = sending.counter+=1;
+    sending = {status: true, counter: ownID};
+    clearTimeout(timeout);
     request.onreadystatechange = function() {
       if(request.readyState == 4) {
         if(request.status == 200) {
@@ -247,8 +249,14 @@ function sendMsg(chatID) {
             document.getElementById("msg-input").value = "";
             document.getElementById("send-msg-btn").disabled = true;
             console.log(request.responseText);
+            console.log(ownID, sending);
+            if(sending.counter == ownID) {
+                sending.status = false;
+            }
             if(request.responseText == "true") {
-                refreshMessages(chatID);
+                if(!sending.status) {
+                    startTimeout(chatID);
+                }
             }
         } else if(request.status == 401){
             openSnackbar('Du hast hierfür keine Berechtigungen', true);

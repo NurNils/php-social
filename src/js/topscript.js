@@ -10,6 +10,8 @@
  */
 
 let lastMsg = 0;
+let timeout;
+let sending = {status: false, counter: 0};
 
 /**
  * Opens a snackbar with error or success styling
@@ -43,9 +45,11 @@ function refreshMessages(chatID) {
                 try {
                     res = JSON.parse(request.responseText);
                     lastMsg = res.lastMsg*1000;
-                    document.getElementById("chat").innerHTML += res.html;
-                    var chat = document.getElementById("chat");
-                    chat.scrollTop = chat.scrollHeight;
+                    if(res.html != "") {
+                        document.getElementById("chat").innerHTML += res.html;
+                        var chat = document.getElementById("chat");
+                        chat.scrollTop = chat.scrollHeight;
+                    }
                 } catch(e) {
                     openSnackbar("Ein Fehler ist aufgetreten", true);
                 };
@@ -60,8 +64,10 @@ function refreshMessages(chatID) {
 }
 
 function startTimeout(chatID) {
-    setTimeout(() => {
-        refreshMessages(chatID);
+    timeout = setTimeout(() => {
+        if(!sending.status) {
+            refreshMessages(chatID);
+        }
         startTimeout(chatID);
-    }, 1000);
+    }, 500);
 }
