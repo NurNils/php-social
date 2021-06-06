@@ -41,62 +41,39 @@ if (isset($_GET['user'])) {
   // Get user from chat and confirm that it is the right chatID
   if ($row = mysqli_fetch_object($res)) {
     $user = new User($row);
-    echo '<div class="container">
-        <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>
-
-        <div class="chat-user">
-            <a class="reply-icon" href="profile.php?user=' .
-      $user->name .
-      '">
-                <img src="' .
-      $user->getAvatar() .
-      '" class="profile-pic-follow"/>
-            </a>
-            <a class="chat-name post-username" href="profile.php?user=' .
-      $user->name .
-      '"><b>' .
-      $user->name .
-      '</b></a><br>
-        </div>
-        <hr>
-        <div class="chat" id="chat">';
+    echo '
+    <div class="container">
+      <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>
+      <div class="chat-user">
+        <a class="reply-icon" href="profile.php?user=' . $user->name . '">
+          <img src="' . $user->getAvatar() . '" class="profile-pic-follow"/>
+        </a>
+        <a class="chat-name post-username" href="profile.php?user=' . $user->name . '"><b>' . $user->name . '</b></a>
+        <br>
+      </div>
+      <hr>
+      <div class="chat" id="chat">';
     $chatID = mysqli_real_escape_string($db, $_GET['chat']);
     $chat = getChat($chatID); // Show chat messages
-
     echo $chat['html'];
-    echo '</div>
-            <div class="form-group chat-input">
-                <input type="text" class="form-control" oninput="msgChanged()" onkeydown="sendMsgCheck(' .
-      $row->chatID .
-      ')" id="msg-input" placeholder="Neue Nachricht...">
-                <button type="button" id="send-msg-btn" disabled onclick="sendMsg(' .
-      $row->chatID .
-      ')" class="btn btn-primary">Senden</button>
-            </div>
-        </div>
-        
-        <script>
-        lastMsg = ' .
-      $chat['lastMsg'] .
-      '*1000;
-        var chat = document.getElementById("chat");
-        chat.scrollTop = chat.scrollHeight;
-        startTimeout(' .
-      $chatID .
-      ');</script>';
+    echo '
+    </div>
+    <div class="form-group chat-input">
+      <input type="text" class="form-control" oninput="msgChanged()" onkeydown="sendMsgCheck(' . $row->chatID . ')" id="msg-input" placeholder="Neue Nachricht...">
+      <button type="button" id="send-msg-btn" disabled onclick="sendMsg(' . $row->chatID . ')" class="btn btn-primary">Senden</button>
+    </div>
+  </div>
+  <script>
+    lastMsg = ' . $chat['lastMsg'] . '*1000;
+    var chat = document.getElementById("chat");
+    chat.scrollTop = chat.scrollHeight;
+    startTimeout(' . $chatID . ');</script>';
   } else {
     header('Location: chats.php'); // ChatID not valid -> Redirect
   }
   // Lists all chats with users
 } else {
-  echo '
-    <div class="container">
-        <h1>Chats</h1>
-        ' .
-    getChats() .
-    '
-    </div>
-    ';
+  echo '<div class="container"><h1>Chats</h1>' . getChats() . '</div>';
 }
 
 include 'src/php/footer.php'; ?>

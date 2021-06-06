@@ -60,19 +60,13 @@ if (isset($_POST['postContent']) || isset($_FILES['uploadedFile'])) {
 
   echo '
         <form enctype="multipart/form-data" action="post.php" method="post">
-            <h2>Inhalt</h2>
-            <textarea maxlength="280" id="postContent" rows="6" name="postContent"></textarea>
-            <h2>Bild oder Video</h2>
-            <input type="file" id="file-upload" name="uploadedFile"><br>
-            ' .
-    (isset($_GET['refPost'])
-      ? '<input type="hidden" name="refPost" value="' . $_GET['refPost'] . '"/>'
-      : '') .
-    '
-            <p class="text-danger">' .
-    $error .
-    '</p>
-            <input class="btn btn-primary btn-lg" type="submit" value="Pfostieren!">
+          <h2>Inhalt</h2>
+          <textarea maxlength="280" id="postContent" rows="6" name="postContent"></textarea>
+          <h2>Bild oder Video</h2>
+          <input type="file" id="file-upload" name="uploadedFile">
+          <br>' . (isset($_GET['refPost']) ? '<input type="hidden" name="refPost" value="' . $_GET['refPost'] . '"/>' : '') . 
+          '<p class="text-danger">' . $error . '</p>
+          <input class="btn btn-primary btn-lg" type="submit" value="Pfostieren!">
         </form>
     </div>
     ';

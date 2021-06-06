@@ -33,16 +33,11 @@ class Notification
    */
   function getHtml()
   {
-    return '<a class="dropdown-item">
-            <b>' .
-      $this->username .
-      '</b> 
-            <span class="notifications-message">' .
-      $this->message .
-      '</span>
-            <i class="gray">' .
-      prettyTime($this->time) .
-      '</i>
-        </a>';
+    return 
+      '<a class="dropdown-item">
+        <b>' . $this->username . '</b> 
+        <span class="notifications-message">' . $this->message . '</span>
+        <i class="gray">' . prettyTime($this->time) . '</i>
+      </a>';
   }
 }

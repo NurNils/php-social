@@ -39,23 +39,16 @@ $userfollowing = $row->ergebnis;
                         <div class="center">
                             <!-- Avatar -->
                             <a href="profile.php?user=<?php echo $_SESSION['user']->name; ?>">
-                                <img src="<?php echo $_SESSION[
-                                  'user'
-                                ]->getAvatar(); ?>" class="profile-pic-side"/>
+                                <img src="<?php echo $_SESSION['user']->getAvatar(); ?>" class="profile-pic-side"/>
                             </a>
                             <!-- Username -->
                             <b>
-                                <a class="post-username" href="profile.php?user=<?php echo $_SESSION[
-                                  'user'
-                                ]->name; ?>">
+                                <a class="post-username" href="profile.php?user=<?php echo $_SESSION['user']->name; ?>">
                                     <?php echo $_SESSION['user']->name; ?>
                                 </a>
                             </b>
                             <!-- Verified Badge -->
-                            <b class="material-icons verified-follow"><?php echo $_SESSION['user']
-                              ->verified
-                              ? 'verified'
-                              : ''; ?></b>
+                            <b class="material-icons verified-follow"><?php echo $_SESSION['user']->verified ? 'verified' : ''; ?></b>
                         </div>
                         <br>
                         <div class="row">
@@ -85,30 +78,18 @@ $userfollowing = $row->ergebnis;
                 <div class="following">
                     <h3>Folge ich:</h3><br>
                     <?php
-                    $sql =
-                      'SELECT *, id AS userID FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=' .
-                      $_SESSION['user']->id;
+                    $sql = 'SELECT *, id AS userID FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=' . $_SESSION['user']->id;
                     $res = $db->query($sql);
-                    // Show all following accounts
+                    // Shows all following accounts
                     while ($row = mysqli_fetch_object($res)) {
                       $user = new User($row);
                       echo '
                         <div class="follower">
-                            <a href="profile.php?user=' .
-                        $user->name .
-                        '">
-                                <img src="' .
-                        $user->getAvatar() .
-                        '" class="profile-pic-follow"/>
+                            <a href="profile.php?user=' . $user->name . '">
+                                <img src="' . $user->getAvatar() . '" class="profile-pic-follow"/>
                             </a>
-                            <b><a class="post-username" href="profile.php?user=' .
-                        $user->name .
-                        '">' .
-                        $user->name .
-                        '</a></b>
-                            <b class="material-icons verified-follow">' .
-                        ($user->verified ? 'verified' : '') .
-                        '</b>
+                            <b><a class="post-username" href="profile.php?user=' . $user->name . '">' . $user->name . '</a></b>
+                            <b class="material-icons verified-follow">' . ($user->verified ? 'verified' : '') . '</b>
                         </div>
                         <br>';
                     }
@@ -120,32 +101,21 @@ $userfollowing = $row->ergebnis;
             <div class="center-div">
                 <?php
                 $hashtag = '';
-                // ShowS search bar if query is set
+                // Shows search bar if query is set
                 if (isset($_GET['query'])) {
                   echo '
                         <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>
                         <form method="get" action="index.php" class="search-form">
                             <div class="searchbar-main">
-                                <input class="search_input-main" type="text" pattern="#[a-zA-Z0-9]+" name="query" value="' .
-                    $_GET['query'] .
-                    '" placeholder="Hashtags suchen...">
+                                <input class="search_input-main" type="text" pattern="#[a-zA-Z0-9]+" name="query" value="' . $_GET['query'] . '" placeholder="Hashtags suchen...">
                                 <span class="material-icons fas fa-search">search</span>
                             </div>
-                        </form>
-                        ';
+                        </form>';
                   $hashtag = htmlspecialchars($_GET['query']);
                 }
                 echo getPosts(
-                  'post.referencedPostID IS NULL AND (post.userID = ' .
-                    $_SESSION['user']->id .
-                    " OR (post.userID IN 
-                    (SELECT id FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=" .
-                    $_SESSION['user']->id .
-                    ")))
-                    " .
-                    ($hashtag != '' ? "AND post.content LIKE '%$hashtag%'" : ''),
-                  $hashtag == '' ? true : false
-                );
+                  'post.referencedPostID IS NULL AND (post.userID = ' . $_SESSION['user']->id . " OR (post.userID IN  (SELECT id FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=" . $_SESSION['user']->id . ")))" . ($hashtag != '' ? "AND post.content LIKE '%$hashtag%'" : ''), 
+                  $hashtag == '' ? true : false);
                 ?>
             </div>
         </div>

@@ -105,9 +105,8 @@ function loadReplies($postID, $replyLevel)
   $sql = 'SELECT * FROM post WHERE referencedPostID = ' . $postID;
   $replies = $db->query($sql);
 
-  if ($replyLevel > 3) {
-    $replyLevel = 3;
-  }
+  // Sets max reply level if reached to 3
+  if ($replyLevel > 3) $replyLevel = 3;
 
   while ($reply = mysqli_fetch_object($replies)) {
     $replyString .=
@@ -118,7 +117,6 @@ function loadReplies($postID, $replyLevel)
       '</div>';
     $replyString .= loadReplies($reply->id, $replyLevel + 1); // Recursion to load replies
   }
-
   return $replyString;
 }
 
@@ -244,30 +242,19 @@ function getChats()
   while ($row = mysqli_fetch_object($res)) {
     $user = new User($row);
     $chats .=
-      '<a class="message-box-link" href="chats.php?chat=' .
-      $row->id .
-      '">
+      '<a class="message-box-link" href="chats.php?chat=' . $row->id . '">
         <div class="card text-white bg-secondary mb-3 message-box">
-            <div class="card-header message-box-content">
-                <img src="' .
-      $user->getAvatar() .
-      '" class="profile-pic-follow"/>
-                <div class="chat-wrapper">
-                    <span class="chat-name"><b>' .
-      $user->name .
-      '</b></span><br>
-                    <span class="last-message">' .
-      $row->lastMsg .
-      '</span> 
-                    ' .
-      (!is_null($row->lastMsgTime)
-        ? '<i class="gray">' . prettyTime($row->lastMsgTime) . '</i>'
-        : '') .
-      '
-                </div>
+          <div class="card-header message-box-content">
+            <img src="' . $user->getAvatar() . '" class="profile-pic-follow"/>
+            <div class="chat-wrapper">
+              <span class="chat-name"><b>' . $user->name . '</b></span>
+              <br>
+              <span class="last-message">' . $row->lastMsg . '</span> 
+              ' . (!is_null($row->lastMsgTime) ? '<i class="gray">' . prettyTime($row->lastMsgTime) . '</i>' : '') . '
             </div>
+          </div>
         </div>
-        </a>';
+      </a>';
   }
   return $chats;
 }
@@ -294,30 +281,19 @@ function getChat($chatID)
     if ($user->id == $userID) {
       $messages .=
         '<div class="right-msg msg">
-                <div class="msg-content-right">' .
-        $row->content .
-        '</div>
-            </div>
-            <i class="msg-time-right">' .
-        prettyTime($row->date) .
-        '</i>';
+          <div class="msg-content-right">' . $row->content . '</div>
+        </div>
+        <i class="msg-time-right">' . prettyTime($row->date) . '</i>';
     } else {
       $messages .=
         '<div class="left-msg msg">
-            <img src="' .
-        $user->getAvatar() .
-        '" class="profile-pic-msg"/>
-                <div class="msg-content-left">' .
-        $row->content .
-        '</div>
-            </div>
-            <i class="msg-time-left">' .
-        prettyTime($row->date) .
-        '</i>';
+          <img src="' . $user->getAvatar() . '" class="profile-pic-msg"/>
+            <div class="msg-content-left">' . $row->content . '</div>
+        </div>
+        <i class="msg-time-left">' . prettyTime($row->date) . '</i>';
     }
     $lastMsg = max(strtotime($row->date), $lastMsg);
   }
-
   return ['html' => $messages, 'lastMsg' => $lastMsg];
 }
 

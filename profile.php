@@ -96,17 +96,13 @@ if (isset($_POST['user']) && isset($_POST['edit'])) {
         <h1>Profil bearbeiten</h1>
         <form enctype="multipart/form-data" action="profile.php" method="post">
             <h2>Beschreibung</h2>
-            <textarea maxlength="160" id="change-description" name="description" rows="6" cols="50">' .
-      $description .
-      '</textarea>
+            <textarea maxlength="160" id="change-description" name="description" rows="6" cols="50">' . $description . '</textarea>
             <br>
             <h2>Avatar</h2>
             <input type="file" id="file-upload" name="avatar"/><br>
             <h2>Banner</h2>
             <input type="file" id="file-upload" name="banner"/><br>
-            <input type="hidden" name="user" value="' .
-      $_GET['user'] .
-      '"/>
+            <input type="hidden" name="user" value="' . $_GET['user'] . '"/>
             <input type="hidden" name="edit" value="1"/>
             <br>
             <input class="btn btn-primary btn-lg" type="submit" value="Änderungen speichern">
@@ -140,117 +136,61 @@ if (isset($_POST['user']) && isset($_POST['edit'])) {
     $user = new User($row);
     echo '
         <div class="container">
-            <div class="profile">
-                <img class="banner" src="' .
-      $user->getBanner() .
-      '">
-                <img class="avatar" src="' .
-      $user->getAvatar() .
-      '">
-                <div class="profile-actions">
-                ' .
-      ($_GET['user'] == $_SESSION['user']->name
-        ? '<a href="profile.php?user=' .
-          $_GET['user'] .
-          '&edit=1"><button id="change-profile">Profil bearbeiten</button></a>'
-        : '
-                    <a href="chats.php?user=' .
-          $user->id .
-          '"><button class="profile-message">Nachricht</button></a>
-                    <form class="follow-form"> 
-                        <input type="hidden" name="user" value="' .
-          $user->name .
-          '">
-                        <input type="hidden" name="userID" value="' .
-          $user->id .
-          '">' .
-          ($isFollowing
+          <div class="profile">
+            <img class="banner" src="' . $user->getBanner() . '">
+            <img class="avatar" src="' . $user->getAvatar() . '">
+            <div class="profile-actions">'
+            . ($_GET['user'] == $_SESSION['user']->name
+            ? '<a href="profile.php?user=' . $_GET['user'] . '&edit=1"><button id="change-profile">Profil bearbeiten</button></a>'
+            : '<a href="chats.php?user=' . $user->id . '"><button class="profile-message">Nachricht</button></a>
+              <form class="follow-form"> 
+                <input type="hidden" name="user" value="' . $user->name . '">
+                <input type="hidden" name="userID" value="' . $user->id . '">' 
+            . ($isFollowing 
             ? '<button type="submit" class="following">Folge ich</button>
-                                <input type="hidden" name="follow" value="true">'
+              <input type="hidden" name="follow" value="true">'
             : '<button type="submit">Folgen</button>
-                                <input type="hidden" name="follow" value="false">') .
-          '</form>') .
-      '
-                </div>
-                <br><br>
-                <p class="profile-displayname"><b>' .
-      $user->name .
-      '</b>' .
-      ($user->verified ? '<b class="material-icons verified-follow">verified</b>' : '') .
-      '</p>
-                <p class="profile-username">@' .
-      $user->name .
-      '</b></p>
-                <p class="profile-description">' .
-      $row->description .
-      '</p>
-                <p class="profile-registered">Seit ' .
-      strftime('%B %G', strtotime($row->registerDate)) .
-      ' bei DHBW Social</p>
-                <div class="profile-followerinfo">
-                    <div class="profile-following">' .
-      $userfollowing .
-      ' Folge ich</div>
-                    <div class="profile-userfollowers">' .
-      $userfollowers .
-      ' Follower</div>
-                </div>
-
-                <div class="tab">
-                    <button class="tablinks active" onclick="openProfileTabs(event, \'posts\')">Posts</button>
-                    <button class="tablinks" onclick="openProfileTabs(event, \'posts-answers\')">Posts und Antworten</button>
-                    <button class="tablinks" onclick="openProfileTabs(event, \'media\')">Medien</button>
-                    <button class="tablinks" onclick="openProfileTabs(event, \'likes\')">Gefällt mir</button>
-                </div>
-              
-                <div id="posts" class="tabcontent" style="display: block">
-                    ' .
-      getPosts('post.referencedPostID IS NULL AND post.userID = ' . $user->id) .
-      '
-                </div>
-                
-                <div id="posts-answers" class="tabcontent">
-                    ' .
-      getPosts('post.userID = ' . $user->id, false, false, true) .
-      '
-                </div>
-                
-                <div id="media" class="tabcontent">
-                    ' .
-      getPosts('post.media IS NOT NULL AND post.userID = ' . $user->id) .
-      '
-                </div>
-                
-                <div id="likes" class="tabcontent">
-                    ' .
-      getPosts('feedback.like = 1 AND feedback.userID = ' . $user->id) .
-      '
-                </div>
+              <input type="hidden" name="follow" value="false">') .
+              '</form>') . '
             </div>
-        </div>
-        ';
+            <br><br>
+            <p class="profile-displayname"><b>' .  $user->name . '</b>'  . ($user->verified ? '<b class="material-icons verified-follow">verified</b>' : '') . '</p>
+            <p class="profile-username">@' . $user->name . '</b></p>
+            <p class="profile-description">' . $row->description . '</p>
+            <p class="profile-registered">Seit ' . strftime('%B %G', strtotime($row->registerDate)) . ' bei DHBW Social</p>
+            <div class="profile-followerinfo">
+              <div class="profile-following">' . $userfollowing . ' Folge ich</div>
+              <div class="profile-userfollowers">' . $userfollowers . ' Follower</div>
+            </div>
+            <div class="tab">
+              <button class="tablinks active" onclick="openProfileTabs(event, \'posts\')">Posts</button>
+              <button class="tablinks" onclick="openProfileTabs(event, \'posts-answers\')">Posts und Antworten</button>
+              <button class="tablinks" onclick="openProfileTabs(event, \'media\')">Medien</button>
+              <button class="tablinks" onclick="openProfileTabs(event, \'likes\')">Gefällt mir</button>
+            </div>              
+            <div id="posts" class="tabcontent" style="display: block">' . getPosts('post.referencedPostID IS NULL AND post.userID = ' . $user->id) . '</div>
+            <div id="posts-answers" class="tabcontent">' . getPosts('post.userID = ' . $user->id, false, false, true) . '</div>
+            <div id="media" class="tabcontent">' . getPosts('post.media IS NOT NULL AND post.userID = ' . $user->id) . '</div>
+            <div id="likes" class="tabcontent">' . getPosts('feedback.like = 1 AND feedback.userID = ' . $user->id) . '</div>
+          </div>
+        </div>';
     // If user does not exist, shows "not exists" page
   } else {
     echo '
         <div class="container">
-            <div class="profile">
-                <img class="banner" src="files/banner/notFound.png">
-                <img class="avatar" src="files/avatar/defaultProfile.png">
-                <br><br><br><br><br><br>
-                <p class="profile-displayname"><b>' .
-      $_GET['user'] .
-      '</b></p>
-                <p class="profile-username">@' .
-      $_GET['user'] .
-      '</b></p>
-                <hr class="not-found-hr">
-                <div class="center">
-                    <h4>Dieser Account existiert nicht</h4>
-                    <p class="text-secondary">Versuche, nach einem anderen Account zu suchen.</p>
-                </div>
+          <div class="profile">
+            <img class="banner" src="files/banner/notFound.png">
+            <img class="avatar" src="files/avatar/defaultProfile.png">
+            <br><br><br><br><br><br>
+            <p class="profile-displayname"><b>' . $_GET['user'] . '</b></p>
+            <p class="profile-username">@' . $_GET['user'] . '</b></p>
+            <hr class="not-found-hr">
+            <div class="center">
+              <h4>Dieser Account existiert nicht</h4>
+              <p class="text-secondary">Versuche, nach einem anderen Account zu suchen.</p>
             </div>
-        </div>
-        ';
+            </div>
+        </div>';
   }
 } else {
   header('Location: index.php');

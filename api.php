@@ -80,26 +80,16 @@ if (isset($_SESSION['user'])) {
       if ($user->id == $userID) {
         $messages .=
           '<div class="right-msg msg">
-                    <div class="msg-content-right">' .
-          $row->content .
-          '</div>
-                </div>
-                <i class="msg-time-right">' .
-          prettyTime($row->date) .
-          '</i>';
+            <div class="msg-content-right">' . $row->content . '</div>
+           </div>
+           <i class="msg-time-right">' . prettyTime($row->date) . '</i>';
       } else {
         $messages .=
           '<div class="left-msg msg">
-                <img src="' .
-          $user->getAvatar() .
-          '" class="profile-pic-msg"/>
-                    <div class="msg-content-left">' .
-          $row->content .
-          '</div>
-                </div>
-                <i class="msg-time-left">' .
-          prettyTime($row->date) .
-          '</i>';
+            <img src="' . $user->getAvatar() . '" class="profile-pic-msg"/>
+            <div class="msg-content-left">' . $row->content . '</div>
+           </div>
+           <i class="msg-time-left">' . prettyTime($row->date) . '</i>';
       }
       $lastMsg = max(strtotime($row->date), $lastMsg);
     }

@@ -43,19 +43,21 @@ function makeLoginForm($isWrong = false)
 {
   echo '
     <div class="center-center">
-        <form action="login.php" method="post">
-            <label>Benutzername: </label><br>
-            <input type="text" name="username">
-            <br>
-            <label>Passwort: </label><br>
-            <input type="password" name="password"><br>
-            ' .
-    ($isWrong ? '<span class="text-danger">Falscher Benutzername <br> oder Passwort</span>' : '') .
-    '
-            <br><br>
-            <input class="btn btn-primary btn-lg" type="submit" value="Login">
-        </form>
-        <p>Kein Profil? Jetzt <a href="register.php">registrieren</a></p>
+      <form action="login.php" method="post">
+        <label>Benutzername: </label>
+        <br>
+        <input type="text" name="username">
+        <br>
+        <label>Passwort: </label>
+        <br>
+        <input type="password" name="password">
+        <br>
+        ' . ($isWrong ? '<span class="text-danger">Falscher Benutzername <br> oder Passwort</span>' : '') . '
+        <br>
+        <br>
+        <input class="btn btn-primary btn-lg" type="submit" value="Login">
+      </form>
+      <p>Kein Profil? Jetzt <a href="register.php">registrieren</a></p>
     </div>';
 }
 ?>
