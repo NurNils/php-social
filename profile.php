@@ -13,8 +13,10 @@ $currentpage = "profile";
 include('src/php/header.php');
 
 if(isset($_POST['user']) && isset($_POST['edit'])){
+    // Updates user information
     $error = "";
 
+    // Checks if a new description was proviced
     $description = NULL;
     if(isset($_POST['description'])) {
         $description = "'" . mysqli_real_escape_string($db, $_POST['description']) . "'";

@@ -9,14 +9,13 @@
  *
  * @copyright Copyright (c) 2021
  */
-
 $isLogin = true;
 include('src/php/header.php');
 
 if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])){
+    // Registers a new user with specified username, email and password
     $username = mysqli_real_escape_string($db, $_POST['username']);
     $email = mysqli_real_escape_string($db, $_POST['email']);
-
     $sql = "INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES (NULL, '$username', '$email', '".md5($_POST['password'])."')";
     $db->query($sql);
     $sql = "SELECT *, id AS userID FROM user WHERE `username` = '$username'";
@@ -25,12 +24,12 @@ if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password
         $_SESSION['user'] = new User($row);
         header("Location: index.php");
     }
-
     header("Location: index.php");
-
 } elseif(isset($_SESSION['user']->name)) {
+    // Redirects user if session exists
     header('Location: index.php');
 } else {
+    // Shows register form
     echo '
     <div class="center-center">
         <h3>Registrierung</h3>
