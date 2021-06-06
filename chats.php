@@ -13,13 +13,13 @@ $currentpage = "chats";
 include('src/php/header.php');
 
 
-/* User clicked on message button in profile page */
+// User clicked on message button in profile page
 if(isset($_GET['user'])) {
     $ownID = $_SESSION['user']->id;
     $userID = htmlspecialchars($_GET['user']);
     $sql ="SELECT id FROM chat WHERE (user1 = $userID AND user2 = $ownID) OR (user1 = $ownID AND user2 = $userID)";
     $res = $db->query($sql);
-    // If the user already has a chat with the person -> redirect, else create new chat
+    // If the user already has a chat with the person, redirects, else creates a new chat
     if($row = mysqli_fetch_object($res)) {
         header("Location: chats.php?chat=".$row->id);
     } else {
@@ -31,7 +31,7 @@ if(isset($_GET['user'])) {
             header("Location: chats.php?chat=".$row2->id);
         }
     }
-/* Show chat of two users */
+// Shows chat of two users
 } else if(isset($_GET['chat'])) {
     $chatID = mysqli_real_escape_string($db, $_GET['chat']);
     $userID = $_SESSION['user']->id;
@@ -72,7 +72,7 @@ if(isset($_GET['user'])) {
     } else {
         header("Location: chats.php"); // ChatID not valid -> Redirect
     }
-/* List all chats with users */
+// Lists all chats with users
 } else {
     echo('
     <div class="container">

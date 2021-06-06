@@ -31,21 +31,18 @@ if (!isset($isLogin) && !isset($_SESSION['user']->id)) {
 </head>
 
 <body>
+  <!-- Snackbar -->
   <div id="snackbar"></div>
   <?php
-
   if (isset($_SESSION['snackbar'])) {
     echo ('<script>openSnackbar(\'' . $_SESSION['snackbar']['message'] . '\', ' . $_SESSION['snackbar']['error'] . ')</script>');
     unset($_SESSION['snackbar']);
   }
 
   if (!isset($isLogin)) {
-
     $notificationsArray = getNotifications($db);
-
     $text = implode('<div class="dropdown-divider"></div>', $notificationsArray);
     $notifications = $text != "" ? $text : '<a class="dropdown-item"><span class="notifications-message gray">Du hast keine neuen Nachrichten</span></a>'; 
-
     echo ('
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="index.php"><img class="logo" src="assets/images/logo.png"/>DHBW Social</a>

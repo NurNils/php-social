@@ -11,29 +11,32 @@
  */
 $currentpage = "info";
 include('src/php/header.php');
-
 ?>
 
+<!-- Info Container -->
 <div class="container">
+    <!-- Introduction -->
     <h1><img src="assets/images/logo.png" width="50"> DHBW Social</h1>
     <p>
         Willkommen zu unserem PHP-Projekt "DHBW Social" - Eine Abwandlung der bekannten Social-Media Plattform Twitter.
         </br>
         (Benutzerhandbuch <a href="assets/pdfs/manual.pdf" download="Benutzerhandbuch">herunterladen</a>)
     </p>
+    <!-- Contributors -->
     <h2>Contributors:</h2>
     <ul>
         <li><a href="https://github.com/NamidM" target="_blank">Namid Faro Marxen</a></li>
         <li><a href="https://github.com/UdolfSeelenfrost" target="_blank">Johannes Emanuel Timter</a></li>
         <li><a href="https://github.com/NurNils" target="_blank">Nils-Christopher Wiesenauer</a></li>
     </ul>
-
+    <!-- Overview -->
     <h2>Über das Projekt</h2>
     <p>
         Das Projekt wurde von DHBW-Studenten im 4. Semester im Rahmen des Wahlfachs "PHP" entwickelt.
         Es dient als kleine Abwandlung der Plattform "Twitter" zum Erweitern der PHP-Skills. 
         Welche Funktionen insgesamt umgesetzt wurden, folgen im folgenden vordefinierten Feature-Set:
     </p>
+    <!-- Must have -->
     <p>
         <h4>Must have</h4>
         <ul>
@@ -74,6 +77,7 @@ include('src/php/header.php');
                 Eine Seite, in der alle Features des ganzen Systems gelistet und erklärt sind
             </li>
         </ul>
+        <!-- Nice to have -->
         <h4>Nice to have</h4>
         <ul>
             <li>
@@ -123,6 +127,7 @@ include('src/php/header.php');
            </li>
         </ul>
     </p>
+    <!-- Technologies -->
     <h3>Technologien</h3>
     <h4>PHP</h4>
     <p>PHP ist eine Skriptsprache mit einer an C und Perl angelehnten Syntax, die hauptsächlich zur Erstellung dynamischer Webseiten oder Webanwendungen verwendet wird. PHP wird als freie Software unter der PHP-Lizenz verbreitet.</p>

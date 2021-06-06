@@ -41,7 +41,7 @@ class Post {
     }
 
     /**
-     * Get the html container of the post
+     * Gets the html container of the post
      * @param boolean $actions show actions 
      * @return string 
      */
@@ -92,7 +92,7 @@ class Post {
     }
 
     /**
-     * Get modified content of the post with hastag and links
+     * Gets modified content of the post with hastag and links
      * @return string 
      */
     function getContent() {
@@ -107,7 +107,7 @@ class Post {
     }
 
     /**
-     * Get media content (image or video)
+     * Gets media content (image or video)
      * @return string 
      */
     function getMedia() {

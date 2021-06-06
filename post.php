@@ -13,7 +13,7 @@ $currentpage = "post";
 include('src/php/header.php');
 
 $error = "";
-/* Parameters set -> Post post */
+// Parameters set, posts a new post
 if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
     $postContent = "NULL";
     if(isset($_POST['postContent'])){
@@ -26,7 +26,7 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
     }
 
     $media = "NULL";
-    // If user uploaded file -> Safe file
+    // If user uploaded file -> safe file
     if($_FILES['uploadedFile']['size'] != 0){
         try {
             $media = "'" . uploadFile($_FILES["uploadedFile"], 'post') . "'";
@@ -34,7 +34,7 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
             $error = $e->getMessage();
         }
     }
-    // If no error occured -> Post post
+    // If no error occured -> post post
     if($error == "") {
         $sql = "INSERT INTO `post` (`userID`, `referencedPostID`, `content`, `media`) 
         VALUES ('" . $_SESSION['user']->id . "', $referencedPost , $postContent, $media)";
@@ -43,7 +43,8 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
         $_SESSION['snackbar']['message'] = "Post erfolgreich erstellt";
         header("Location: index.php");
     }
-/* Parameters not set -> show post form */
+    
+// Shows post form
 } else {
     echo '<div class="create-post-form">';
     if(isset($_GET['refPost'])){

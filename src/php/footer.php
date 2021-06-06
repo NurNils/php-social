@@ -1,7 +1,7 @@
 <!-- 
  File: footer.php
  HTML Footer for implementation in each page  
- *
+ 
  @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
  @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
  @author UdolfSeelenfrost <inf19220@lehre.dhbw-stuttgart.de>

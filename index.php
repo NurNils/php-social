@@ -12,19 +12,23 @@
 $currentpage = "home";
 include('src/php/header.php');
 
+// Loads posts count from user
 $sql = "SELECT COUNT(*) AS ergebnis FROM post WHERE userID=".$_SESSION['user']->id;
 $row = mysqli_fetch_object($db->query($sql));
 $userposts = $row->ergebnis;
 
+// Loads users followers count
 $sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE `following`=".$_SESSION['user']->id;
 $row = mysqli_fetch_object($db->query($sql));
 $userfollowers = $row->ergebnis;
 
+// Loads users following count
 $sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE userID=".$_SESSION['user']->id;
 $row = mysqli_fetch_object($db->query($sql));
 $userfollowing = $row->ergebnis;
 ?>
 
+<!-- User side info -->
 <br>
 <div class="container-fluid content">
     <div class="row">
@@ -33,19 +37,30 @@ $userfollowing = $row->ergebnis;
                 <div class="personal">
                     <div class="profile-side-info">
                         <div class="center">
+                            <!-- Avatar -->
                             <a href="profile.php?user=<?php echo($_SESSION['user']->name) ?>">
                                 <img src="<?php echo(($_SESSION['user']->getAvatar())) ?>" class="profile-pic-side"/>
                             </a>
-                            <b><a class="post-username" href="profile.php?user=<?php echo ($_SESSION['user']->name . "\">". $_SESSION['user']->name . "</a>"); ?></b>
+                            <!-- Username -->
+                            <b>
+                                <a class="post-username" href="profile.php?user=<?php echo($_SESSION['user']->name) ?>">
+                                    <?php echo($_SESSION['user']->name)?>
+                                </a>
+                            </b>
+                            <!-- Verified Badge -->
                             <b class="material-icons verified-follow"><?php echo ($_SESSION['user']->verified ? 'verified' : ''); ?></b>
-                        </div><br>
+                        </div>
+                        <br>
                         <div class="row">
+                            <!-- Posts Count -->
                             <div class="col profile-info-row-content">
                                 <?php echo($userposts); ?>
                             </div>
+                            <!-- Followers Count -->
                             <div class="col profile-info-row-content">
                                 <?php echo($userfollowers); ?>
                             </div>
+                            <!-- Following Count -->
                             <div class="col profile-info-row-content">
                                 <?php echo($userfollowing); ?>
                             </div>
@@ -56,8 +71,10 @@ $userfollowing = $row->ergebnis;
                             <div class="col profile-info-row">Folge ich</div>
                         </div>
                     </div>
+                    <!-- Create new post -->
                     <a href="post.php" class="profile-info-button">Neuen Post erstellen</a>
                 </div>
+                <!-- Following -->
                 <div class="following">
                     <h3>Folge ich:</h3><br>
                     <?php
@@ -84,7 +101,7 @@ $userfollowing = $row->ergebnis;
             <div class="center-div">
                 <?php
                     $hashtag = "";
-                    // Show search bar if query is set
+                    // ShowS search bar if query is set
                     if(isset($_GET['query'])) {
                         echo('
                         <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>

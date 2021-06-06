@@ -15,7 +15,7 @@ if(localStorage.getItem('light')) {
 }
 
 /**
- * Load feedback (set like or dislike)
+ * Loads feedback (set like or dislike)
  * @param boolean like is post liked or disliked
  * @param string postID the post id
  */
@@ -61,12 +61,12 @@ function feedback(like, postID){
 }
 
 /**
- * Set light or dark theme
+ * Sets light or dark theme
  */
 function modeChange() {
     let checked = document.getElementById("light-dark-switch").checked;
     if(checked) {
-        // Change to dark
+        // Changes to dark
         document.getElementById('light-dark-icon').innerHTML = "nightlight_round";
         if(document.getElementById('bootstrap')) document.getElementById('bootstrap').remove();
         var link = document.createElement('link');
@@ -98,7 +98,7 @@ function modeChange() {
             document.getElementById('change-description').style.color = "white";
         } catch(e) {}
     } else {
-        // Change to light
+        // Changes to light
         document.getElementById('light-dark-icon').innerHTML = "wb_sunny";
         document.getElementById('light-dark-label').style.color = "white";
         if(document.getElementById('bootstrap')) document.getElementById('bootstrap').remove();
@@ -130,7 +130,7 @@ function modeChange() {
 }
 
 /**
- * Search posts
+ * Searches posts
  * @param string query search terms
  */
 function search(query) {
@@ -138,7 +138,7 @@ function search(query) {
 }
 
 /**
- * Open a user page
+ * Opens a user page
  * @param string user name of the user should be opened
  */
 function openUser(user) {
@@ -146,7 +146,7 @@ function openUser(user) {
 }
 
 /**
- * Open selected profile tab
+ * Opens selected profile tab
  * @param event evt triggered event
  * @param int tabId id of the tab
  */
@@ -206,7 +206,6 @@ function openNotifications() {
  */
 function deletePost(id) {
     if(confirm('Wollen Sie diesen Post wirklich löschen?')) {
-
         const request = new XMLHttpRequest();
         request.open('GET', `http://localhost/api.php?postID=${id}&delete=true`);
         request.setRequestHeader('Accept', 'text/plain');
@@ -227,7 +226,10 @@ function deletePost(id) {
     }
 }
 
-
+/**
+ * Sends message in a specified chat
+ * @param string chatID id of the chat
+ */
 function sendMsg(chatID) {
     let msg = document.getElementById("msg-input").value;
 
@@ -268,6 +270,10 @@ function sendMsg(chatID) {
     request.send(formData);
 }
 
+/**
+ * Sends message check in a specified chat
+ * @param string chatID id of the chat
+ */
 function sendMsgCheck(chatID) {
     let msg = document.getElementById("msg-input").value;
     if(event.key === 'Enter' && msg != "") {
@@ -275,11 +281,11 @@ function sendMsgCheck(chatID) {
     }
 }
 
+/**
+ * Checks if message was changed
+ */
 function msgChanged() {
     let msg = document.getElementById("msg-input").value;
-    if(msg != "" ) {
-        document.getElementById("send-msg-btn").disabled = false;
-    } else {
-        document.getElementById("send-msg-btn").disabled = true;
-    }
+    const changed = (msg == "");
+    document.getElementById("send-msg-btn").disabled = changed;
 }

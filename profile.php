@@ -12,17 +12,18 @@
 $currentpage = "profile";
 include('src/php/header.php');
 
-/* If parameters are set -> User wants to update profile */
+// If parameters are set, updates user profile
 if(isset($_POST['user']) && isset($_POST['edit'])){
     // Updates user information
     $error = "";
 
-    // Checks if a new description was proviced
+    // Checks if a new description was provided
     $description = NULL;
     if(isset($_POST['description'])) {
         $description = "'" . mysqli_real_escape_string($db, $_POST['description']) . "'";
     }
 
+    // Checks if a new avatar was provided
     $avatar = NULL;
     if($_FILES['avatar']['size'] != 0) {
         try {
@@ -32,6 +33,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         }
     }
 
+    // Checks if a new banner was provided
     $banner = NULL;
     if($_FILES['banner']['size'] != 0){
         try {
@@ -63,13 +65,14 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         $_SESSION['snackbar']['message'] = $error;
     }
     header("Location: profile.php?user=" . $_SESSION['user']->name);
-/* If parameters are set -> User wants to follow other user */
+
+// If parameters are set, user wants to follow other user
 } else if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
     $username = mysqli_real_escape_string($db, $_GET['user']);
     $userID = mysqli_real_escape_string($db, $_GET['userID']);
     $follow = mysqli_real_escape_string($db, $_GET['follow']);
 
-    // If user is already following -> Delete follow, else insert into follow
+    // If user is already following, delete follow, else insert into follow
     if($follow == "true") {
         $sql = "DELETE FROM follows WHERE `userID` = ".$_SESSION['user']->id." AND `following` = $userID";
     } else {
@@ -77,7 +80,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
     }
     $db->query($sql);
     header("Location: profile.php?user=".$username);
-/* If get parameters are set -> Show update profile form */
+// If get parameters are set, shows update profile form
 } else if(isset($_GET['user']) && isset($_GET['edit'])){
     $user = mysqli_real_escape_string($db, $_GET['user']);
     if($user == $_SESSION['user']->name) {
@@ -104,7 +107,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
     } else {
         header("Location: index.php");
     }
-/* If just "get" user parameter is set -> Show user profile */
+// If just "get" user parameter is set, shows user profile
 } else if(isset($_GET['user'])) {    
     $sql = "SELECT *, id AS userID FROM user WHERE username='" . htmlspecialchars($_GET['user']) . "'";
     $res = $db->query($sql);
@@ -178,7 +181,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
             </div>
         </div>
         ');
-    // If user does not exist -> Show "not exists" page
+    // If user does not exist, shows "not exists" page
     } else{
         echo('
         <div class="container">
@@ -197,7 +200,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
         </div>
         ');
     }
-} else{
+} else {
     header("Location: index.php");
 }
 

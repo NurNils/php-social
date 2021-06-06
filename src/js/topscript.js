@@ -28,7 +28,10 @@ function openSnackbar(message, error) {
     }, 3000);
 }
 
-
+/**
+ * Refreshes chat messages of a specified chat
+ * @param string chatID id of the chat
+ */
 function refreshMessages(chatID) {
     var formData = new FormData();
     formData.append("lastMsg", lastMsg/1000);
@@ -63,11 +66,13 @@ function refreshMessages(chatID) {
     request.send(formData);
 }
 
+/**
+ * Starts timeout to refresh messages
+ * @param string chatID id of the chat
+ */
 function startTimeout(chatID) {
     timeout = setTimeout(() => {
-        if(!sending.status) {
-            refreshMessages(chatID);
-        }
+        if(!sending.status) refreshMessages(chatID);
         startTimeout(chatID);
     }, 500);
 }

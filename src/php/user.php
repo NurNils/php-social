@@ -30,7 +30,7 @@ class User {
     }
 
     /**
-     * Get the users avatar or if not exist the default avatar
+     * Gets the users avatar or if not exist the default avatar
      * @return string 
      */
     function getAvatar() {
@@ -38,7 +38,7 @@ class User {
     }
 
     /**
-     * Get the users banner or if not exist the default banner
+     * Gets the users banner or if not exist the default banner
      * @return string 
      */
     function getBanner() {

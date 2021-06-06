@@ -16,11 +16,11 @@ $db_database = 'dhbwSocial';
 $t = 1;
 
 $db = @ new mysqli($db_host, $db_user, $db_pass, "mysql");
-
 $res = $db->query("CREATE DATABASE IF NOT EXISTS ".$db_database);
 mysqli_select_db($db, $db_database);
 $db->set_charset("utf8");
-// Create tables
+
+// Creates "user" table if not exists
 $db->query("CREATE TABLE IF NOT EXISTS `user` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `username` varchar(100) NOT NULL UNIQUE,
@@ -35,6 +35,7 @@ $db->query("CREATE TABLE IF NOT EXISTS `user` (
     PRIMARY KEY (`id`)
    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
 
+// Creates "post" table if not exists
 $db->query("CREATE TABLE IF NOT EXISTS `post` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `userID` int(11) NOT NULL,
@@ -48,6 +49,7 @@ $db->query("CREATE TABLE IF NOT EXISTS `post` (
     FOREIGN KEY (`referencedPostID`) REFERENCES post(`id`) ON DELETE NO ACTION 
    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
 
+// Creates "follows" table if not exists
 $db->query("CREATE TABLE IF NOT EXISTS `follows` (
     `userID` int(11) NOT NULL,
     `following` int(11) NOT NULL,
@@ -57,6 +59,7 @@ $db->query("CREATE TABLE IF NOT EXISTS `follows` (
     FOREIGN KEY (`following`) REFERENCES user(`id`) ON DELETE CASCADE
    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
 
+// Creates "feedback" table if not exists
 $db->query("CREATE TABLE IF NOT EXISTS `feedback` (
     `userID` int(11) NOT NULL,
     `postID` int(11) NOT NULL,
@@ -67,6 +70,7 @@ $db->query("CREATE TABLE IF NOT EXISTS `feedback` (
     FOREIGN KEY (`postID`) REFERENCES post(`id`) ON DELETE CASCADE
    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
 
+// Creates "chat" table if not exists
 $db->query("CREATE TABLE IF NOT EXISTS `chat` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `user1` int(11) NOT NULL,
@@ -76,6 +80,7 @@ $db->query("CREATE TABLE IF NOT EXISTS `chat` (
     FOREIGN KEY (`user2`) REFERENCES user(`id`) ON DELETE CASCADE
    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
 
+// Creates "message" table if not exists
 $db->query("CREATE TABLE IF NOT EXISTS `message` (
     `chatID` int(11) NOT NULL,
     `userID` int(11) NOT NULL,
@@ -85,16 +90,9 @@ $db->query("CREATE TABLE IF NOT EXISTS `message` (
     FOREIGN KEY (`userID`) REFERENCES user(`id`) ON DELETE CASCADE
    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
 
+// Drops "notificationView" view if exists
 $db->query("DROP VIEW IF EXISTS `notificationView`");
-
-/* Notification: message, username, time, userID 
-Types of Notifications:
-        - User liked/disliked a post
-        - User got new follower
-        - User got tagged
-        - User got reply
-        - User the user followed posted something
-*/
+// Creates "notificationView" view to show user notifications (user liked/disliked a post, new follower, tagged by somebody, got a reply or following user posted new stuff)
 $db->query("CREATE VIEW `notificationView` AS
             SELECT user.id AS `userID`, follows.followDate AS `time`, sUser.username, 'folgt dir jetzt' AS `message` FROM user
             INNER JOIN follows ON follows.following = user.id AND follows.followDate > user.notificationUpdateTime

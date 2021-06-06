@@ -11,7 +11,7 @@
  */
 $isLogin = true;
 include('src/php/header.php');
-/* Parameter given -> Try login user */
+// If parameters are given, tries to login user
 if(isset($_POST['username']) && isset($_POST['password'])){
     $sql = "SELECT *, id AS userID FROM `user` WHERE `username`=\"".htmlspecialchars($_POST['username'])."\" AND `password`=\"".md5( $_POST['password'])."\"";
     $res = $db->query($sql);
@@ -20,14 +20,15 @@ if(isset($_POST['username']) && isset($_POST['password'])){
         header("Location: index.php");
     }
     makeLoginForm(true); // Login failed
-/* User already logged in */
+// Checks if user is already logged in
 } else if(isset($_SESSION['user']->id)) {
     header("Location: index.php");
-/* No parameters given -> show login form */
+// If no parameters are given, shows login form
 } else {
     makeLoginForm();
     include('src/php/footer.php');
 }
+
 /**
  * Show login form
  * @param boolean $isWrong show error message or not

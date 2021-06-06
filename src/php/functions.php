@@ -14,7 +14,7 @@ include("user.php");
 include("notification.php");
 
 /**
- * Get user notifications from the database
+ * Gets user notifications from the database
  * @return Notification[] 
  */
 function getNotifications() {
@@ -30,7 +30,7 @@ function getNotifications() {
 }
 
 /**
- * Get user posts from the database
+ * Gets user posts from the database
  * @param string $cond conditions for select statement
  * @param boolean $showReplies get post with or without replies
  * @param boolean $second show other interesting posts
@@ -58,7 +58,7 @@ function getPosts($cond, $showReplies = false, $second = false, $getParent = fal
     while($row = mysqli_fetch_object($res)) {
         $post = new Post($row);
         array_push($postIDs, $post->id);
-        // If getParent is set and post has parent -> show parent
+        // If getParent is set and post has parent, shows parent
         if($getParent && !is_null($post->referencedPostID)) {
             $posts .= getPostById($post->referencedPostID);
             $posts .= '<div class="comment comment-level-1">' .$post->getHtml() . '</div>';
@@ -83,7 +83,7 @@ function getPosts($cond, $showReplies = false, $second = false, $getParent = fal
 }
 
 /**
- * Get posts replies from the database
+ * Gets posts replies from the database
  * @param string $postID post id where the replies should be loaded from
  * @param int $replyLevel define how many levels should be loaded (maximum 3)
  * @return string 
@@ -107,7 +107,7 @@ function loadReplies($postID, $replyLevel) {
 }
 
 /**
- * Get posts by id
+ * Gets posts by id
  * @param string $postID post id which should be loaded
  * @param boolean $actions show actions
  * @return string 
@@ -124,16 +124,14 @@ function getPostById($postID, $actions = true) {
     LEFT JOIN post comments ON comments.referencedPostID = post.id
     WHERE post.id = $postID
     GROUP BY post.id
-    ORDER BY post.postDate DESC";
-    
+    ORDER BY post.postDate DESC";    
     $row = mysqli_fetch_object($db->query($sql));
     $post = new Post($row);
-
     return $post->getHtml($actions);
 }
 
 /**
- * Get array of all allowed file extensions 
+ * Gets array of all allowed file extensions 
  * @param string $destinationFoler destination where the file should be saved
  * @return string[]
  */
@@ -148,27 +146,27 @@ function getAllowedFileExtensions($destinationFolder){
 }
 
 /**
- * Upload file to defined folder 
+ * Uploads file to defined folder 
  * @param file $uploadedFile uploaded file from the user
  * @param string $destinationFoler destination where the file should be saved
  * @return string[]
  */
 function uploadFile($uploadedFile, $destinationFolder){
     if ( $uploadedFile['error'] === UPLOAD_ERR_OK) {
-        // get details of the uploaded file
+        // Gets details of the uploaded file
         $fileTmpPath = $uploadedFile['tmp_name'];
         $fileName = $uploadedFile['name'];
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
 
-        // sanitize file-name
+        // Sanitizes file-name
         $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
 
-        // check if file has one of the following extensions
+        // Checks if file has one of the following extensions
         $allowedfileExtensions = getAllowedFileExtensions($destinationFolder);
 
         if (in_array($fileExtension, $allowedfileExtensions)) {
-            // directory in which the uploaded file will be moved
+            // Gets directory in which the uploaded file will be moved
             $uploadFileDir = 'files/' . $destinationFolder . "/";
             $dest_path = $uploadFileDir . $newFileName;
             if(move_uploaded_file($fileTmpPath, $dest_path)) {
@@ -188,7 +186,7 @@ function uploadFile($uploadedFile, $destinationFolder){
 }
 
 /**
- * Delete file by name 
+ * Deletes file by name 
  * @param string $fileName name of the file
  * @param string $destinationFoler destination where the file is saved
  */
@@ -202,7 +200,7 @@ function deleteFile($fileName, $destinationFolder){
 }
 
 /**
- * Get a list of chats from user 
+ * Gets a list of chats from user 
  * @return string
  */
 function getChats() {
@@ -230,12 +228,11 @@ function getChats() {
         </div>
         </a>';
     }
-
     return $chats;
 }
 
 /**
- * Get messages from a specific chat 
+ * Gets messages from a specific chat 
  * @param string $chatID chatID of the chat
  * @return string
  */
@@ -283,19 +280,19 @@ function prettyTime($time) {
     if($diff == 0) {
         return "Gerade eben";
     } else if($diff - 60 < 0) {
-        // Show seconds
+        // Shows seconds
         return $diff." sek";
     } elseif ($diff - 60*60 < 0) {
-        // Show minutes
+        // Shows minutes
         return round($diff/60)." min";
     } elseif ($diff - 60*60*24 < 0) {
-        // Show hours
+        // Shows hours
         return round($diff/60/60)." std";
     } elseif (strftime("%Y", $time) == strftime("%Y", $now)) {
-        // Show date
+        // Shows date
         return strftime("%d %h", $time);
     } else {
-        // Show date and year
+        // Shows date and year
         return strftime("%d %h %y", $time);
     }
 }

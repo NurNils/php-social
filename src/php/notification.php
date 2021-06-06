@@ -26,7 +26,7 @@ class Notification {
     }
 
     /**
-     * Get html content for the notification drop down
+     * Gets html content for the notification drop down
      * @return string 
      */
     function getHtml() {
