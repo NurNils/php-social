@@ -1,7 +1,7 @@
-<?php 
+<?php
 /**
  * File: info.php
- * Info page with description of the whole project 
+ * Info page with description of the whole project
  *
  * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
  * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
@@ -9,8 +9,8 @@
  *
  * @copyright Copyright (c) 2021
  */
-$currentpage = "info";
-include('src/php/header.php');
+$currentpage = 'info';
+include 'src/php/header.php';
 ?>
 
 <!-- Info Container -->
@@ -144,4 +144,4 @@ include('src/php/header.php');
     <br>
 </div>
 
-<?php include('src/php/footer.php'); ?>
+<?php include 'src/php/footer.php'; ?>

@@ -1,7 +1,7 @@
 <?php
 /**
  * File: db.php
- * MySQL database authorization and creation with all needed tables  
+ * MySQL database authorization and creation with all needed tables
  *
  * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
  * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
@@ -15,10 +15,10 @@ $db_pass = '';
 $db_database = 'dhbwSocial';
 $t = 1;
 
-$db = @ new mysqli($db_host, $db_user, $db_pass, "mysql");
-$res = $db->query("CREATE DATABASE IF NOT EXISTS ".$db_database);
+$db = @new mysqli($db_host, $db_user, $db_pass, 'mysql');
+$res = $db->query('CREATE DATABASE IF NOT EXISTS ' . $db_database);
 mysqli_select_db($db, $db_database);
-$db->set_charset("utf8");
+$db->set_charset('utf8');
 
 // Creates "user" table if not exists
 $db->query("CREATE TABLE IF NOT EXISTS `user` (
@@ -91,7 +91,7 @@ $db->query("CREATE TABLE IF NOT EXISTS `message` (
    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4");
 
 // Drops "notificationView" view if exists
-$db->query("DROP VIEW IF EXISTS `notificationView`");
+$db->query('DROP VIEW IF EXISTS `notificationView`');
 // Creates "notificationView" view to show user notifications (user liked/disliked a post, new follower, tagged by somebody, got a reply or following user posted new stuff)
 $db->query("CREATE VIEW `notificationView` AS
             SELECT user.id AS `userID`, follows.followDate AS `time`, sUser.username, 'folgt dir jetzt' AS `message` FROM user

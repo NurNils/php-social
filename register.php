@@ -1,7 +1,7 @@
 <?php
 /**
  * File: register.php
- * Login page to register a user 
+ * Login page to register a user
  *
  * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
  * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
@@ -10,26 +10,29 @@
  * @copyright Copyright (c) 2021
  */
 $isLogin = true;
-include('src/php/header.php');
+include 'src/php/header.php';
 // Registers a new user with specified username, email and password
-if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])){
-    $username = mysqli_real_escape_string($db, $_POST['username']);
-    $email = mysqli_real_escape_string($db, $_POST['email']);
-    $sql = "INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES (NULL, '$username', '$email', '".md5($_POST['password'])."')";
-    $db->query($sql);
-    $sql = "SELECT *, id AS userID FROM user WHERE `username` = '$username'";
-    $res = $db->query($sql);
-    if($row = mysqli_fetch_object($res)) {
-        $_SESSION['user'] = new User($row);
-        header("Location: index.php");
-    }
-    header("Location: index.php");
-// Redirects user if session exists
-} elseif(isset($_SESSION['user']->name)) {
+if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])) {
+  $username = mysqli_real_escape_string($db, $_POST['username']);
+  $email = mysqli_real_escape_string($db, $_POST['email']);
+  $sql =
+    "INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES (NULL, '$username', '$email', '" .
+    md5($_POST['password']) .
+    "')";
+  $db->query($sql);
+  $sql = "SELECT *, id AS userID FROM user WHERE `username` = '$username'";
+  $res = $db->query($sql);
+  if ($row = mysqli_fetch_object($res)) {
+    $_SESSION['user'] = new User($row);
     header('Location: index.php');
-// Shows register form
+  }
+  header('Location: index.php');
+  // Redirects user if session exists
+} elseif (isset($_SESSION['user']->name)) {
+  header('Location: index.php');
+  // Shows register form
 } else {
-    echo '
+  echo '
     <div class="center-center">
         <h3>Registrierung</h3>
         <form action="register.php" method="post">
@@ -47,6 +50,6 @@ if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password
         <p>Oder <a href="login.php">einloggen</a></p>
     </div>
     ';
-    include('src/php/footer.php');
+  include 'src/php/footer.php';
 }
 ?>

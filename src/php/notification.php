@@ -1,7 +1,7 @@
 <?php
 /**
  * File: notification.php
- * Notification class to create a notification object 
+ * Notification class to create a notification object
  *
  * @author NamidM <inf19054@lehre.dhbw-stuttgart.de>
  * @author NurNils <inf19161@lehre.dhbw-stuttgart.de>
@@ -11,30 +11,38 @@
  */
 /**
  * Name: Notification
- * 
+ *
  * Represents a notification for the user
  */
-class Notification {
-    public string $message;
-    public string $time;
-    public string $username;
+class Notification
+{
+  public string $message;
+  public string $time;
+  public string $username;
 
-    function __construct($row) {
-        $this->message = $row->message;
-        $this->time = $row->time;
-        $this->username = $row->username;
-    }
+  function __construct($row)
+  {
+    $this->message = $row->message;
+    $this->time = $row->time;
+    $this->username = $row->username;
+  }
 
-    /**
-     * Gets html content for the notification drop down
-     * @return string 
-     */
-    function getHtml() {
-        return 
-        '<a class="dropdown-item">
-            <b>'.$this->username.'</b> 
-            <span class="notifications-message">'.$this->message.'</span>
-            <i class="gray">'.prettyTime($this->time).'</i>
+  /**
+   * Gets html content for the notification drop down
+   * @return string
+   */
+  function getHtml()
+  {
+    return '<a class="dropdown-item">
+            <b>' .
+      $this->username .
+      '</b> 
+            <span class="notifications-message">' .
+      $this->message .
+      '</span>
+            <i class="gray">' .
+      prettyTime($this->time) .
+      '</i>
         </a>';
-    }
+  }
 }
