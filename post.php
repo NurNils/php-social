@@ -13,8 +13,8 @@ $currentpage = "post";
 include('src/php/header.php');
 
 $error = "";
+/* Parameters set -> Post post */
 if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
-
     $postContent = "NULL";
     if(isset($_POST['postContent'])){
         $postContent = "'" . mysqli_real_escape_string($db, $_POST['postContent']) . "'";
@@ -26,6 +26,7 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
     }
 
     $media = "NULL";
+    // If user uploaded file -> Safe file
     if($_FILES['uploadedFile']['size'] != 0){
         try {
             $media = "'" . uploadFile($_FILES["uploadedFile"], 'post') . "'";
@@ -33,7 +34,7 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
             $error = $e->getMessage();
         }
     }
-
+    // If no error occured -> Post post
     if($error == "") {
         $sql = "INSERT INTO `post` (`userID`, `referencedPostID`, `content`, `media`) 
         VALUES ('" . $_SESSION['user']->id . "', $referencedPost , $postContent, $media)";
@@ -42,12 +43,13 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
         $_SESSION['snackbar']['message'] = "Post erfolgreich erstellt";
         header("Location: index.php");
     }
+/* Parameters not set -> show post form */
 } else {
     echo '<div class="create-post-form">';
     if(isset($_GET['refPost'])){
         $refPost = mysqli_real_escape_string($db, $_GET['refPost']);
         echo '<h3>Antwort auf:</h3>';
-        echo(getPostById($refPost, $db, false));
+        echo(getPostById($refPost, false)); // If post is comment -> show parent post
     } else {
         echo '<h3>Post erstellen:</h3>';
     }
@@ -66,7 +68,5 @@ if(isset($_POST['postContent']) || isset($_FILES['uploadedFile'])){
     ';
 }
 include('src/php/footer.php');
-//UserID muss gesetzt sein und (Content || Media)
-//Wenn nichts davon gesetzt ist echo form mit Eingaben für einen neuen POST
-//Rest abschreiben von register
+
 ?>

@@ -17,7 +17,8 @@ include("notification.php");
  * Get user notifications from the database
  * @return Notification[] 
  */
-function getNotifications($db) {
+function getNotifications() {
+    global $db;
     $notifications = array();
     $sql ="SELECT * FROM notificationView WHERE userID = " . strval($_SESSION['user']->id);
     $res = $db->query($sql);
@@ -31,12 +32,13 @@ function getNotifications($db) {
 /**
  * Get user posts from the database
  * @param string $cond conditions for select statement
- * @param boolean $showReplies get post with or withour replies
- * @param boolean $second show other interested post
+ * @param boolean $showReplies get post with or without replies
+ * @param boolean $second show other interesting posts
  * @param boolean $getparent get parent post if exist
  * @return Posts[] 
  */
-function getPosts($cond, $db, $showReplies = false, $second = false, $getParent = false) {
+function getPosts($cond, $showReplies = false, $second = false, $getParent = false) {
+    global $db;
     $sql ="SELECT ergebnis.*, COUNT(comments.referencedPostID) AS replycount FROM (
         SELECT post.*, user.username, user.avatar, user.verified,
             SUM(IF(feedback.like IS NULL, 0, IF(feedback.like = 1, 1, -1))) AS likedcount,
@@ -56,23 +58,25 @@ function getPosts($cond, $db, $showReplies = false, $second = false, $getParent 
     while($row = mysqli_fetch_object($res)) {
         $post = new Post($row);
         array_push($postIDs, $post->id);
+        // If getParent is set and post has parent -> show parent
         if($getParent && !is_null($post->referencedPostID)) {
-            $posts .= getPostById($post->referencedPostID, $db);
+            $posts .= getPostById($post->referencedPostID);
             $posts .= '<div class="comment comment-level-1">' .$post->getHtml() . '</div>';
         } else {
             $posts .= $post->getHtml();
         }
 
         if($showReplies) {
-            $posts .= loadReplies($post->id, 1, $db);
+            $posts .= loadReplies($post->id, 1);
         }
     }
     if(!$second) {
         $posts = $posts != "" ? $posts : "<h4 class='gray'>Keine interessanten Posts...</h4>";
     }
+    // Also show other interesting posts (from users the user did not follow)
     if($showReplies && !$second) {
         $others = getPosts("post.referencedPostID IS NULL "
-        . ( count($postIDs) != 0 ? "AND post.id NOT IN (" . implode(",", $postIDs) . ")" : ""), $db, true, true);
+        . ( count($postIDs) != 0 ? "AND post.id NOT IN (" . implode(",", $postIDs) . ")" : ""), true, true);
         $posts .= $others == "" ? "" : "<h3>Diese Posts könnten Sie auch interessieren:</h3><hr>" . $others;
     }
     return $posts;
@@ -84,7 +88,8 @@ function getPosts($cond, $db, $showReplies = false, $second = false, $getParent 
  * @param int $replyLevel define how many levels should be loaded (maximum 3)
  * @return string 
  */
-function loadReplies($postID, $replyLevel, $db){
+function loadReplies($postID, $replyLevel) {
+    global $db;
     $replyString = "";
     $sql = "SELECT * FROM post WHERE referencedPostID = " . $postID;
     $replies = $db->query($sql);
@@ -94,8 +99,8 @@ function loadReplies($postID, $replyLevel, $db){
     }
 
     while($reply = mysqli_fetch_object($replies)){
-        $replyString .= '<div class="comment comment-level-'.$replyLevel.'">' . getPosts("post.id = $reply->id", $db) . '</div>';
-        $replyString .= loadReplies($reply->id, $replyLevel+1, $db);
+        $replyString .= '<div class="comment comment-level-'.$replyLevel.'">' . getPosts("post.id = $reply->id") . '</div>';
+        $replyString .= loadReplies($reply->id, $replyLevel+1); // Recursion to load replies
     }
 
     return $replyString;
@@ -107,7 +112,8 @@ function loadReplies($postID, $replyLevel, $db){
  * @param boolean $actions show actions
  * @return string 
  */
-function getPostById($postID, $db, $actions = true) {
+function getPostById($postID, $actions = true) {
+    global $db;
     $sql = "SELECT post.*, user.username, user.avatar, user.verified, COUNT(feedback.like),
         SUM(IF(feedback.like IS NULL, 0, IF(feedback.like = 1, 1, -1))) AS likedcount,
         IF(feedback.like = 1 AND feedback.userID = " . $_SESSION['user']->id . ", 1 ,0) AS liked,
@@ -152,8 +158,6 @@ function uploadFile($uploadedFile, $destinationFolder){
         // get details of the uploaded file
         $fileTmpPath = $uploadedFile['tmp_name'];
         $fileName = $uploadedFile['name'];
-        $fileSize = $uploadedFile['size'];
-        $fileType = $uploadedFile['type'];
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
 
@@ -197,7 +201,12 @@ function deleteFile($fileName, $destinationFolder){
     }
 }
 
-function getChats($db) {
+/**
+ * Get a list of chats from user 
+ * @return string
+ */
+function getChats() {
+    global $db;
     $userID = $_SESSION['user']->id;
     $sql ="SELECT chat.id, user.id AS userID, user.username, user.verified, user.avatar, IF(msg.content IS NULL, '', msg.content) AS lastMsg, MAX(msg.date) AS lastMsgTime  FROM chat
     INNER JOIN user ON user.id = IF(chat.user1 = $userID, chat.user2, chat.user1)
@@ -225,7 +234,13 @@ function getChats($db) {
     return $chats;
 }
 
-function getChat($db, $chatID) {
+/**
+ * Get messages from a specific chat 
+ * @param string $chatID chatID of the chat
+ * @return string
+ */
+function getChat($chatID) {
+    global $db;
     $userID = $_SESSION['user']->id;
     $sql ="SELECT msg.*, user.id AS userID, user.username, user.verified, user.avatar FROM `message` msg
     INNER JOIN user ON user.id = msg.userID
@@ -255,6 +270,11 @@ function getChat($db, $chatID) {
     return array("html" => $messages, "lastMsg" => $lastMsg);
 }
 
+/**
+ * Returns the time as a time string 
+ * @param string $time time to be converted 
+ * @return string
+ */
 function prettyTime($time) {
     setlocale(LC_TIME, "de_DE");
     $time = strtotime($time);
