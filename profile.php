@@ -12,6 +12,7 @@
 $currentpage = "profile";
 include('src/php/header.php');
 
+/* If parameters are set -> User wants to update profile */
 if(isset($_POST['user']) && isset($_POST['edit'])){
     $error = "";
 
@@ -39,28 +40,34 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
     }    
 
     if($error == "") {
+        // Build array with changed attributes and then update in database
         $set = array();
-        if($description) array_push($set, "description=".$description);
+        if($description) {
+            array_push($set, "description=".$description);
+        }
         if($avatar) {
             array_push($set, "avatar='".$avatar."'");
             $_SESSION['user']->avatar = $avatar;
         }
-        if($banner) array_push($set, "banner=".$banner);
+        if($banner) {
+            array_push($set, "banner=".$banner);
+        }
         $sql = "UPDATE `user` SET " . implode(",", $set) . "WHERE id=" . $_SESSION['user']->id;
         $db->query($sql);
         $_SESSION['snackbar']['error'] = false;
         $_SESSION['snackbar']['message'] = "Profil erfolgreich bearbeitet";
-        
     } else {
         $_SESSION['snackbar']['error'] = true;
         $_SESSION['snackbar']['message'] = $error;
     }
     header("Location: profile.php?user=" . $_SESSION['user']->name);
+/* If parameters are set -> User wants to follow other user */
 } else if(isset($_GET['user']) && isset($_GET['follow']) && isset($_GET['userID'])){
     $username = mysqli_real_escape_string($db, $_GET['user']);
     $userID = mysqli_real_escape_string($db, $_GET['userID']);
     $follow = mysqli_real_escape_string($db, $_GET['follow']);
 
+    // If user is already following -> Delete follow, else insert into follow
     if($follow == "true") {
         $sql = "DELETE FROM follows WHERE `userID` = ".$_SESSION['user']->id." AND `following` = $userID";
     } else {
@@ -68,6 +75,7 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
     }
     $db->query($sql);
     header("Location: profile.php?user=".$username);
+/* If get parameters are set -> Show update profile form */
 } else if(isset($_GET['user']) && isset($_GET['edit'])){
     $user = mysqli_real_escape_string($db, $_GET['user']);
     if($user == $_SESSION['user']->name) {
@@ -94,11 +102,11 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
     } else {
         header("Location: index.php");
     }
+/* If just "get" user parameter is set -> Show user profile */
 } else if(isset($_GET['user'])) {    
     $sql = "SELECT *, id AS userID FROM user WHERE username='" . htmlspecialchars($_GET['user']) . "'";
     $res = $db->query($sql);
-    $counter = 0;
-    while($row = mysqli_fetch_object($res)) {
+    if($row = mysqli_fetch_object($res)) {
         $sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE `following`=".$row->id;
         $row2 = mysqli_fetch_object($db->query($sql));
         $userfollowers = $row2->ergebnis;
@@ -151,26 +159,25 @@ if(isset($_POST['user']) && isset($_POST['edit'])){
                 </div>
               
                 <div id="posts" class="tabcontent" style="display: block">
-                    '.getPosts("post.referencedPostID IS NULL AND post.userID = " . $user->id, $db).'
+                    '.getPosts("post.referencedPostID IS NULL AND post.userID = " . $user->id).'
                 </div>
                 
                 <div id="posts-answers" class="tabcontent">
-                    '.getPosts("post.userID = " . $user->id, $db, false, false, true).'
+                    '.getPosts("post.userID = " . $user->id, false, false, true).'
                 </div>
                 
                 <div id="media" class="tabcontent">
-                    '.getPosts("post.media IS NOT NULL AND post.userID = " . $user->id, $db).'
+                    '.getPosts("post.media IS NOT NULL AND post.userID = " . $user->id).'
                 </div>
                 
                 <div id="likes" class="tabcontent">
-                    '.getPosts("feedback.like = 1 AND feedback.userID = " . $user->id , $db).'
+                    '.getPosts("feedback.like = 1 AND feedback.userID = " . $user->id).'
                 </div>
             </div>
         </div>
         ');
-        $counter++;
-    }
-    if($counter == 0) {
+    // If user does not exist -> Show "not exists" page
+    } else{
         echo('
         <div class="container">
             <div class="profile">

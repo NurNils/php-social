@@ -12,7 +12,7 @@
 
 $isLogin = true;
 include('src/php/header.php');
-
+/* If parameters are set -> Insert new profile */
 if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])){
     $username = mysqli_real_escape_string($db, $_POST['username']);
     $email = mysqli_real_escape_string($db, $_POST['email']);
@@ -21,15 +21,16 @@ if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password
     $db->query($sql);
     $sql = "SELECT *, id AS userID FROM user WHERE `username` = '$username'";
     $res = $db->query($sql);
-    while($row = mysqli_fetch_object($res)) {
+    if($row = mysqli_fetch_object($res)) {
         $_SESSION['user'] = new User($row);
         header("Location: index.php");
     }
 
     header("Location: index.php");
-
-} elseif(isset($_SESSION['user']->name)) {
+/* If user already logged in -> redirect */
+} else if(isset($_SESSION['user']->name)) {
     header('Location: index.php');
+/* Else show register form */
 } else {
     echo '
     <div class="center-center">

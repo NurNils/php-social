@@ -12,13 +12,14 @@
 $currentpage = "chats";
 include('src/php/header.php');
 
-if(isset($_GET['user'])) {
-    // TODO: Check if user has chat with that user or create new chat
 
+/* User clicked on message button in profile page */
+if(isset($_GET['user'])) {
     $ownID = $_SESSION['user']->id;
     $userID = htmlspecialchars($_GET['user']);
     $sql ="SELECT id FROM chat WHERE (user1 = $userID AND user2 = $ownID) OR (user1 = $ownID AND user2 = $userID)";
     $res = $db->query($sql);
+    // If the user already has a chat with the person -> redirect, else create new chat
     if($row = mysqli_fetch_object($res)) {
         header("Location: chats.php?chat=".$row->id);
     } else {
@@ -30,6 +31,7 @@ if(isset($_GET['user'])) {
             header("Location: chats.php?chat=".$row2->id);
         }
     }
+/* Show chat of two users */
 } else if(isset($_GET['chat'])) {
     $chatID = mysqli_real_escape_string($db, $_GET['chat']);
     $userID = $_SESSION['user']->id;
@@ -37,6 +39,7 @@ if(isset($_GET['user'])) {
     INNER JOIN user ON user.id = IF(chat.user1 = $userID, chat.user2, chat.user1)
     WHERE chat.id = $chatID";
     $res = $db->query($sql);
+    // Get user from chat and confirm that it is the right chatID
     if($row = mysqli_fetch_object($res)) {
         $user = new User($row);
         echo('<div class="container">
@@ -51,7 +54,7 @@ if(isset($_GET['user'])) {
         <hr>
         <div class="chat" id="chat">');
         $chatID = mysqli_real_escape_string($db, $_GET['chat']);
-        $chat = getChat($db, $chatID);
+        $chat = getChat($chatID); // Show chat messages
 
         echo($chat["html"]);
         echo('</div>
@@ -66,17 +69,17 @@ if(isset($_GET['user'])) {
         var chat = document.getElementById("chat");
         chat.scrollTop = chat.scrollHeight;
         startTimeout('.$chatID.');</script>');
-        // TODO add "live" reload for new messages
+    } else {
+        header("Location: chats.php"); // ChatID not valid -> Redirect
     }
+/* List all chats with users */
 } else {
     echo('
     <div class="container">
         <h1>Chats</h1>
-        '.getChats($db).'
+        '.getChats().'
     </div>
     ');
 }
-?>
 
-
-<?php include('src/php/footer.php'); ?>
+include('src/php/footer.php'); ?>

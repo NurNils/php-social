@@ -11,10 +11,10 @@
  */
 include('src/php/functions.php');
 include('src/php/db.php');
-
 session_start();
 if(isset($_SESSION['user'])) {
     $userID = $_SESSION['user']->id;
+    /* Endpoint for liking/disliking posts */
     if(isset($_GET['like']) && isset($_GET['postID'])) {
         $like = mysqli_real_escape_string($db, $_GET['like']);
         $postID = mysqli_real_escape_string($db, $_GET['postID']);
@@ -34,12 +34,15 @@ if(isset($_SESSION['user'])) {
             $sql = "INSERT INTO feedback (`userID`, `postID`, `like`) VALUES ($userID, $postID, $like)";
         }
         $db->query($sql);
+    /* Endpoint for post deletion */
     } else if(isset($_GET['delete']) && isset($_GET['postID'])) {
         $postID = mysqli_real_escape_string($db, $_GET['postID']);
-        checkDelete($db, $postID, false);
+        checkDelete($postID, false);
+    /* Endpoint for updating last notification time */
     } else if(isset($_GET['openNotification'])) {
         $sql = "UPDATE user SET `notificationUpdateTime` = now() WHERE `id` = $userID";
         $db->query($sql);
+    /* Endpoint for new chat message */
     } else if(isset($_POST['chat']) && isset($_POST['message'])) {
         $chatID = mysqli_real_escape_string($db, $_POST['chat']);
         $message = mysqli_real_escape_string($db, $_POST['message']);
@@ -52,6 +55,7 @@ if(isset($_SESSION['user'])) {
             $db->query($sql);
             echo("true");
         }
+    /* Endpoint to get all new chat messages from point "lastMsg" */
     } else if(isset($_POST['chat']) && isset($_POST['lastMsg'])) {
         $chatID = mysqli_real_escape_string($db, $_POST['chat']);
         $lastMsg = mysqli_real_escape_string($db, $_POST['lastMsg']);
@@ -63,6 +67,7 @@ if(isset($_SESSION['user'])) {
         WHERE chatID = $chatID AND `date` > '". date('Y-m-d H:i:s' , $lastMsg) ."'
         ORDER BY msg.date ASC";
         $res = $db->query($sql);
+        // Get all messages and send html
         while($row = mysqli_fetch_object($res)) {
             $user = new User($row);
             $userID = $_SESSION['user']->id;
@@ -80,13 +85,20 @@ if(isset($_SESSION['user'])) {
             }
             $lastMsg = max(strtotime($row->date), $lastMsg);
         }
+        // Send html and the time of the last message
         echo(json_encode(array("html" => $messages, "lastMsg" => $lastMsg)));
     }
 } else {
     echo('No permission');
 }
 
-function checkDelete($db, $postID, $second) {
+/**
+ * Check if post can be deleted
+ * @param int $postID id for post
+ * @param boolean $second for recursion
+ */
+function checkDelete($postID, $second) {
+    global $db;
     $sql = "SELECT user.verified, user.id, COUNT(comments.referencedPostID) AS replycount, post.referencedPostID, post.deleted, post.media
     FROM user 
     INNER JOIN post ON user.id = post.userID
@@ -94,19 +106,20 @@ function checkDelete($db, $postID, $second) {
     WHERE post.id = $postID
     GROUP BY post.id";
     if($row = mysqli_fetch_object($db->query($sql))) {
+        // Check if user is allowed to delete post
         if(($_SESSION['user']->verified || $row->id == $_SESSION['user']->id) OR $second) {
+            // If post has no replies -> delete post, else set "deleted" to true
             if($row->replycount == 0) {
-                
-                if($row->deleted == 1 OR !$second) {
+                if($row->deleted == 1 OR !$second) { // If post is set to be deleted -> delete post
                     $sql = "DELETE FROM post WHERE `id` = $postID";
                     $db->query($sql);
-
+                    // If post has media -> remove media from folder
                     if(!is_null($row->media)) {
                         deleteFile($row->media, "post");
                     }
-
+                    // If post has parent -> Check if parent can be deleted
                     if(!is_null($row->referencedPostID)) {
-                        checkDelete($db, $row->referencedPostID, true);
+                        checkDelete($row->referencedPostID, true);
                     }
                 }
             } else {

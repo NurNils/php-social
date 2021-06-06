@@ -23,7 +23,6 @@ $userfollowers = $row->ergebnis;
 $sql = "SELECT COUNT(*) AS ergebnis FROM follows WHERE userID=".$_SESSION['user']->id;
 $row = mysqli_fetch_object($db->query($sql));
 $userfollowing = $row->ergebnis;
-
 ?>
 
 <br>
@@ -64,6 +63,7 @@ $userfollowing = $row->ergebnis;
                     <?php
                     $sql = "SELECT *, id AS userID FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=".$_SESSION['user']->id;
                     $res = $db->query($sql);
+                    // Show all following accounts
                     while($row = mysqli_fetch_object($res)) {
                         $user = new User($row);
                         echo('
@@ -84,6 +84,7 @@ $userfollowing = $row->ergebnis;
             <div class="center-div">
                 <?php
                     $hashtag = "";
+                    // Show search bar if query is set
                     if(isset($_GET['query'])) {
                         echo('
                         <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>
@@ -98,13 +99,12 @@ $userfollowing = $row->ergebnis;
                     }
                     echo getPosts("post.referencedPostID IS NULL AND (post.userID = ".$_SESSION['user']->id." OR (post.userID IN 
                     (SELECT id FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=".$_SESSION['user']->id.")))
-                    " . ($hashtag != "" ? "AND post.content LIKE '%$hashtag%'" : ""), $db, true);
+                    " . ($hashtag != "" ? "AND post.content LIKE '%$hashtag%'" : ""), $hashtag == "" ? true : false );
                 ?>
             </div>
         </div>
         <div class="col-2"></div>
     </div>
 </div>
-
 
 <?php include('src/php/footer.php'); ?>
