@@ -76,14 +76,14 @@ $userfollowing = $row->ergebnis;
                 </div>
                 <!-- Following -->
                 <div class="following">
-                    <h3>Folge ich:</h3><br>
                     <?php
                     $sql = 'SELECT *, id AS userID FROM follows INNER JOIN user ON follows.following = user.id WHERE follows.userID=' . $_SESSION['user']->id;
                     $res = $db->query($sql);
+                    $followers = "";
                     // Shows all following accounts
                     while ($row = mysqli_fetch_object($res)) {
                       $user = new User($row);
-                      echo '
+                      $followers .= '
                         <div class="follower">
                             <a href="profile.php?user=' . $user->name . '">
                                 <img src="' . $user->getAvatar() . '" class="profile-pic-follow"/>
@@ -93,6 +93,8 @@ $userfollowing = $row->ergebnis;
                         </div>
                         <br>';
                     }
+                    $followers = $followers != "" ? "<h3>Folge ich:</h3><br>$followers" : "";
+                    echo($followers);
                     ?>
                 </div>
             </div>
@@ -108,7 +110,7 @@ $userfollowing = $row->ergebnis;
                         <a class="material-icons arrow-back text-primary" onclick="window.history.back();">arrow_back</a>
                         <form method="get" action="index.php" class="search-form">
                             <div class="searchbar-main">
-                                <input class="search_input-main" type="text" pattern="#[a-zA-Z0-9]+" name="query" value="' . $_GET['query'] . '" placeholder="Hashtags suchen...">
+                                <input class="search_input-main" type="text" pattern="#[a-zA-Z0-9]+" required=true name="query" value="' . $_GET['query'] . '" placeholder="Hashtags suchen...">
                                 <span class="material-icons fas fa-search">search</span>
                             </div>
                         </form>';

@@ -69,7 +69,7 @@ if (!isset($isLogin) && !isset($_SESSION['user']->id)) {
       </ul>
       <form method="get" action="index.php" class="search-form">
         <div class="searchbar">
-          <input class="search_input" type="text" pattern="#[a-zA-Z0-9]+" name="query" placeholder="Hashtags suchen...">
+          <input class="search_input" type="text" pattern="#[a-zA-Z0-9]+" name="query" required=true placeholder="Hashtags suchen...">
           <span class="material-icons fas fa-search">search</span>
         </div>
       </form>

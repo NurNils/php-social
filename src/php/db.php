@@ -101,7 +101,7 @@ $db->query("CREATE VIEW `notificationView` AS
             UNION ALL
             SELECT user.id AS `userID`, post.postDate AS `time`, sUser.username, 'hat etwas gepostet' AS `message` FROM user
             INNER JOIN follows ON follows.userID = user.id
-            INNER JOIN post ON post.userID = follows.following AND post.postDate > user.notificationUpdateTime
+            INNER JOIN post ON post.userID = follows.following AND post.postDate > user.notificationUpdateTime AND post.postDate > follows.followDate
             INNER JOIN user sUser ON sUser.id = follows.following
             GROUP BY user.id
             UNION ALL

@@ -254,7 +254,7 @@ function getChats()
         </div>
       </a>';
   }
-  return $chats;
+  return $chats != "" ? $chats : "<h4 class='gray'>Starte eine neue Unterhaltung über die Profil Seite...</h4>";
 }
 
 /**
