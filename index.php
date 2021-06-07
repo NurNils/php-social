@@ -99,6 +99,7 @@ $userfollowing = $row->ergebnis;
         </div>
         <div class="col">
             <div class="center-div">
+                <h3>Neuste Posts:</h3>
                 <?php
                 $hashtag = '';
                 // Shows search bar if query is set

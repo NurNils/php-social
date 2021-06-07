@@ -15,7 +15,7 @@ include 'src/php/header.php';
 // User clicked on message button in profile page
 if (isset($_GET['user'])) {
   $ownID = $_SESSION['user']->id;
-  $userID = htmlspecialchars($_GET['user']);
+  $userID = intval(htmlspecialchars($_GET['user']));
   $sql = "SELECT id FROM chat WHERE (user1 = $userID AND user2 = $ownID) OR (user1 = $ownID AND user2 = $userID)";
   $res = $db->query($sql);
   // If the user already has a chat with the person, redirects, else creates a new chat
@@ -28,6 +28,8 @@ if (isset($_GET['user'])) {
     $res2 = $db->query($sql);
     if ($row2 = mysqli_fetch_object($res2)) {
       header('Location: chats.php?chat=' . $row2->id);
+    } else {
+      header('Location: chats.php');
     }
   }
   // Shows chat of two users

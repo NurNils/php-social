@@ -49,9 +49,7 @@ function getPosts($cond, $showReplies = false, $second = false, $getParent = fal
         FROM post
         INNER JOIN user ON user.id = post.userID 
         LEFT JOIN feedback ON feedback.postID = post.id
-        LEFT JOIN feedback pFeedback ON pFeedback.postID = post.id AND pFeedback.userID = " .
-    $_SESSION['user']->id .
-    "
+        LEFT JOIN feedback pFeedback ON pFeedback.postID = post.id AND pFeedback.userID = " . $_SESSION['user']->id . "
         WHERE $cond
         GROUP BY post.id) ergebnis
     LEFT JOIN post comments ON comments.referencedPostID = ergebnis.id
@@ -232,10 +230,10 @@ function getChats()
 {
   global $db;
   $userID = $_SESSION['user']->id;
-  $sql = "SELECT chat.id, user.id AS userID, user.username, user.verified, user.avatar, IF(msg.content IS NULL, '', msg.content) AS lastMsg, MAX(msg.date) AS lastMsgTime  FROM chat
+  $sql = "SELECT chat.id, user.id AS userID, user.username, user.verified, user.avatar, IF(msg.content IS NULL, '', msg.content) AS lastMsg, MAX(msg.date) AS lastMsgTime FROM chat
     INNER JOIN user ON user.id = IF(chat.user1 = $userID, chat.user2, chat.user1)
-    LEFT JOIN `message` msg ON msg.chatID = chat.id
-    WHERE chat.user1 = $userID OR chat.user2 = $userID
+    LEFT JOIN `message` msg ON msg.chatID = chat.id AND msg.date = (SELECT MAX(msg2.date) FROM `message` msg2 WHERE msg2.chatID = msg.chatID)
+    WHERE (chat.user1 = $userID OR chat.user2 = $userID)
     GROUP BY chat.id";
   $chats = '';
   $res = $db->query($sql);

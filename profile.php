@@ -171,7 +171,7 @@ if (isset($_POST['user']) && isset($_POST['edit'])) {
             <div id="posts" class="tabcontent" style="display: block">' . getPosts('post.referencedPostID IS NULL AND post.userID = ' . $user->id) . '</div>
             <div id="posts-answers" class="tabcontent">' . getPosts('post.userID = ' . $user->id, false, false, true) . '</div>
             <div id="media" class="tabcontent">' . getPosts('post.media IS NOT NULL AND post.userID = ' . $user->id) . '</div>
-            <div id="likes" class="tabcontent">' . getPosts('feedback.like = 1 AND feedback.userID = ' . $user->id) . '</div>
+            <div id="likes" class="tabcontent">' . getPosts('pFeedback.like = 1') . '</div>
           </div>
         </div>';
     // If user does not exist, shows "not exists" page

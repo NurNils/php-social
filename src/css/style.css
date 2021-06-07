@@ -434,6 +434,7 @@ body {
 
 .profile-description {
   margin: 5px 0;
+  word-break: break-word;
 }
 
 .profile-registered {

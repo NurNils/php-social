@@ -15,23 +15,39 @@ include 'src/php/header.php';
 if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])) {
   $username = mysqli_real_escape_string($db, $_POST['username']);
   $email = mysqli_real_escape_string($db, $_POST['email']);
-  $sql =
+
+  $sql = "SELECT * FROM user WHERE `username` = '$username' OR `email` = '$email'";
+  $res = $db->query($sql);
+  if ($row = mysqli_fetch_object($res)) {
+    makeRegisterForm(true);
+  } else {
+    $sql =
     "INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES (NULL, '$username', '$email', '" .
     md5($_POST['password']) .
     "')";
-  $db->query($sql);
-  $sql = "SELECT *, id AS userID FROM user WHERE `username` = '$username'";
-  $res = $db->query($sql);
-  if ($row = mysqli_fetch_object($res)) {
-    $_SESSION['user'] = new User($row);
+    $db->query($sql);
+    $sql = "SELECT *, id AS userID FROM user WHERE `username` = '$username'";
+    $res = $db->query($sql);
+    if ($row = mysqli_fetch_object($res)) {
+      $_SESSION['user'] = new User($row);
+    }
     header('Location: index.php');
+    // Redirects user if session exists
   }
-  header('Location: index.php');
-  // Redirects user if session exists
 } elseif (isset($_SESSION['user']->name)) {
   header('Location: index.php');
   // Shows register form
 } else {
+  makeRegisterForm();
+  include 'src/php/footer.php';
+}
+
+/**
+ * Show register form
+ * @param boolean $isWrong show error message or not
+ * @return string
+ */
+function makeRegisterForm($isWrong = false) {
   echo '
     <div class="center-center">
         <h3>Registrierung</h3>
@@ -46,10 +62,11 @@ if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['passwor
             <input type="password" required="1" name="password">
             <br><br>
             <input class="btn btn-primary btn-lg" type="submit" value="Registrieren">
+            <br>
+            ' . ($isWrong ? '<br><span class="text-danger">Benutzername/Email wird bereits verwendet!</span>' : '') . '
         </form>
         <p>Oder <a href="login.php">einloggen</a></p>
     </div>
     ';
-  include 'src/php/footer.php';
 }
 ?>

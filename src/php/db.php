@@ -107,12 +107,12 @@ $db->query("CREATE VIEW `notificationView` AS
             UNION ALL
             SELECT user.id AS `userID`, comment.postDate AS `time`, sUser.username, 'hat auf einen Post von dir geantwortet' AS `message` FROM user
             INNER JOIN post ON post.userID = user.id
-            INNER JOIN post comment ON comment.referencedPostID = post.id AND comment.postDate > user.notificationUpdateTime
+            INNER JOIN post comment ON comment.referencedPostID = post.id AND comment.postDate > user.notificationUpdateTime AND comment.userID != user.id
             INNER JOIN user sUser ON sUser.id = comment.userID
             GROUP BY user.id
             UNION ALL
             SELECT user.id AS `userID`, post.postDate AS `time`, sUser.username, 'hat dich in einem Post erwähnt' AS `message` FROM user
-            INNER JOIN post ON post.content REGEXP CONCAT(CONCAT('(?<= |^)(@', user.username), ')(?= |$)') AND post.postDate > user.notificationUpdateTime
+            INNER JOIN post ON post.content REGEXP CONCAT(CONCAT('(?<= |^)(@', user.username), ')(?= |$)') AND post.postDate > user.notificationUpdateTime AND post.userID != user.id
             INNER JOIN user sUser ON sUser.id = post.userID
             GROUP BY user.id
             UNION ALL
@@ -122,5 +122,5 @@ $db->query("CREATE VIEW `notificationView` AS
             INNER JOIN post ON post.userID = user.id
             INNER JOIN feedback ON feedback.postID = post.id AND feedback.likedDate > user.notificationUpdateTime AND feedback.userID != user.id
             INNER JOIN user sUser ON sUser.id = feedback.userID
-            GROUP BY user.id");
+            GROUP BY user.id, post.id");
 ?>
