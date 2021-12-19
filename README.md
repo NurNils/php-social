@@ -1,4 +1,4 @@
-# DHBW Social
+# PHP Social
 
 ![Logo](https://github.com/NurNils/dhbw-php-social/blob/master/assets/images/logo.png)
 
